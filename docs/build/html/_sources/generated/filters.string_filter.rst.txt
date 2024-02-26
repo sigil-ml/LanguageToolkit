@@ -1,0 +1,36 @@
+﻿filters.string\_filter
+======================
+
+.. automodule:: filters.string_filter
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      custom_excepthook
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FilterResult
+      StringFilter
+   
+   
+
+   
+   
+   
+
+
+

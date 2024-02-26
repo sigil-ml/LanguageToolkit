@@ -1,0 +1,1107 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>at_nlp.filters.string_filter - Athena AIML NLP Tools main documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Athena AIML NLP Tools main documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Athena AIML NLP Tools main documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../filters.html">String Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../retrieval_augmented_generation.html">Retrieval Augmented Generation (RAG)</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <h1>Source code for at_nlp.filters.string_filter</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defines the StringFilter class which is used to filter Mattermost messages&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">punctuation</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">rich</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="c1"># from loguru import logger as log</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="kn">from</span> <span class="nn">snorkel.labeling</span> <span class="kn">import</span> <span class="n">labeling_function</span><span class="p">,</span> <span class="n">LabelingFunction</span>
+<span class="kn">from</span> <span class="nn">snorkel.labeling</span> <span class="kn">import</span> <span class="n">PandasLFApplier</span>
+<span class="kn">from</span> <span class="nn">snorkel.labeling</span> <span class="kn">import</span> <span class="n">LFAnalysis</span>
+<span class="kn">from</span> <span class="nn">snorkel.labeling.model</span> <span class="kn">import</span> <span class="n">LabelModel</span>
+
+<span class="kn">from</span> <span class="nn">drain3</span> <span class="kn">import</span> <span class="n">TemplateMiner</span>
+<span class="kn">from</span> <span class="nn">drain3.template_miner_config</span> <span class="kn">import</span> <span class="n">TemplateMinerConfig</span>
+<span class="kn">from</span> <span class="nn">rich.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
+
+
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">custom_excepthook</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_traceback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom exception hook to print errors to the console&quot;&quot;&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_value</span><span class="p">)</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold red&quot;</span><span class="p">)</span>
+
+
+<span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">custom_excepthook</span>
+
+
+<span class="k">class</span> <span class="nc">FilterResult</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumeration of categories for each message&quot;&quot;&quot;</span>
+
+    <span class="n">ABSTAIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">ACTION</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">REVIEW</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">RECYCLE</span> <span class="o">=</span> <span class="mi">2</span>
+
+
+<div class="viewcode-block" id="StringFilter">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter">[docs]</a>
+<span class="k">class</span> <span class="nc">StringFilter</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;This is a conceptual class representation of a simple BLE device</span>
+<span class="sd">    (GATT Server). It is essentially an extended combination of the</span>
+<span class="sd">    :class:`bluepy.btle.Peripheral` and :class:`bluepy.btle.ScanEntry` classes</span>
+
+<span class="sd">    :param client: A handle to the :class:`simpleble.SimpleBleClient` client</span>
+<span class="sd">        object that detected the device</span>
+<span class="sd">    :type client: class:`simpleble.SimpleBleClient`</span>
+<span class="sd">    :param addr: Device MAC address, defaults to None</span>
+<span class="sd">    :type addr: str, optional</span>
+<span class="sd">    :param addrType: Device address type - one of ADDR_TYPE_PUBLIC or</span>
+<span class="sd">        ADDR_TYPE_RANDOM, defaults to ADDR_TYPE_PUBLIC</span>
+<span class="sd">    :type addrType: str, optional</span>
+<span class="sd">    :param iface: Bluetooth interface number (0 = /dev/hci0) used for the</span>
+<span class="sd">        connection, defaults to 0</span>
+<span class="sd">    :type iface: int, optional</span>
+<span class="sd">    :param data: A list of tuples (adtype, description, value) containing the</span>
+<span class="sd">        AD type code, human-readable description and value for all available</span>
+<span class="sd">        advertising data items, defaults to None</span>
+<span class="sd">    :type data: list, optional</span>
+<span class="sd">    :param rssi: Received Signal Strength Indication for the last received</span>
+<span class="sd">        broadcast from the device. This is an integer value measured in dB,</span>
+<span class="sd">        where 0 dB is the maximum (theoretical) signal strength, and more</span>
+<span class="sd">        negative numbers indicate a weaker signal, defaults to 0</span>
+<span class="sd">    :type rssi: int, optional</span>
+<span class="sd">    :param connectable: `True` if the device supports connections, and `False`</span>
+<span class="sd">        otherwise (typically used for advertising ‘beacons’).,</span>
+<span class="sd">        defaults to `False`</span>
+<span class="sd">    :type connectable: bool, optional</span>
+<span class="sd">    :param updateCount: Integer count of the number of advertising packets</span>
+<span class="sd">        received from the device so far, defaults to 0</span>
+<span class="sd">    :type updateCount: int, optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">acronym_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mapping of acronyms to their meanings from provided CSV&quot;&quot;&quot;</span>
+    <span class="n">filter_result</span><span class="p">:</span> <span class="n">FilterResult</span> <span class="o">=</span> <span class="n">FilterResult</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumeration of categories for each message&quot;&quot;&quot;</span>
+    <span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coverts messages to a sparse matrix of token counts&quot;&quot;&quot;</span>
+    <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Random forest classifier for ensemble of weak learners&quot;&quot;&quot;</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple MLP classifier for ensemble of weak learners&quot;&quot;&quot;</span>
+    <span class="n">class_likelihood</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Threshold for class probabilities&quot;&quot;&quot;</span>
+    <span class="n">salutations</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;hello&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hola&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;aloha&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mornin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ello govna&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;good morning&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;good evening&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;good night&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;good &lt;:*:&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hey &lt;:*:&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hi &lt;:*:&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;haha &lt;:*:&gt;&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List of salutations to filter&quot;&quot;&quot;</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether to print diagnostic information to stdout&quot;&quot;&quot;</span>
+    <span class="n">msg_len_cutoff</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of characters in a message to define a short mesasge&quot;&quot;&quot;</span>
+    <span class="n">applier</span><span class="p">:</span> <span class="n">PandasLFApplier</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies functions to Pandas DataFrame&quot;&quot;&quot;</span>
+    <span class="n">label_model</span><span class="p">:</span> <span class="n">LabelModel</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensemble of labeling models&quot;&quot;&quot;</span>
+    <span class="n">drain_config</span><span class="p">:</span> <span class="n">TemplateMinerConfig</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration dictionary from drain3.ini file in cur dir&quot;&quot;&quot;</span>
+    <span class="n">drain_config_path</span><span class="p">:</span> <span class="n">Path</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Path to drain3.ini file as pathlib.Path object&quot;&quot;&quot;</span>
+    <span class="n">template_miner</span><span class="p">:</span> <span class="n">TemplateMiner</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drain3 template miner to convert log messages to cluster templates&quot;&quot;&quot;</span>
+    <span class="n">stage_one_train_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data used to train stage one&quot;&quot;&quot;</span>
+    <span class="n">stage_one_test_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data used to test stage one&quot;&quot;&quot;</span>
+    <span class="n">stage_two_train_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data used to train stage two&quot;&quot;&quot;</span>
+    <span class="n">stage_two_test_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data used to test stage two&quot;&quot;&quot;</span>
+    <span class="n">trace_stack</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">list</span><span class="p">())</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retain performance metrics for each classifier&quot;&quot;&quot;</span>
+    <span class="n">trace_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Toggle tracing mode&quot;&quot;&quot;</span>
+    <span class="n">keyword_register</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterable of keywords to strain&quot;&quot;&quot;</span>
+    <span class="n">min_str_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Minimum length of a message&quot;&quot;&quot;</span>
+    <span class="n">max_str_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Maximum length of a message&quot;&quot;&quot;</span>
+    <span class="n">_preprocessor_stack</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Call stack of preprocessing functions&quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: add source dir as a parameter to make importing the CSV and INI files easier</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">model_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># assert acronyms_path is not None, &quot;Acronyms CSV is required!&quot;</span>
+        <span class="c1"># assert (</span>
+        <span class="c1">#     acronyms_path.exists()</span>
+        <span class="c1"># ), f&quot;Provided acronyms path: {acronyms_path.absolute()} does not exist!&quot;</span>
+        <span class="c1"># assert drain_config_path is not None, &quot;Drain3 config file is required!&quot;</span>
+        <span class="c1"># assert (</span>
+        <span class="c1">#     drain_config_path.exists()</span>
+        <span class="c1"># ), f&quot;Provided drain3.ini path: {drain_config_path.absolute()} does not exist!&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+        <span class="c1"># with open(acronyms_path.absolute(), &quot;r&quot;, encoding=&quot;utf-8-sig&quot;) as f:</span>
+        <span class="c1">#     for line in csv.DictReader(f):</span>
+        <span class="c1">#         line: dict</span>
+        <span class="c1">#         self.acronym_mapping[line[&quot;Jargon&quot;]] = (</span>
+        <span class="c1">#             line[&quot;Meaning&quot;] + &quot; (&quot; + line[&quot;Jargon&quot;] + &quot;)&quot;</span>
+        <span class="c1">#         )</span>
+
+        <span class="c1"># self.drain_config = TemplateMinerConfig()</span>
+        <span class="c1"># self.drain_config.load(str(drain_config_path))</span>
+        <span class="c1"># self.drain_config.profiling_enabled = False</span>
+        <span class="c1"># self.template_miner = TemplateMiner(None, self.drain_config)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyword_register</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="nd">@labeling_function</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">string_keyword_strainer</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Return a list of random ingredients as strings.</span>
+
+<span class="sd">            :param kind: Optional &quot;kind&quot; of ingredients.</span>
+<span class="sd">            :type kind: list[str] or None</span>
+<span class="sd">            :raise lumache.InvalidKindError: If the kind is invalid.</span>
+<span class="sd">            :return: The ingredients list.</span>
+<span class="sd">            :rtype: list[str]</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_result</span><span class="o">.</span><span class="n">ABSTAIN</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword_register</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_result</span><span class="o">.</span><span class="n">RECYCLE</span><span class="o">.</span><span class="n">value</span>
+                    <span class="k">break</span>
+            <span class="k">return</span> <span class="n">pred</span>
+
+        <span class="nd">@labeling_function</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">string_len_strainer</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Classify based on the length of the string&quot;&quot;&quot;</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@labeling_function</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">lf_rf_rbf</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Classify a post using the SVC&quot;&quot;&quot;</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">ds_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorize_text</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+            <span class="n">ds_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">ds_arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="p">)</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_mode</span><span class="p">:</span>
+                <span class="n">total_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;rf&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">total_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">ds_arr</span>
+
+        <span class="nd">@labeling_function</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">lf_mlp</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Classify a post using the MLP&quot;&quot;&quot;</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">ds_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorize_text</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+            <span class="n">ds_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">ds_arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">)</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_mode</span><span class="p">:</span>
+                <span class="n">total_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;mlp&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">total_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">ds_arr</span>
+
+        <span class="c1"># @labeling_function()</span>
+        <span class="c1"># def lf_channel(ds: pd.Series) -&gt; int:</span>
+        <span class="c1">#     &quot;&quot;&quot;Classify a post as RECYCLE if it&#39;s a system message otherwise ABSTAIN&quot;&quot;&quot;</span>
+        <span class="c1">#     start_time = time.time()</span>
+        <span class="c1">#     msg = ds[&quot;Message&quot;]</span>
+
+        <span class="c1">#     # TODO: Prune with Mercury</span>
+        <span class="c1">#     r_val = self.filter_result.ABSTAIN.value</span>
+        <span class="c1">#     if (</span>
+        <span class="c1">#         msg.find(&quot;joined the channel&quot;) &gt;= 0</span>
+        <span class="c1">#         or msg.find(&quot;added to the channel&quot;) &gt;= 0</span>
+        <span class="c1">#     ):</span>
+        <span class="c1">#         r_val = self.filter_result.RECYCLE.value</span>
+        <span class="c1">#     end_time = time.time()</span>
+        <span class="c1">#     if self.trace_mode:</span>
+        <span class="c1">#         total_time = end_time - start_time</span>
+        <span class="c1">#         self.trace_stack.append([&quot;channel&quot;, f&quot;{total_time:.4f}s&quot;])</span>
+        <span class="c1">#     return r_val</span>
+
+        <span class="nd">@labeling_function</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">lf_length</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span>
+            <span class="n">msg_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">r_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_result</span><span class="o">.</span><span class="n">ABSTAIN</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">if</span> <span class="n">msg_len</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg_len_cutoff</span><span class="p">:</span>
+                <span class="n">r_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_result</span><span class="o">.</span><span class="n">RECYCLE</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_mode</span><span class="p">:</span>
+                <span class="n">total_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;length&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">total_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">r_val</span>
+
+        <span class="c1"># @labeling_function()</span>
+        <span class="c1"># def lf_hello(ds: pd.Series) -&gt; int:</span>
+        <span class="c1">#     &quot;&quot;&quot;Classify a post as RECYCLE if it&#39;s a greeting/farewell otherwise ABSTAIN&quot;&quot;&quot;</span>
+        <span class="c1">#     start_time = time.time()</span>
+        <span class="c1">#     msg = ds[&quot;Message&quot;].lower()</span>
+        <span class="c1">#     for item in self.salutations:</span>
+        <span class="c1">#         if msg.find(item.lower()) &gt;= 0:</span>
+        <span class="c1">#             end_time = time.time()</span>
+        <span class="c1">#             if self.trace_mode:</span>
+        <span class="c1">#                 total_time = end_time - start_time</span>
+        <span class="c1">#                 self.trace_stack.append([&quot;hello&quot;, f&quot;{total_time:.4f}s&quot;])</span>
+        <span class="c1">#             return self.filter_result.RECYCLE.value</span>
+
+        <span class="c1">#     end_time = time.time()</span>
+        <span class="c1">#     if self.trace_mode:</span>
+        <span class="c1">#         total_time = end_time - start_time</span>
+        <span class="c1">#         self.trace_stack.append([&quot;hello&quot;, f&quot;{total_time:.4f}s&quot;])</span>
+        <span class="c1">#     return self.filter_result.ABSTAIN.value</span>
+
+        <span class="c1"># @labeling_function()</span>
+        <span class="c1"># def lf_roger(ds: pd.Series) -&gt; int:</span>
+        <span class="c1">#     &quot;&quot;&quot;Classify a post as RECYCLE if it&#39;s just a confirmation otherwise ABSTAIN&quot;&quot;&quot;</span>
+        <span class="c1">#     start_time = time.time()</span>
+        <span class="c1">#     msg = ds[&quot;Message&quot;].lower()</span>
+        <span class="c1">#     r_val = self.filter_result.ABSTAIN.value</span>
+        <span class="c1">#     if msg.find(&quot;rgr&quot;) &gt;= 0 or msg.find(&quot;roger&quot;) &gt;= 0:</span>
+        <span class="c1">#         r_val = self.filter_result.RECYCLE.value</span>
+        <span class="c1">#     end_time = time.time()</span>
+        <span class="c1">#     if self.trace_mode:</span>
+        <span class="c1">#         total_time = end_time - start_time</span>
+        <span class="c1">#         self.trace_stack.append([&quot;roger&quot;, f&quot;{total_time:.4f}s&quot;])</span>
+        <span class="c1">#     return r_val</span>
+
+        <span class="c1"># @labeling_function()</span>
+        <span class="c1"># def lf_lunch(ds: pd.Series) -&gt; int:</span>
+        <span class="c1">#     &quot;&quot;&quot;Classify a post as RECYCLE if it is about food otherwise ABSTAIN&quot;&quot;&quot;</span>
+        <span class="c1">#     start_time = time.time()</span>
+        <span class="c1">#     msg = ds[&quot;Message&quot;].lower()</span>
+        <span class="c1">#     for item in [&quot;lunch&quot;, &quot;dinner&quot;, &quot;food&quot;]:</span>
+        <span class="c1">#         if msg.find(item) &gt;= 0:</span>
+        <span class="c1">#             end_time = time.time()</span>
+        <span class="c1">#             if self.trace_mode:</span>
+        <span class="c1">#                 total_time = end_time - start_time</span>
+        <span class="c1">#                 self.trace_stack.append([&quot;lunch&quot;, f&quot;{total_time:.4f}s&quot;])</span>
+        <span class="c1">#             return self.filter_result.RECYCLE.value</span>
+        <span class="c1">#     end_time = time.time()</span>
+        <span class="c1">#     if self.trace_mode:</span>
+        <span class="c1">#         total_time = end_time - start_time</span>
+        <span class="c1">#         self.trace_stack.append([&quot;lunch&quot;, f&quot;{total_time:.4f}s&quot;])</span>
+        <span class="c1">#     return self.filter_result.ABSTAIN.value</span>
+
+        <span class="k">if</span> <span class="n">model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">model_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Loading from directory: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">model_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_models</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+
+        <span class="c1"># self.transform_template = partial(</span>
+        <span class="c1">#     self.template_miner_transform, tm=self.template_miner</span>
+        <span class="c1"># )</span>
+        <span class="c1"># self.labeling_functions = [</span>
+        <span class="c1">#     lf_rf_rbf,</span>
+        <span class="c1">#     lf_mlp,</span>
+        <span class="c1">#     string_keyword_strainer,</span>
+        <span class="c1">#     lf_length,</span>
+        <span class="c1"># ]</span>
+        <span class="c1"># self.update_applier()</span>
+
+<div class="viewcode-block" id="StringFilter.register_keywords">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.register_keywords">[docs]</a>
+    <span class="k">def</span> <span class="nf">register_keywords</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">make_lowercase</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register new keywords to be used in the labeling functions&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No keywords supplied!&quot;</span>
+        <span class="k">if</span> <span class="n">make_lowercase</span><span class="p">:</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyword_register</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.set_string_len_bounds">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.set_string_len_bounds">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_string_len_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the lower and upper bounds for the string length labeling function&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">lower_bound</span> <span class="o">&lt;</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="s2">&quot;Lower bound must be less than upper bound!&quot;</span>
+        <span class="k">assert</span> <span class="n">lower_bound</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Lower bound must be greater than 0!&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_str_len</span> <span class="o">=</span> <span class="n">lower_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_str_len</span> <span class="o">=</span> <span class="n">upper_bound</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.update_applier">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.update_applier">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_applier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update applier with new lists&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labeling_functions</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No labeling functions supplied!&quot;</span>
+        <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeling_functions</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">fn</span><span class="p">,</span> <span class="n">LabelingFunction</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not a labeling function!&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">applier</span> <span class="o">=</span> <span class="n">PandasLFApplier</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labeling_functions</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.register_csv_preprocessor">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.register_csv_preprocessor">[docs]</a>
+    <span class="k">def</span> <span class="nf">register_csv_preprocessor</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">search_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">replace_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Registers a CSV file to be used for preprocessing. This is different than</span>
+<span class="sd">        the registering a CSV file for weak learning since we replace the strings</span>
+<span class="sd">        before the weak learners are trained and applied. If you wish to use the CSV</span>
+<span class="sd">        for weak learning then use the :meth:`register_csv_weak_learner` method instead.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The CSV file will not be serialized when saving the StringFilter object.</span>
+<span class="sd">            Internally we will store the search and replacement strings in a dictionary</span>
+<span class="sd">            that will get pickled with the object. Thus, when loading the object the</span>
+<span class="sd">            CSV file is not necessary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            csv_path (Path): Path to the CSV file.</span>
+<span class="sd">            search_idx (int): Index of the column containing the string to be replaced (Defaults to 0).</span>
+<span class="sd">            replace_idx (int): Index of the column containing the replacement string (Defaults to 1).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: raised if the CSV file does not exist, or the indices are not integers.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; sf.register_csv_preprocessor(Path(&quot;replacement_text1.csv&quot;), 0, 1)</span>
+<span class="sd">            &gt;&gt;&gt; sf.register_csv_preprocessor(Path(&quot;replacement_text2.csv&quot;))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">Path</span><span class="p">),</span> <span class="s2">&quot;CSV path must be a pathlib.Path object!&quot;</span>
+        <span class="k">assert</span> <span class="n">csv_path</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;CSV file </span><span class="si">{</span><span class="n">csv_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s2"> does not exist!&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_idx</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;Search index must be an integer!&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">replace_idx</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;Replace index must be an integer!&quot;</span>
+        <span class="k">assert</span> <span class="n">search_idx</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Search index must be greater than or equal to 0!&quot;</span>
+        <span class="k">assert</span> <span class="n">replace_idx</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Replace index must be greater than or equal to 0!&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">search_idx</span> <span class="o">!=</span> <span class="n">replace_idx</span>
+        <span class="p">),</span> <span class="s2">&quot;Search and replace indices must be different!&quot;</span>
+        <span class="n">csv_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">))</span>
+        <span class="n">num_cols</span> <span class="o">=</span> <span class="n">csv_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">assert</span> <span class="n">search_idx</span> <span class="o">&lt;=</span> <span class="n">num_cols</span><span class="p">,</span> <span class="s2">&quot;Search index out of range!&quot;</span>
+        <span class="k">assert</span> <span class="n">replace_idx</span> <span class="o">&lt;=</span> <span class="n">num_cols</span><span class="p">,</span> <span class="s2">&quot;Replace index out of range!&quot;</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.register_preprocessor">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.register_preprocessor">[docs]</a>
+    <span class="k">def</span> <span class="nf">register_preprocessor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Registers one or more preprocessing functions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fns (list[tuple[int, Callable]]): A list of tuples where each tuple contains the index</span>
+<span class="sd">                in the call stack the function should be placed and the function itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: raised if no tuples are supplied, the index is not an integer, or the function is not callable.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; sf.register_preprocessor([(0, lambda x: x.lower()), (1, lambda x: x.upper())])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fns</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No preprocessing functions supplied!&quot;</span>
+        <span class="k">for</span> <span class="n">fn_tuple</span> <span class="ow">in</span> <span class="n">fns</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">fn_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">_fn</span> <span class="o">=</span> <span class="n">fn_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;Index must be an integer!&quot;</span>
+            <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">_fn</span><span class="p">),</span> <span class="s2">&quot;Second element must be a callable function!&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessor_stack</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">_fn</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.print_preprocessor_stack">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.print_preprocessor_stack">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_preprocessor_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Prints the current preprocessor callstack.&quot;&quot;&quot;</span>
+        <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Preprocessor Callstack&quot;</span><span class="p">,</span> <span class="n">show_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Type&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">fn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessor_stack</span><span class="p">):</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">fn</span><span class="p">)))</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.register_new_labeling_fn">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.register_new_labeling_fn">[docs]</a>
+    <span class="k">def</span> <span class="nf">register_new_labeling_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LabelingFunction</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register any new labeling functions&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fns</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No labeling functions supplied!&quot;</span>
+        <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">fns</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">fn</span><span class="p">,</span> <span class="n">LabelingFunction</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not a labeling function!&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labeling_functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_applier</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.replace_acronyms">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.replace_acronyms">[docs]</a>
+    <span class="k">def</span> <span class="nf">replace_acronyms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace acronyms with their meaningful names&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acronym_mapping</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acronym_mapping</span> <span class="k">else</span> <span class="n">x</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">in_text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">fix_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">in_text</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">end_of_string</span> <span class="o">=</span> <span class="n">in_text</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">end_of_string</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">punctuation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace_acronyms</span><span class="p">(</span><span class="n">in_text</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">end_punctuation</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">while</span> <span class="n">end_of_string</span> <span class="ow">in</span> <span class="n">punctuation</span><span class="p">:</span>
+            <span class="n">end_of_string</span> <span class="o">=</span> <span class="n">in_text</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">end_punctuation</span> <span class="o">=</span> <span class="n">end_of_string</span> <span class="o">+</span> <span class="n">end_punctuation</span>
+            <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="n">fixed_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace_acronyms</span><span class="p">(</span><span class="n">in_text</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="n">punctuation</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">fixed_text</span> <span class="o">+</span> <span class="n">end_punctuation</span>
+
+<div class="viewcode-block" id="StringFilter.vectorize_text">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.vectorize_text">[docs]</a>
+    <span class="k">def</span> <span class="nf">vectorize_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Helper function to vectorize the messages in a pandas Series&quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="p">[</span><span class="n">msg</span><span class="p">]</span>
+        <span class="n">ds_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ds_arr</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.transform">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.transform">[docs]</a>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">in_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+        <span class="n">pred_fun</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">MLPClassifier</span><span class="p">,</span> <span class="n">SVC</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generic prediction function that calls the predict method of the supplied callable&quot;&quot;&quot;</span>
+        <span class="n">y_prob</span> <span class="o">=</span> <span class="n">pred_fun</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">in_data</span><span class="p">)</span>
+        <span class="n">max_prob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y_prob</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_prob</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_likelihood</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_result</span><span class="o">.</span><span class="n">ABSTAIN</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y_prob</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.train_template_miner">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.train_template_miner">[docs]</a>
+    <span class="k">def</span> <span class="nf">train_template_miner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Train the drain3 template miner first on all available data&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">log_line</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">in_data</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]):</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_miner</span><span class="o">.</span><span class="n">add_log_message</span><span class="p">(</span><span class="n">log_line</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Template miner training complete!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.template_miner_transform">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.template_miner_transform">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">template_miner_transform</span><span class="p">(</span><span class="n">in_row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">tm</span><span class="p">:</span> <span class="n">TemplateMiner</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper function to transform messages into their cluster templates&quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">in_row</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span>
+        <span class="n">cluster</span> <span class="o">=</span> <span class="n">tm</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cluster</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cluster</span><span class="o">.</span><span class="n">get_template</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.evaluate">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.evaluate">[docs]</a>
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">test_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">],</span>
+        <span class="n">test_labels</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">classifier_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rf&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of random ingredients as strings.</span>
+
+<span class="sd">        :param kind: Optional &quot;kind&quot; of ingredients.</span>
+<span class="sd">        :type kind: list[str] or None</span>
+<span class="sd">        :raise lumache.InvalidKindError: If the kind is invalid.</span>
+<span class="sd">        :return: The ingredients list.</span>
+<span class="sd">        :rtype: list[str]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">table_title</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">match</span> <span class="n">classifier_id</span><span class="p">:</span>
+            <span class="k">case</span> <span class="s2">&quot;rf&quot;</span><span class="p">:</span>
+                <span class="n">table_title</span> <span class="o">=</span> <span class="s2">&quot;Random Forest Performance&quot;</span>
+                <span class="n">classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span>
+                <span class="n">test_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_data</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">])</span>
+            <span class="k">case</span> <span class="s2">&quot;mlp&quot;</span><span class="p">:</span>
+                <span class="n">table_title</span> <span class="o">=</span> <span class="s2">&quot;Perceptron Performance&quot;</span>
+                <span class="n">classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span>
+                <span class="n">test_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_data</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">])</span>
+            <span class="k">case</span> <span class="s2">&quot;label_model&quot;</span><span class="p">:</span>
+                <span class="n">table_title</span> <span class="o">=</span> <span class="s2">&quot;Label Model Performance&quot;</span>
+                <span class="n">classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_model</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">classifier</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="n">test_labels</span><span class="p">)</span>
+
+        <span class="n">stats_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">table_title</span><span class="p">,</span> <span class="n">show_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">stats_table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Metric&quot;</span><span class="p">)</span>
+        <span class="n">stats_table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Value&quot;</span><span class="p">)</span>
+        <span class="n">stats_table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Percentage&quot;</span><span class="p">)</span>
+        <span class="n">stats_table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Total&quot;</span><span class="p">)</span>
+
+        <span class="n">num_correct</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">num_incorrect</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">-</span> <span class="n">num_correct</span>
+        <span class="n">stats_table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span>
+            <span class="s2">&quot;Correct&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">num_correct</span><span class="p">),</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">num_correct</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)),</span>
+            <span class="n">style</span><span class="o">=</span><span class="s2">&quot;dark_sea_green4&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">stats_table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span>
+            <span class="s2">&quot;Incorrect&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">num_incorrect</span><span class="p">),</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">num_incorrect</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)),</span>
+            <span class="n">style</span><span class="o">=</span><span class="s2">&quot;dark_orange&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">stats_table</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.latency_trace">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.latency_trace">[docs]</a>
+    <span class="k">def</span> <span class="nf">latency_trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the inferencing speed of the classifiers&quot;&quot;&quot;</span>
+
+        <span class="n">table_title</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_mode</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">data_quantity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Drain3</span>
+        <span class="n">start_drain</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">test_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;Message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_template</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">end_drain</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">drain_time</span> <span class="o">=</span> <span class="n">end_drain</span> <span class="o">-</span> <span class="n">start_drain</span>
+        <span class="n">drain_time</span> <span class="o">=</span> <span class="n">drain_time</span> <span class="o">/</span> <span class="n">data_quantity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;drain&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">drain_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Applier</span>
+        <span class="n">start_apply</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">test_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applier</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+        <span class="n">end_apply</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">apply_time</span> <span class="o">=</span> <span class="n">end_apply</span> <span class="o">-</span> <span class="n">start_apply</span>
+        <span class="n">apply_time</span> <span class="o">=</span> <span class="n">apply_time</span> <span class="o">/</span> <span class="n">data_quantity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;apply&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">apply_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Prediction</span>
+        <span class="n">prediction_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+        <span class="n">prediction_end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">prediction_time</span> <span class="o">=</span> <span class="n">prediction_end</span> <span class="o">-</span> <span class="n">prediction_start</span>
+        <span class="n">prediction_time</span> <span class="o">=</span> <span class="n">prediction_time</span> <span class="o">/</span> <span class="n">data_quantity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;label_model&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prediction_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">])</span>
+
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_mode</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_stack</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+        <span class="c1"># stats_table.add_row(</span>
+        <span class="c1">#     &quot;Correct&quot;,</span>
+        <span class="c1">#     str(num_correct),</span>
+        <span class="c1">#     f&quot;{100 * num_correct / len(mask):.2f}%&quot;,</span>
+        <span class="c1">#     str(len(mask)),</span>
+        <span class="c1">#     style=&quot;dark_sea_green4&quot;,</span>
+        <span class="c1"># )</span>
+        <span class="c1"># stats_table.add_row(</span>
+        <span class="c1">#     &quot;Incorrect&quot;,</span>
+        <span class="c1">#     str(num_incorrect),</span>
+        <span class="c1">#     f&quot;{100 * num_incorrect / len(mask):.2f}%&quot;,</span>
+        <span class="c1">#     str(len(mask)),</span>
+        <span class="c1">#     style=&quot;dark_orange&quot;,</span>
+        <span class="c1"># )</span>
+        <span class="c1"># console.print(stats_table)</span>
+
+<div class="viewcode-block" id="StringFilter.print_weak_learner_info">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.print_weak_learner_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_weak_learner_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l_train</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints the weak learners collisions, etc.&quot;&quot;&quot;</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">LFAnalysis</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">l_train</span><span class="p">,</span> <span class="n">lfs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labeling_functions</span><span class="p">)</span><span class="o">.</span><span class="n">lf_summary</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.stage_one_train">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.stage_one_train">[docs]</a>
+    <span class="k">def</span> <span class="nf">stage_one_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">train_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Train the MLP and RF on the reserved stage one training data&quot;&quot;&quot;</span>
+
+        <span class="c1"># train vectorizer on entire data set</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">in_data</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">])</span>
+
+        <span class="c1"># produce test-train split</span>
+        <span class="n">amt</span> <span class="o">=</span> <span class="n">train_config</span><span class="p">[</span><span class="s2">&quot;amt&quot;</span><span class="p">]</span>
+        <span class="n">split_p</span> <span class="o">=</span> <span class="n">train_config</span><span class="p">[</span><span class="s2">&quot;split&quot;</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">in_data</span><span class="p">[:</span><span class="n">amt</span><span class="p">]</span>
+        <span class="n">training_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">split_p</span>
+        <span class="n">training_set</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">training_mask</span><span class="p">]</span>
+        <span class="n">training_set</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">training_set</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_template</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_two_train_data</span> <span class="o">=</span> <span class="n">training_set</span>
+        <span class="n">training_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">training_set</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">])</span>
+
+        <span class="n">test_set</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">training_mask</span><span class="p">]</span>
+        <span class="n">test_set</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_set</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_template</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_one_test_data</span> <span class="o">=</span> <span class="n">test_set</span>
+
+        <span class="n">training_labels</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">][</span><span class="n">training_mask</span><span class="p">]</span>
+        <span class="n">test_labels</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">][</span><span class="o">~</span><span class="n">training_mask</span><span class="p">]</span>
+
+        <span class="c1"># train RF</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_set</span><span class="p">,</span> <span class="n">training_labels</span><span class="p">)</span>
+        <span class="n">svm_finish_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">svm_finish_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RF training complete: elapsed time </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_set</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">,</span> <span class="s2">&quot;rf&quot;</span><span class="p">)</span>
+
+        <span class="c1"># train MLP</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_set</span><span class="p">,</span> <span class="n">training_labels</span><span class="p">)</span>
+        <span class="n">mlp_finish_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">mlp_finish_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MLP training complete: elapsed time </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_set</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">,</span> <span class="s2">&quot;mlp&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.save_template_miner_cluster_information">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.save_template_miner_cluster_information">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_template_miner_cluster_information</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save template miner clusters to a JSON for analysis&quot;&quot;&quot;</span>
+        <span class="n">clusters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_miner</span><span class="o">.</span><span class="n">drain</span><span class="o">.</span><span class="n">clusters</span><span class="p">:</span>
+            <span class="n">clusters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">cluster</span><span class="o">.</span><span class="n">cluster_id</span><span class="p">,</span>
+                    <span class="s2">&quot;template&quot;</span><span class="p">:</span> <span class="n">cluster</span><span class="o">.</span><span class="n">get_template</span><span class="p">(),</span>
+                    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">cluster</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="n">clusters</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">clusters</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;clusters.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">clusters</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.stage_two_train">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.stage_two_train">[docs]</a>
+    <span class="k">def</span> <span class="nf">stage_two_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">train_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Train the ensemble on the reserved stage two training data&quot;&quot;&quot;</span>
+
+        <span class="n">amt</span> <span class="o">=</span> <span class="n">train_config</span><span class="p">[</span><span class="s2">&quot;amt&quot;</span><span class="p">]</span>
+        <span class="n">split_p</span> <span class="o">=</span> <span class="n">train_config</span><span class="p">[</span><span class="s2">&quot;split&quot;</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">in_data</span><span class="p">[</span><span class="o">-</span><span class="n">amt</span><span class="p">:]</span>
+        <span class="n">training_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">split_p</span>
+        <span class="n">training_set</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">training_mask</span><span class="p">]</span>
+        <span class="n">training_set</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">training_set</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_template</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_two_train_data</span> <span class="o">=</span> <span class="n">training_set</span>
+        <span class="n">test_set</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">training_mask</span><span class="p">]</span>
+        <span class="n">test_labels</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">][</span><span class="o">~</span><span class="n">training_mask</span><span class="p">]</span>
+        <span class="n">test_set</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_set</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_template</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_two_test_data</span> <span class="o">=</span> <span class="n">test_set</span>
+        <span class="n">test_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applier</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">test_set</span><span class="p">)</span>
+        <span class="n">l_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applier</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">training_set</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_model</span> <span class="o">=</span> <span class="n">LabelModel</span><span class="p">(</span><span class="n">cardinality</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">L_train</span><span class="o">=</span><span class="n">l_train</span><span class="p">,</span> <span class="n">n_epochs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">log_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+        <span class="n">label_finish_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">label_finish_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Label model training complete: elapsed time </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">elapsed_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_set</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">,</span> <span class="s2">&quot;label_model&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.predict">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.predict">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict the labels for a supplied Pandas data frame&quot;&quot;&quot;</span>
+        <span class="n">in_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;Message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">in_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_template</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">in_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applier</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">in_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">in_data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.train">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.train">[docs]</a>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">train_conf</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">serialize</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trains both the first and second stages&quot;&quot;&quot;</span>
+        <span class="c1"># Train template miner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_template_miner</span><span class="p">(</span><span class="n">in_data</span><span class="p">)</span>
+
+        <span class="c1"># Train stage one</span>
+        <span class="n">stage_one_conf</span> <span class="o">=</span> <span class="n">train_conf</span><span class="p">[</span><span class="s2">&quot;stage-one&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_one_train</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span> <span class="n">stage_one_conf</span><span class="p">)</span>
+
+        <span class="c1"># Train stage two</span>
+        <span class="n">stage_two_conf</span> <span class="o">=</span> <span class="n">train_conf</span><span class="p">[</span><span class="s2">&quot;stage-two&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_two_train</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span> <span class="n">stage_two_conf</span><span class="p">)</span>
+
+        <span class="c1"># TODO: Use save models here</span>
+        <span class="k">if</span> <span class="n">serialize</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_models</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./models&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.save_models">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.save_models">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_models</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path_stub</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save trained models to directory with a random uuid to prevent collisions&quot;&quot;&quot;</span>
+        <span class="n">uuid_str</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+        <span class="n">uuid_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid_str</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">save_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">save_path_stub</span><span class="p">)</span> <span class="o">+</span> <span class="n">uuid_str</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving models to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;================================================================&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving vectorizer to </span><span class="si">{</span><span class="n">save_path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/vectorizer.pkl&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">,</span> <span class="n">save_path</span> <span class="o">+</span> <span class="s2">&quot;/vectorizer.pkl&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving template miner to </span><span class="si">{</span><span class="n">save_path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/template_miner.pkl&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template_miner</span><span class="p">,</span> <span class="n">save_path</span> <span class="o">+</span> <span class="s2">&quot;/template_miner.pkl&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving random forest to </span><span class="si">{</span><span class="n">save_path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/random_forest.pkl&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="p">,</span> <span class="n">save_path</span> <span class="o">+</span> <span class="s2">&quot;/random_forest.pkl&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving MLP to </span><span class="si">{</span><span class="n">save_path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/mlp.pkl&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">save_path</span> <span class="o">+</span> <span class="s2">&quot;/mlp.pkl&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving label model to </span><span class="si">{</span><span class="n">save_path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/label_model.pkl&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_model</span><span class="p">,</span> <span class="n">save_path</span> <span class="o">+</span> <span class="s2">&quot;/label_model.pkl&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;================================================================&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Finished!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StringFilter.load_models">
+<a class="viewcode-back" href="../../../filters.html#at_nlp.filters.string_filter.StringFilter.load_models">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_models</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Restore models from a directory&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">model_dir</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Cannot find directory at path: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">!&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">model_dir</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Provided path is not a directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">!&quot;</span>
+
+        <span class="n">models</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span>
+        <span class="n">model_names</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;vectorizer.pkl&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;template_miner.pkl&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;random_forest.pkl&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mlp.pkl&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;label_model.pkl&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">model_names</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Cannot find model at path: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">!&quot;</span>
+
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Models found! Starting restoration...&quot;</span><span class="p">)</span>
+        <span class="n">model_dir_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">model_dir</span><span class="o">.</span><span class="n">absolute</span><span class="p">())</span>
+        <span class="n">model_dir_rel</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">msg_factory</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;❌ </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2"> is corrupted and cannot be loaded!&quot;</span>
+
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;================================================================&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_dir_path</span> <span class="o">+</span> <span class="s2">&quot;/vectorizer.pkl&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">,</span> <span class="n">CountVectorizer</span><span class="p">),</span> <span class="n">msg_factory</span><span class="p">(</span><span class="s2">&quot;Vectorizer&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Loading vectorizer from </span><span class="si">{</span><span class="n">model_dir_rel</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/vectorizer.pkl&#39;</span><span class="si">}</span><span class="s2">... ✅&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">template_miner</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_dir_path</span> <span class="o">+</span> <span class="s2">&quot;/template_miner.pkl&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template_miner</span><span class="p">,</span> <span class="n">TemplateMiner</span><span class="p">),</span> <span class="n">msg_factory</span><span class="p">(</span>
+            <span class="s2">&quot;Template miner&quot;</span>
+        <span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Loading template miner from </span><span class="si">{</span><span class="n">model_dir_rel</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/template_miner.pkl&#39;</span><span class="si">}</span><span class="s2">... ✅&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rf</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_dir_path</span> <span class="o">+</span> <span class="s2">&quot;/random_forest.pkl&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">),</span> <span class="n">msg_factory</span><span class="p">(</span><span class="s2">&quot;Random forest&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Loading random forest from </span><span class="si">{</span><span class="n">model_dir_rel</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/random_forest.pkl&#39;</span><span class="si">}</span><span class="s2">... ✅&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_dir_path</span> <span class="o">+</span> <span class="s2">&quot;/mlp.pkl&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">MLPClassifier</span><span class="p">),</span> <span class="n">msg_factory</span><span class="p">(</span><span class="s2">&quot;MLP&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading MLP from </span><span class="si">{</span><span class="n">model_dir_rel</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/mlp.pkl&#39;</span><span class="si">}</span><span class="s2">... ✅&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_dir_path</span> <span class="o">+</span> <span class="s2">&quot;/label_model.pkl&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_model</span><span class="p">,</span> <span class="n">LabelModel</span><span class="p">),</span> <span class="n">msg_factory</span><span class="p">(</span><span class="s2">&quot;Label model&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Loading label model from </span><span class="si">{</span><span class="n">model_dir_rel</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;/label model.pkl&#39;</span><span class="si">}</span><span class="s2">... ✅&quot;</span>
+        <span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;================================================================&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Complete!&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Athena AIML Contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=a8da1a53"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/katex.min.js?v=48ec3933"></script>
+    <script src="../../../_static/auto-render.min.js?v=8b9f325c"></script>
+    <script src="../../../_static/katex_autorenderer.js?v=bebc588a"></script>
+    </body>
+</html>

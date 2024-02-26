@@ -1,0 +1,130 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter A
+  \item \spxentry{acronym\_mapping}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{1}
+  \item \spxentry{applier}\spxextra{filters.string\_filter.StringFilter attribute}, \hyperpage{1}
+
+  \indexspace
+  \bigletter C
+  \item \spxentry{class\_likelihood}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{1}
+
+  \indexspace
+  \bigletter D
+  \item \spxentry{drain\_config}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{2}
+  \item \spxentry{drain\_config\_path}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{2}
+
+  \indexspace
+  \bigletter E
+  \item \spxentry{evaluate()}\spxextra{filters.string\_filter.StringFilter method}, \hyperpage{2}
+
+  \indexspace
+  \bigletter F
+  \item \spxentry{filter\_result}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{2}
+  \item \spxentry{filters.string\_filter}
+    \subitem \spxentry{module}, \hyperpage{1}
+  \item \spxentry{fix\_text()}\spxextra{filters.string\_filter.StringFilter method}, \hyperpage{2}
+
+  \indexspace
+  \bigletter K
+  \item \spxentry{keyword\_register}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{3}
+
+  \indexspace
+  \bigletter L
+  \item \spxentry{label\_model}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{3}
+  \item \spxentry{latency\_trace()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+  \item \spxentry{load\_models()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{max\_str\_len}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{3}
+  \item \spxentry{min\_str\_len}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{3}
+  \item \spxentry{mlp}\spxextra{filters.string\_filter.StringFilter attribute}, \hyperpage{3}
+  \item \spxentry{module}
+    \subitem \spxentry{filters.string\_filter}, \hyperpage{1}
+  \item \spxentry{msg\_len\_cutoff}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{3}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{predict()}\spxextra{filters.string\_filter.StringFilter method}, \hyperpage{3}
+  \item \spxentry{print\_weak\_learner\_info()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{register\_keywords()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+  \item \spxentry{register\_new\_labeling\_fn()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+  \item \spxentry{replace\_acronyms()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+  \item \spxentry{rf}\spxextra{filters.string\_filter.StringFilter attribute}, \hyperpage{3}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{salutations}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{3}
+  \item \spxentry{save\_models()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+  \item \spxentry{save\_template\_miner\_cluster\_information()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+  \item \spxentry{set\_string\_len\_bounds()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+  \item \spxentry{stage\_one\_test\_data}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{3}
+  \item \spxentry{stage\_one\_train()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{3}
+  \item \spxentry{stage\_one\_train\_data}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{4}
+  \item \spxentry{stage\_two\_test\_data}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{4}
+  \item \spxentry{stage\_two\_train()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{4}
+  \item \spxentry{stage\_two\_train\_data}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{4}
+  \item \spxentry{StringFilter}\spxextra{class in filters.string\_filter}, \hyperpage{1}
+
+  \indexspace
+  \bigletter T
+  \item \spxentry{template\_miner}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{4}
+  \item \spxentry{template\_miner\_transform()}\spxextra{filters.string\_filter.StringFilter static method}, 
+		\hyperpage{4}
+  \item \spxentry{trace\_mode}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{4}
+  \item \spxentry{trace\_stack}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{4}
+  \item \spxentry{train()}\spxextra{filters.string\_filter.StringFilter method}, \hyperpage{4}
+  \item \spxentry{train\_template\_miner()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{4}
+  \item \spxentry{transform()}\spxextra{filters.string\_filter.StringFilter method}, \hyperpage{4}
+
+  \indexspace
+  \bigletter U
+  \item \spxentry{update\_applier()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{4}
+
+  \indexspace
+  \bigletter V
+  \item \spxentry{vectorize\_text()}\spxextra{filters.string\_filter.StringFilter method}, 
+		\hyperpage{4}
+  \item \spxentry{vectorizer}\spxextra{filters.string\_filter.StringFilter attribute}, 
+		\hyperpage{4}
+  \item \spxentry{verbose}\spxextra{filters.string\_filter.StringFilter attribute}, \hyperpage{4}
+
+\end{sphinxtheindex}

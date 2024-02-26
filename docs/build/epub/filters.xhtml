@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>filters.string_filter</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8e8a900e" />
+    <link rel="stylesheet" type="text/css" href="_static/epub.css?v=1d6d279e" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=91adb8b6" /> 
+  </head><body>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <section id="filters-string-filter">
+<h1>filters.string_filter</h1>
+<section id="module-filters.string_filter">
+<span id="overview"></span><h2>Overview</h2>
+<p>Defines the StringFilter class which is used to filter Mattermost messages</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">filters.string_filter.</span></span><span class="sig-name descname"><span class="pre">StringFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acronyms_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drain_config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>This is a conceptual class representation of a simple BLE device
+(GATT Server). It is essentially an extended combination of the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">bluepy.btle.Peripheral</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">bluepy.btle.ScanEntry</span></code> classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (class:<cite>simpleble.SimpleBleClient</cite>) – A handle to the <code class="xref py py-class docutils literal notranslate"><span class="pre">simpleble.SimpleBleClient</span></code> client
+object that detected the device</p></li>
+<li><p><strong>addr</strong> (<em>str</em><em>, </em><em>optional</em>) – Device MAC address, defaults to None</p></li>
+<li><p><strong>addrType</strong> (<em>str</em><em>, </em><em>optional</em>) – Device address type - one of ADDR_TYPE_PUBLIC or
+ADDR_TYPE_RANDOM, defaults to ADDR_TYPE_PUBLIC</p></li>
+<li><p><strong>iface</strong> (<em>int</em><em>, </em><em>optional</em>) – Bluetooth interface number (0 = /dev/hci0) used for the
+connection, defaults to 0</p></li>
+<li><p><strong>data</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of tuples (adtype, description, value) containing the
+AD type code, human-readable description and value for all available
+advertising data items, defaults to None</p></li>
+<li><p><strong>rssi</strong> (<em>int</em><em>, </em><em>optional</em>) – Received Signal Strength Indication for the last received
+broadcast from the device. This is an integer value measured in dB,
+where 0 dB is the maximum (theoretical) signal strength, and more
+negative numbers indicate a weaker signal, defaults to 0</p></li>
+<li><p><strong>connectable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the device supports connections, and <cite>False</cite>
+otherwise (typically used for advertising ‘beacons’).,
+defaults to <cite>False</cite></p></li>
+<li><p><strong>updateCount</strong> (<em>int</em><em>, </em><em>optional</em>) – Integer count of the number of advertising packets
+received from the device so far, defaults to 0</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.acronym_mapping">
+<span class="sig-name descname"><span class="pre">acronym_mapping</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em></dt>
+<dd><p>Mapping of acronyms to their meanings from provided CSV</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.applier">
+<span class="sig-name descname"><span class="pre">applier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">PandasLFApplier</span></em></dt>
+<dd><p>Applies functions to Pandas DataFrame</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.class_likelihood">
+<span class="sig-name descname"><span class="pre">class_likelihood</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.6</span></em></dt>
+<dd><p>Threshold for class probabilities</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.drain_config">
+<span class="sig-name descname"><span class="pre">drain_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TemplateMinerConfig</span></em></dt>
+<dd><p>Configuration dictionary from drain3.ini file in cur dir</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.drain_config_path">
+<span class="sig-name descname"><span class="pre">drain_config_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em></dt>
+<dd><p>Path to drain3.ini file as pathlib.Path object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rf'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Return a list of random ingredients as strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kind</strong> (<em>list</em><em>[</em><em>str</em><em>] or </em><em>None</em>) – Optional “kind” of ingredients.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>lumache.InvalidKindError</strong> – If the kind is invalid.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ingredients list.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.filter_result">
+<span class="sig-name descname"><span class="pre">filter_result</span></span></dt>
+<dd><p>Enumeration of categories for each message</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">FilterResult</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.fix_text">
+<span class="sig-name descname"><span class="pre">fix_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span></dt>
+<dd><p>Strips trailing punctuation and replaces acronyms with their meaningful names</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.keyword_register">
+<span class="sig-name descname"><span class="pre">keyword_register</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em></dt>
+<dd><p>Iterable of keywords to strain</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.label_model">
+<span class="sig-name descname"><span class="pre">label_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">LabelModel</span></em></dt>
+<dd><p>Ensemble of labeling models</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.latency_trace">
+<span class="sig-name descname"><span class="pre">latency_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Evaluate the inferencing speed of the classifiers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.load_models">
+<span class="sig-name descname"><span class="pre">load_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Restore models from a directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.max_str_len">
+<span class="sig-name descname"><span class="pre">max_str_len</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd><p>Maximum length of a message</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.min_str_len">
+<span class="sig-name descname"><span class="pre">min_str_len</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd><p>Minimum length of a message</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.mlp">
+<span class="sig-name descname"><span class="pre">mlp</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">MLPClassifier(alpha=1,</span> <span class="pre">max_iter=1000)</span></em></dt>
+<dd><p>Simple MLP classifier for ensemble of weak learners</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.msg_len_cutoff">
+<span class="sig-name descname"><span class="pre">msg_len_cutoff</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em></dt>
+<dd><p>Number of characters in a message to define a short mesasge</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span></dt>
+<dd><p>Predict the labels for a supplied Pandas data frame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.print_weak_learner_info">
+<span class="sig-name descname"><span class="pre">print_weak_learner_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l_train</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Prints the weak learners collisions, etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.register_keywords">
+<span class="sig-name descname"><span class="pre">register_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_lowercase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Register new keywords to be used in the labeling functions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.register_new_labeling_fn">
+<span class="sig-name descname"><span class="pre">register_new_labeling_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">LabelingFunction</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Register any new labeling functions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.replace_acronyms">
+<span class="sig-name descname"><span class="pre">replace_acronyms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span></dt>
+<dd><p>Replace acronyms with their meaningful names</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.rf">
+<span class="sig-name descname"><span class="pre">rf</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">RandomForestClassifier()</span></em></dt>
+<dd><p>Random forest classifier for ensemble of weak learners</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.salutations">
+<span class="sig-name descname"><span class="pre">salutations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['hello',</span> <span class="pre">'hola',</span> <span class="pre">'aloha',</span> <span class="pre">'mornin',</span> <span class="pre">'ello</span> <span class="pre">govna',</span> <span class="pre">'good</span> <span class="pre">morning',</span> <span class="pre">'good</span> <span class="pre">evening',</span> <span class="pre">'good</span> <span class="pre">night',</span> <span class="pre">'good</span> <span class="pre">&lt;:*:&gt;',</span> <span class="pre">'hey</span> <span class="pre">&lt;:*:&gt;',</span> <span class="pre">'hi</span> <span class="pre">&lt;:*:&gt;',</span> <span class="pre">'haha</span> <span class="pre">&lt;:*:&gt;']</span></em></dt>
+<dd><p>List of salutations to filter</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.save_models">
+<span class="sig-name descname"><span class="pre">save_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path_stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Save trained models to directory with a random uuid to prevent collisions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.save_template_miner_cluster_information">
+<span class="sig-name descname"><span class="pre">save_template_miner_cluster_information</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Save template miner clusters to a JSON for analysis</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.set_string_len_bounds">
+<span class="sig-name descname"><span class="pre">set_string_len_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Set the lower and upper bounds for the string length labeling function</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.stage_one_test_data">
+<span class="sig-name descname"><span class="pre">stage_one_test_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd><p>Data used to test stage one</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.stage_one_train">
+<span class="sig-name descname"><span class="pre">stage_one_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Train the MLP and RF on the reserved stage one training data</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.stage_one_train_data">
+<span class="sig-name descname"><span class="pre">stage_one_train_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd><p>Data used to train stage one</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.stage_two_test_data">
+<span class="sig-name descname"><span class="pre">stage_two_test_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd><p>Data used to test stage two</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.stage_two_train">
+<span class="sig-name descname"><span class="pre">stage_two_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Train the ensemble on the reserved stage two training data</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.stage_two_train_data">
+<span class="sig-name descname"><span class="pre">stage_two_train_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd><p>Data used to train stage two</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.template_miner">
+<span class="sig-name descname"><span class="pre">template_miner</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TemplateMiner</span></em></dt>
+<dd><p>Drain3 template miner to convert log messages to cluster templates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.template_miner_transform">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">template_miner_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TemplateMiner</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Helper function to transform messages into their cluster templates</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.trace_mode">
+<span class="sig-name descname"><span class="pre">trace_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd><p>Toggle tracing mode</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.trace_stack">
+<span class="sig-name descname"><span class="pre">trace_stack</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em></dt>
+<dd><p>Retain performance metrics for each classifier</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_conf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">serialize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Trains both the first and second stages</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.train_template_miner">
+<span class="sig-name descname"><span class="pre">train_template_miner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Train the drain3 template miner first on all available data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_fun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MLPClassifier</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SVC</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">RandomForestClassifier</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span></dt>
+<dd><p>Generic prediction function that calls the predict method of the supplied callable</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.update_applier">
+<span class="sig-name descname"><span class="pre">update_applier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Update applier with new lists</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.vectorize_text">
+<span class="sig-name descname"><span class="pre">vectorize_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span></dt>
+<dd><p>Helper function to vectorize the messages in a pandas Series</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.vectorizer">
+<span class="sig-name descname"><span class="pre">vectorizer</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountVectorizer()</span></em></dt>
+<dd><p>Coverts messages to a sparse matrix of token counts</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="filters.string_filter.StringFilter.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em></dt>
+<dd><p>Whether to print diagnostic information to stdout</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
