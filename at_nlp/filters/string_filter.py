@@ -2,23 +2,26 @@
 import logging
 import os
 import sys
+
 # import csv
 import uuid
 import json
 import time
 import traceback
+
 # import inspect
 from collections import defaultdict
 from string import punctuation
 from functools import partial
 from pathlib import Path
 from enum import Enum
-from typing import Union, List, Dict, Callable, Optional
+from typing import Union, List, Dict, Callable, Optional, get_type_hints
 
 import joblib
 import pandas as pd
 import dask.dataframe as dd
 import numpy as np
+
 # import rich
 from tqdm import tqdm
 
@@ -68,9 +71,29 @@ class StringFilter:
 
     """
 
-
-
-
+    """
+    ---------------------------------------------
+    Pre-processor Add/Delete/Update Methods
+    ---------------------------------------------
+    Labeling Add/Delete/Update Methods
+        1. Generic labeling function
+        2. Sklearn labeling function
+        3. Delete labeling function
+        4. Update labeling function
+    ---------------------------------------------
+    Training Methods
+        1. Train template miner
+        2. Train weak learners
+        3. Train ensemble learners
+    ---------------------------------------------
+    Execute Methods
+        1. Call template miner
+        2. Call pre-processors
+        3. Call Ensemble
+    ---------------------------------------------
+    Save/Load Methods
+    ---------------------------------------------
+    """
 
     mlp = MLPClassifier(alpha=1, max_iter=1000)
     """Simple MLP classifier for ensemble of weak learners"""
@@ -81,7 +104,7 @@ class StringFilter:
         "hola",
         "aloha",
         "mornin",  # noqa
-        "ello govna", # noqa
+        "ello govna",  # noqa
         "good morning",
         "good evening",
         "good night",
@@ -128,7 +151,7 @@ class StringFilter:
 
     # TODO: add source dir as a parameter to make importing the CSV and INI files easier
     def __init__(self, verbose=True, model_path: Path = None):
-        self.acronym_mapping: Dict[str, str] = dict()                 # marked for deletion
+        self.acronym_mapping: Dict[str, str] = dict()  # marked for deletion
         """Mapping of acronyms to their meanings from provided CSV"""
         self.filter_result: FilterResult = FilterResult
         """Enumeration of categories for each message"""
@@ -137,7 +160,6 @@ class StringFilter:
         """Coverts messages to a sparse matrix of token counts"""
         self.rf = RandomForestClassifier()
         """Random forest classifier for ensemble of weak learners"""
-
 
         # assert acronyms_path is not None, "Acronyms CSV is required!"
         # assert (
@@ -190,7 +212,7 @@ class StringFilter:
             end_time = time.time()
             if self.trace_mode:
                 total_time = end_time - start_time
-                self.trace_stack['rf'] += total_time
+                self.trace_stack["rf"] += total_time
             return ds_arr
 
         @labeling_function()
@@ -202,7 +224,7 @@ class StringFilter:
             end_time = time.time()
             if self.trace_mode:
                 total_time = end_time - start_time
-                self.trace_stack['mlp'] += total_time
+                self.trace_stack["mlp"] += total_time
             return ds_arr
 
         # @labeling_function()
@@ -235,7 +257,7 @@ class StringFilter:
             end_time = time.time()
             if self.trace_mode:
                 total_time = end_time - start_time
-                self.trace_stack['length'] += total_time
+                self.trace_stack["length"] += total_time
             return r_val
 
         # @labeling_function()
@@ -305,7 +327,7 @@ class StringFilter:
         # self.update_applier()
 
     def register_keywords(
-        self, keywords: List[str], make_lowercase: bool = True
+        self, keywords: list[str], make_lowercase: bool = True
     ) -> None:
         """Register new keywords to be used in the labeling functions"""
         assert len(keywords) != 0, "No keywords supplied!"
@@ -320,21 +342,14 @@ class StringFilter:
         self.min_str_len = lower_bound
         self.max_str_len = upper_bound
 
-    def update_applier(self):
-        """Update applier with new lists"""
-        assert len(self.labeling_functions) != 0, "No labeling functions supplied!"
-        for fn in self.labeling_functions:
-            assert isinstance(
-                fn, LabelingFunction
-            ), f"{fn.__name__} is not a labeling function!"
-        self.applier = PandasLFApplier(self.labeling_functions)
+    # ========================================================================
 
-    def register_csv_preprocessor(
+    def add_csv_preprocessor(
         self,
         csv_path: Path,
         search_idx: int = 0,
         replace_idx: int = 1,
-        order: Optional[int] = None,
+        order: int | None = None,
     ) -> None:
         r"""Registers a CSV file to be used for preprocessing. This is different from
         registering a CSV file for weak learning since we replace the strings
@@ -351,7 +366,7 @@ class StringFilter:
             csv_path (Path): Path to the CSV file.
             search_idx (int): Index of the column containing the string to be replaced (Defaults to 0).
             replace_idx (int): Index of the column containing the replacement string (Defaults to 1).
-            order (int): The position in the call stack to place the preprocessor function.
+            order (int| None): The position in the call stack to place the preprocessor function.
                 The default is None which places the caller at the end of the stack.
 
         Returns:
@@ -362,22 +377,31 @@ class StringFilter:
 
         Example:
             >>> sf = StringFilter()
-            >>> sf.register_csv_preprocessor(Path("replacement_text1.csv"), 0, 1)
-            >>> sf.register_csv_preprocessor(Path("replacement_text2.csv"))
+            >>> sf.add_csv_preprocessor(Path("replacement_text1.csv"), 0, 1)
+            >>> sf.add_csv_preprocessor(Path("replacement_text2.csv"))
         """
         console.log(f"Registering CSV for preprocessing: {csv_path.stem}")
-        assert isinstance(csv_path, Path), "CSV path must be a pathlib.Path object!"
+
+        if not isinstance(csv_path, Path):
+            raise ValueError("CSV path must be a pathlib.Path object.")
+
         assert csv_path.exists(), f"CSV file {csv_path.absolute()} does not exist!"
-        assert search_idx >= 0, "Search index must be greater than or equal to 0!"
-        assert replace_idx >= 0, "Replace index must be greater than or equal to 0!"
-        assert (
-            search_idx != replace_idx
-        ), "Search and replace indices must be different!"
+
         csv_df = pd.DataFrame(pd.read_csv(csv_path))
         num_cols = csv_df.columns.size
-        assert search_idx <= num_cols, "Search index out of range!"
-        assert replace_idx <= num_cols, "Replace index out of range!"
-        assert num_cols > 1, "CSV file must have at least two columns!"
+
+        if num_cols <= 1:
+            raise ValueError("Pandas DataFrame must have at least two columns.")
+
+        if search_idx < 0 or search_idx > num_cols:
+            raise IndexError(f"Search index must be in [0, df.columns.size)")
+
+        if replace_idx < 0 or replace_idx > num_cols:
+            raise IndexError(f"Replacement index must be in [0, df.columns.size)")
+
+        if search_idx == replace_idx:
+            raise IndexError(f"Search/replace indices must be different.")
+
         csv_name = csv_path.stem
         search_col_name = csv_df.columns[search_idx]
         replace_col_name = csv_df.columns[replace_idx]
@@ -396,14 +420,74 @@ class StringFilter:
         preprocessor.__name__ = f"{csv_name}_{preprocessor.__name__}"
         processor_stack_size = len(self._preprocessor_stack)
         if order is None:
-            self.register_preprocessor([(processor_stack_size, preprocessor)])
+            self.add_preprocessor(preprocessor, processor_stack_size)
         else:
-            self.register_preprocessor([(order, preprocessor)])
+            self.add_preprocessor(preprocessor, order)
         console.log(
             f"CSV registered successfully at callstack position: {processor_stack_size}!"
         )
 
-    def register_preprocessor(
+    def add_preprocessor(
+        self,
+        preprocessor: Callable[[pd.Series, int | str], pd.Series],
+        position: int = -1,
+    ) -> None:
+        r"""Adds a preprocessor to the filter. Pre-processors must have the following
+            function signature: (pd.Series, int) -> pd.Series. The second argument of the
+            function is column index or name of the item in the series to operate on.
+
+        Args:
+            preprocessor: A preprocessor function that operates on Pandas Series.
+            position: Index position of the preprocessor in the stack
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: If the preprocessor function is not callable or has the wrong signature.
+
+        Example:
+            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> def make_lower_case(ds: pd.Series, col_idx: int):
+            >>>     s: str = ds.iat[col_idx]
+            >>>     s = s.lower()
+            >>>     ds.iat[col_idx] = s
+            >>>     return ds
+            >>> sf = StringFilter()
+            >>> sf.add_preprocessor(make_lower_case)
+            >>> # sf.add_preprocessor(make_lower_case, 0)
+
+        """
+        if position > len(self._preprocessor_stack):
+            raise IndexError(f"Index {position} larger than the list length.")
+
+        if position < -1:
+            raise IndexError(f"Index {position} is negative.")
+
+        if position == -1:
+            self._preprocessor_stack.append(preprocessor)
+        else:
+            self._preprocessor_stack.insert(position, preprocessor)
+        # type_dict = get_type_hints(preprocessor)
+        # arg1_name = preprocessor.__code__.co_varnames[0]  # noqa
+        # arg2_name = preprocessor.__code__.co_varnames[1]  # noqa
+        #
+        # if arg1_name not in type_dict:
+        #     arg1_type = type_dict[arg1_name]
+        #     if arg1_type != "pandas.core.series.Series":
+        #         raise ValueError(
+        #             "First argument of {} is not a pandas Series."
+        #             % preprocessor.__name__
+        #         )
+        #
+        # if arg2_name not in type_dict:
+        #     arg2_type = type_dict[arg2_name]
+        #     if arg2_type != "int":
+        #         raise ValueError(
+        #             "Second argument of {} is not an int." % preprocessor.__name__
+        #         )
+
+    def add_preprocessors(
         self, fns: list[tuple[int, Callable[[pd.Series, int], pd.Series]]]
     ) -> None:
         r"""Registers one or more preprocessing functions.
@@ -419,7 +503,6 @@ class StringFilter:
             AssertionError: raised if no tuples are supplied, the index is not an integer, or the function is not
                 callable.
         """
-        assert len(fns) != 0, "No preprocessing functions supplied!"
         for fn_tuple in fns:
             idx = fn_tuple[0]
             _fn = fn_tuple[1]
@@ -434,7 +517,7 @@ class StringFilter:
         df: pd.DataFrame,
         col_idx: int = 0,
         use_multi_processing: bool = False,
-        num_processors: int = 2
+        num_processors: int = 2,
     ) -> pd.DataFrame:
         r"""Sequentially execute functions in the preprocessor stack"""
         col_name = df.columns[col_idx]
@@ -458,6 +541,8 @@ class StringFilter:
         for idx, fn in enumerate(self._preprocessor_stack):
             table.add_row(str(idx), fn.__name__, str(type(fn)))
         console.print(table)
+
+    # ========================================================================
 
     def use_random_forest(self, random_forest: RandomForestClassifier) -> None:
         r"""Sets up the StringFilter to use a provided RandomForest Classifier from sklearn
@@ -506,11 +591,15 @@ class StringFilter:
             >>> sf.add_labeling_fn(lf_example)  # noqa
         """
         if not isinstance(labeling_fn, LabelingFunction):
-            raise ValueError(f"Supplied function must be a Snorkel labeling function; got {type(labeling_fn)}")
+            raise ValueError(
+                f"Supplied function must be a Snorkel labeling function; got {type(labeling_fn)}"
+            )
         self._labeling_fns.append(labeling_fn)
 
     # TODO: Finish this function
-    def add_multiple_labeling_fns(self, labeling_fn_list: list[LabelingFunction]) -> None:
+    def add_multiple_labeling_fns(
+        self, labeling_fn_list: list[LabelingFunction]
+    ) -> None:
         r"""Convenience function to add multiple labeling functions to the filter
 
         Args:
@@ -528,12 +617,8 @@ class StringFilter:
             return
         for fn in labeling_fn_list:
             if not isinstance(fn, LabelingFunction):
-
-            assert isinstance(
-                fn, LabelingFunction
-            ), f"{fn.__name__} is not a labeling function!"
-            self.labeling_functions.append(fn)
-        self.update_applier()
+                raise ValueError(f"{fn.__name__} is not a labeling function.")
+            self.add_labeling_fn(fn)
 
     def remove_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
         r"""Remove a labeling function from the filter.
@@ -569,7 +654,9 @@ class StringFilter:
                 try:
                     self._labeling_fns.remove(existing_fn)
                 except ValueError:
-                    logging.warning(f"Labeling function: {labeling_fn} not in the filter")
+                    logging.warning(
+                        f"Labeling function: {labeling_fn} not in the filter"
+                    )
 
     def update_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
         r"""Update an existing labeling function in the filter
@@ -589,30 +676,7 @@ class StringFilter:
         self.remove_labeling_fn(labeling_fn)
         self.add_labeling_fn(labeling_fn)
 
-    def replace_acronyms(self, in_text: str) -> str:
-        """Replace acronyms with their meaningful names"""
-        return " ".join(
-            self.acronym_mapping[x.upper()] if x.upper() in self.acronym_mapping else x
-            for x in in_text.split()
-        )
-
-    def fix_text(self, in_text: str) -> str:
-        if in_text == "":
-            return ""
-
-        end_of_string = in_text[-1]
-        if end_of_string not in punctuation:
-            return self.replace_acronyms(in_text)
-
-        i = 0
-        end_punctuation = ""
-        while end_of_string in punctuation:
-            end_of_string = in_text[-1 - i]
-            end_punctuation = end_of_string + end_punctuation
-            i -= 1
-
-        fixed_text = self.replace_acronyms(in_text.rstrip(punctuation))
-        return fixed_text + end_punctuation
+    # ========================================================================
 
     def vectorize_text(self, ds: pd.Series) -> np.array:
         r"""Helper function to vectorize the messages in a pandas Series"""
@@ -624,7 +688,7 @@ class StringFilter:
     def transform(
         self,
         in_data: np.array,
-        pred_fun: Union[MLPClassifier, SVC, RandomForestClassifier],
+        pred_fun: MLPClassifier | SVC | RandomForestClassifier,
     ) -> np.array:
         """Generic prediction function that calls the predict method of the supplied callable"""
         y_prob = pred_fun.predict_proba(in_data)
@@ -650,13 +714,11 @@ class StringFilter:
 
     def evaluate(
         self,
-        test_data: Union[pd.DataFrame, np.array],
+        test_data: pd.DataFrame | np.array,
         test_labels: pd.Series,
         classifier_id: str = "rf",
     ) -> None:
-        r"""Evaluate trained weak learners.
-
-        """
+        r"""Evaluate trained weak learners."""
         table_title = ""
         match classifier_id:
             case "rf":
@@ -700,7 +762,7 @@ class StringFilter:
         )
         console.print(stats_table)
 
-    def latency_trace(self, test_data: Union[pd.DataFrame, np.array]) -> None:
+    def latency_trace(self, test_data: pd.DataFrame | np.array) -> None:
         """Evaluate the inference speed of the classifiers"""
 
         self.trace_mode = True
@@ -709,11 +771,13 @@ class StringFilter:
 
         # Drain3
         start_drain = time.perf_counter()
-        test_data.loc[:, "Message"] = test_data.apply(self.template_miner_transform, axis=1)
+        test_data.loc[:, "Message"] = test_data.apply(
+            self.template_miner_transform, axis=1
+        )
         end_drain = time.perf_counter()
         drain_time = end_drain - start_drain
         drain_time = drain_time / data_quantity
-        self.trace_stack['drain_time'] = drain_time
+        self.trace_stack["drain_time"] = drain_time
 
         # Applier
         start_apply = time.perf_counter()
@@ -721,7 +785,7 @@ class StringFilter:
         end_apply = time.perf_counter()
         apply_time = end_apply - start_apply
         apply_time = apply_time / data_quantity
-        self.trace_stack['apply_time'] = apply_time
+        self.trace_stack["apply_time"] = apply_time
 
         # Prediction
         prediction_start = time.perf_counter()
@@ -729,7 +793,7 @@ class StringFilter:
         prediction_end = time.perf_counter()
         prediction_time = prediction_end - prediction_start
         prediction_time = prediction_time / data_quantity
-        self.trace_stack['prediction_time'] = prediction_time
+        self.trace_stack["prediction_time"] = prediction_time
 
         console.log(self.trace_stack)
         self.trace_mode = False
@@ -755,7 +819,7 @@ class StringFilter:
         """Prints the weak learners collisions, etc."""
         console.log(LFAnalysis(L=l_train, lfs=self.labeling_functions).lf_summary())
 
-    def stage_one_train(self, in_data: pd.DataFrame, train_config: Dict):
+    def stage_one_train(self, in_data: pd.DataFrame, train_config: dict):
         """Train the MLP and RF on the reserved stage one training data"""
 
         # train vectorizer on entire data set
@@ -767,7 +831,9 @@ class StringFilter:
         df = in_data[:amt]
         training_mask = np.random.rand(len(df)) < split_p
         training_set = df[training_mask]
-        training_set.iloc[:, 11] = training_set.apply(self.template_miner_transform, axis=1)
+        training_set.iloc[:, 11] = training_set.apply(
+            self.template_miner_transform, axis=1
+        )
         self.stage_two_train_data = training_set
         training_set = self.cv.transform(training_set["Message"])
 
@@ -819,7 +885,9 @@ class StringFilter:
         df = in_data[-amt:]
         training_mask = np.random.rand(len(df)) < split_p
         training_set = df[training_mask]
-        training_set.iloc[:, 11] = training_set.apply(self.template_miner_transform, axis=1)
+        training_set.iloc[:, 11] = training_set.apply(
+            self.template_miner_transform, axis=1
+        )
         self.stage_two_train_data = training_set
         test_set = df[~training_mask]
         test_labels = df["labels"][~training_mask]
@@ -911,9 +979,7 @@ class StringFilter:
         console.log("================================================================")
         self.cv = joblib.load(model_dir_path + "/vectorizer.pkl")
         assert isinstance(self.cv, CountVectorizer), msg_factory("Vectorizer")
-        console.log(
-            f"Loading vectorizer from {model_dir_rel + '/vectorizer.pkl'}... ✅"
-        )
+        console.log(f"Loading vectorizer from {model_dir_rel + '/vectorizer.pkl'}... ✅")
         self.template_miner = joblib.load(model_dir_path + "/template_miner.pkl")
         assert isinstance(self.template_miner, TemplateMiner), msg_factory(
             "Template miner"
