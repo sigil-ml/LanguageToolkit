@@ -481,22 +481,6 @@ class StringFilter:
             >>> string_filter.use_random_forest(random_forest)
         """
 
-    def add_labeling_fns(self, labeling_fn_list: list[LabelingFunction]):
-        r"""Register functions that perform labeling operations
-
-            Args:
-                labeling_fn_list (list[LabelingFunction]): List of Snorkel labeling functions
-        """
-        if len(labeling_fn_list) == 0:
-            logging.warning("No labeling functions supplied, skipping registration")
-            exit()
-        for fn in fns:
-            assert isinstance(
-                fn, LabelingFunction
-            ), f"{fn.__name__} is not a labeling function!"
-            self.labeling_functions.append(fn)
-        self.update_applier()
-
     def add_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
         r"""Adds a labeling function to the filter
 
@@ -524,6 +508,32 @@ class StringFilter:
         if not isinstance(labeling_fn, LabelingFunction):
             raise ValueError(f"Supplied function must be a Snorkel labeling function; got {type(labeling_fn)}")
         self._labeling_fns.append(labeling_fn)
+
+    # TODO: Finish this function
+    def add_multiple_labeling_fns(self, labeling_fn_list: list[LabelingFunction]) -> None:
+        r"""Convenience function to add multiple labeling functions to the filter
+
+        Args:
+            labeling_fn_list (list[LabelingFunction]): List of Snorkel labeling functions to be added
+
+        Returns:
+             None
+
+        Raises:
+
+
+        """
+        if len(labeling_fn_list) == 0:
+            logging.warning("No labeling functions supplied, skipping registration")
+            return
+        for fn in labeling_fn_list:
+            if not isinstance(fn, LabelingFunction):
+
+            assert isinstance(
+                fn, LabelingFunction
+            ), f"{fn.__name__} is not a labeling function!"
+            self.labeling_functions.append(fn)
+        self.update_applier()
 
     def remove_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
         r"""Remove a labeling function from the filter.
