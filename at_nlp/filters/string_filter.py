@@ -1,5 +1,5 @@
 """Defines the StringFilter class which is used to filter Mattermost messages"""
-
+import logging
 import os
 import sys
 # import csv
@@ -68,14 +68,10 @@ class StringFilter:
 
     """
 
-    acronym_mapping: Dict[str, str] = dict()
-    """Mapping of acronyms to their meanings from provided CSV"""
-    filter_result: FilterResult = FilterResult
-    """Enumeration of categories for each message"""
-    cv = CountVectorizer()
-    """Coverts messages to a sparse matrix of token counts"""
-    rf = RandomForestClassifier()
-    """Random forest classifier for ensemble of weak learners"""
+
+
+
+
     mlp = MLPClassifier(alpha=1, max_iter=1000)
     """Simple MLP classifier for ensemble of weak learners"""
     class_likelihood = 0.6
@@ -129,10 +125,20 @@ class StringFilter:
     """Maximum length of a message"""
     _preprocessor_stack: list[Callable[[pd.Series, int], pd.Series]] = []
     """Call stack of preprocessing functions"""
-    labeling_functions = []
 
     # TODO: add source dir as a parameter to make importing the CSV and INI files easier
     def __init__(self, verbose=True, model_path: Path = None):
+        self.acronym_mapping: Dict[str, str] = dict()                 # marked for deletion
+        """Mapping of acronyms to their meanings from provided CSV"""
+        self.filter_result: FilterResult = FilterResult
+        """Enumeration of categories for each message"""
+        self._labeling_fns: list[LabelingFunction] = []
+        self.cv = CountVectorizer()
+        """Coverts messages to a sparse matrix of token counts"""
+        self.rf = RandomForestClassifier()
+        """Random forest classifier for ensemble of weak learners"""
+
+
         # assert acronyms_path is not None, "Acronyms CSV is required!"
         # assert (
         #     acronyms_path.exists()
@@ -453,15 +459,80 @@ class StringFilter:
             table.add_row(str(idx), fn.__name__, str(type(fn)))
         console.print(table)
 
-    def register_new_labeling_fn(self, fns: List[LabelingFunction]):
-        """Register any new labeling functions"""
-        assert len(fns) != 0, "No labeling functions supplied!"
+    def use_random_forest(self, random_forest: RandomForestClassifier) -> None:
+        r"""Sets up the StringFilter to use a provided RandomForest Classifier from sklearn
+
+        Args:
+            random_forest (RandomForestClassifier): Sklearn RandomForest Classifier reference
+
+        Returns:
+            None
+
+        Example:
+            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> from sklearn.ensemble import RandomForestClassifier  # noqa
+            >>> random_forest = RandomForestClassifier()  # noqa
+            >>> string_filter = StringFilter()
+            >>> @labeling_function()
+            >>> def new_labeling_function(ds: pd.Series) -> pd.Series:
+                    x = cv.transform(ds)
+                    x =
+            >>>
+            >>> string_filter.use_random_forest(random_forest)
+        """
+
+    def add_labeling_fns(self, labeling_fn_list: list[LabelingFunction]):
+        r"""Register functions that perform labeling operations
+
+            Args:
+                labeling_fn_list (list[LabelingFunction]): List of Snorkel labeling functions
+        """
+        if len(labeling_fn_list) == 0:
+            logging.warning("No labeling functions supplied, skipping registration")
+            exit()
         for fn in fns:
             assert isinstance(
                 fn, LabelingFunction
             ), f"{fn.__name__} is not a labeling function!"
             self.labeling_functions.append(fn)
         self.update_applier()
+
+    def add_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
+        r"""Adds a labeling function to the filter
+
+        Args:
+            labeling_fn (LabelingFunction): A Snorkel labeling function to be used in the ensemble. The labeling
+                function takes in a Panda's Series and returns an integer representing the label. See the provided
+                example for more information.
+        Returns:
+            None
+        Raises:
+            ValueError: If the supplied function is not a Snorkel labeling function
+        Example:
+            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> from snorkel.labeling import LabelingFunction
+            >>> sf = StringFilter()
+            >>> @labeling_function()
+            >>> def lf_example(ds: pd.Series) -> int:
+            >>>     # This function will test for string lengths greater than 10
+            >>>     col_name = "Test"
+            >>>     if len(ds[col_name]) >= 10:
+            >>>         return 1
+            >>>     return 0
+            >>> sf.add_labeling_fn(lf_example)  # noqa
+        """
+        if not isinstance(labeling_fn, LabelingFunction):
+            raise ValueError(f"Supplied function must be a Snorkel labeling function; got {type(labeling_fn)}")
+        self._labeling_fns.append(labeling_fn)
+
+
+    def remove_labeling_fn(self, fn: Callable | int) -> None:
+        r"""Remove a labeling function from the filter.
+
+        Args:
+            fn (Callable | int): List of
+        """
+        pass
 
     def replace_acronyms(self, in_text: str) -> str:
         """Replace acronyms with their meaningful names"""
