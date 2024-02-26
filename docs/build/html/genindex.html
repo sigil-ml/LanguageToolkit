@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 --><title>Index - Athena AIML NLP Tools main documentation</title>
-<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
@@ -202,10 +202,14 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.acronym_mapping">acronym_mapping (at_nlp.filters.string_filter.StringFilter attribute)</a>
 </li>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.applier">applier (at_nlp.filters.string_filter.StringFilter attribute)</a>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.add_labeling_fn">add_labeling_fn() (at_nlp.filters.string_filter.StringFilter method)</a>
+</li>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.add_labeling_fns">add_labeling_fns() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.applier">applier (at_nlp.filters.string_filter.StringFilter attribute)</a>
+</li>
         <li>
     at_nlp.filters.string_filter
 
@@ -222,6 +226,10 @@
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.class_likelihood">class_likelihood (at_nlp.filters.string_filter.StringFilter attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.cv">cv (at_nlp.filters.string_filter.StringFilter attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -318,6 +326,8 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.predict">predict() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.preprocess">preprocess() (at_nlp.filters.string_filter.StringFilter method)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.print_preprocessor_stack">print_preprocessor_stack() (at_nlp.filters.string_filter.StringFilter method)</a>
@@ -336,13 +346,15 @@
 </li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.register_keywords">register_keywords() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.register_new_labeling_fn">register_new_labeling_fn() (at_nlp.filters.string_filter.StringFilter method)</a>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.register_preprocessor">register_preprocessor() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.register_preprocessor">register_preprocessor() (at_nlp.filters.string_filter.StringFilter method)</a>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.remove_labeling_fn">remove_labeling_fn() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.replace_acronyms">replace_acronyms() (at_nlp.filters.string_filter.StringFilter method)</a>
+</li>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.reset">reset() (at_nlp.filters.string_filter.StringFilter class method)</a>
 </li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.rf">rf (at_nlp.filters.string_filter.StringFilter attribute)</a>
 </li>
@@ -413,6 +425,10 @@
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.update_applier">update_applier() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
     </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.use_random_forest">use_random_forest() (at_nlp.filters.string_filter.StringFilter method)</a>
+</li>
+    </ul></td>
   </tr></table>
 </section>
 
@@ -424,8 +440,6 @@
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.vectorizer">vectorizer (at_nlp.filters.string_filter.StringFilter attribute)</a>
-</li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.verbose">verbose (at_nlp.filters.string_filter.StringFilter attribute)</a>
 </li>
     </ul></td>

@@ -7,7 +7,7 @@
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
         <title>String Filter - Athena AIML NLP Tools main documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
@@ -203,37 +203,55 @@
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">at_nlp.filters.string_filter.</span></span><span class="sig-name descname"><span class="pre">StringFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter" title="Link to this definition">#</a></dt>
 <dd><p>This is a conceptual class representation of a simple BLE device
-(GATT Server). It is essentially an extended combination of the
-<code class="xref py py-class docutils literal notranslate"><span class="pre">bluepy.btle.Peripheral</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">bluepy.btle.ScanEntry</span></code> classes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>client</strong> (class:<cite>simpleble.SimpleBleClient</cite>) – A handle to the <code class="xref py py-class docutils literal notranslate"><span class="pre">simpleble.SimpleBleClient</span></code> client
-object that detected the device</p></li>
-<li><p><strong>addr</strong> (<em>str</em><em>, </em><em>optional</em>) – Device MAC address, defaults to None</p></li>
-<li><p><strong>addrType</strong> (<em>str</em><em>, </em><em>optional</em>) – Device address type - one of ADDR_TYPE_PUBLIC or
-ADDR_TYPE_RANDOM, defaults to ADDR_TYPE_PUBLIC</p></li>
-<li><p><strong>iface</strong> (<em>int</em><em>, </em><em>optional</em>) – Bluetooth interface number (0 = /dev/hci0) used for the
-connection, defaults to 0</p></li>
-<li><p><strong>data</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of tuples (adtype, description, value) containing the
-AD type code, human-readable description and value for all available
-advertising data items, defaults to None</p></li>
-<li><p><strong>rssi</strong> (<em>int</em><em>, </em><em>optional</em>) – Received Signal Strength Indication for the last received
-broadcast from the device. This is an integer value measured in dB,
-where 0 dB is the maximum (theoretical) signal strength, and more
-negative numbers indicate a weaker signal, defaults to 0</p></li>
-<li><p><strong>connectable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the device supports connections, and <cite>False</cite>
-otherwise (typically used for advertising ‘beacons’).,
-defaults to <cite>False</cite></p></li>
-<li><p><strong>updateCount</strong> (<em>int</em><em>, </em><em>optional</em>) – Integer count of the number of advertising packets
-received from the device so far, defaults to 0</p></li>
-</ul>
-</dd>
-</dl>
+(GATT Server). It is essentially an extended combination of the</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.acronym_mapping">
-<span class="sig-name descname"><span class="pre">acronym_mapping</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.acronym_mapping" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">acronym_mapping</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.acronym_mapping" title="Link to this definition">#</a></dt>
 <dd><p>Mapping of acronyms to their meanings from provided CSV</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.add_labeling_fn">
+<span class="sig-name descname"><span class="pre">add_labeling_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeling_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LabelingFunction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.add_labeling_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.add_labeling_fn" title="Link to this definition">#</a></dt>
+<dd><p>Adds a labeling function to the filter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>labeling_fn</strong> (<em>LabelingFunction</em>) – A Snorkel labeling function to be used in the ensemble. The labeling
+function takes in a Panda’s Series and returns an integer representing the label. See the provided
+example for more information.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the supplied function is not a Snorkel labeling function</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">at_nlp.filters.string_filter</span> <span class="kn">import</span> <span class="n">StringFilter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snorkel.labeling</span> <span class="kn">import</span> <span class="n">LabelingFunction</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span> <span class="o">=</span> <span class="n">StringFilter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@labeling_function</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">lf_example</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># This function will test for string lengths greater than 10</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">col_name</span> <span class="o">=</span> <span class="s2">&quot;Test&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">col_name</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="k">return</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span><span class="o">.</span><span class="n">add_labeling_fn</span><span class="p">(</span><span class="n">lf_example</span><span class="p">)</span>  <span class="c1"># noqa</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.add_labeling_fns">
+<span class="sig-name descname"><span class="pre">add_labeling_fns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeling_fn_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">LabelingFunction</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.add_labeling_fns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.add_labeling_fns" title="Link to this definition">#</a></dt>
+<dd><p>Register functions that perform labeling operations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>labeling_fn_list</strong> (<em>list</em><em>[</em><em>LabelingFunction</em><em>]</em>) – List of Snorkel labeling functions</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -246,6 +264,12 @@ received from the device so far, defaults to 0</p></li>
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.class_likelihood">
 <span class="sig-name descname"><span class="pre">class_likelihood</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.6</span></em><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.class_likelihood" title="Link to this definition">#</a></dt>
 <dd><p>Threshold for class probabilities</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.cv">
+<span class="sig-name descname"><span class="pre">cv</span></span><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.cv" title="Link to this definition">#</a></dt>
+<dd><p>Coverts messages to a sparse matrix of token counts</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -263,28 +287,13 @@ received from the device so far, defaults to 0</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rf'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.evaluate" title="Link to this definition">#</a></dt>
-<dd><p>Return a list of random ingredients as strings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>kind</strong> (<em>list</em><em>[</em><em>str</em><em>] or </em><em>None</em>) – Optional “kind” of ingredients.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lumache.InvalidKindError</strong> – If the kind is invalid.</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The ingredients list.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[str]</p>
-</dd>
-</dl>
+<dd><p>Evaluate trained weak learners.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.filter_result">
-<span class="sig-name descname"><span class="pre">filter_result</span></span><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.filter_result" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">filter_result</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FilterResult</span></em><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.filter_result" title="Link to this definition">#</a></dt>
 <dd><p>Enumeration of categories for each message</p>
-<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">FilterResult</span></code></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -302,7 +311,7 @@ received from the device so far, defaults to 0</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.latency_trace">
 <span class="sig-name descname"><span class="pre">latency_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.latency_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.latency_trace" title="Link to this definition">#</a></dt>
-<dd><p>Evaluate the inferencing speed of the classifiers</p>
+<dd><p>Evaluate the inference speed of the classifiers</p>
 </dd></dl>
 
 <dl class="py method">
@@ -332,13 +341,19 @@ received from the device so far, defaults to 0</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.msg_len_cutoff">
 <span class="sig-name descname"><span class="pre">msg_len_cutoff</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.msg_len_cutoff" title="Link to this definition">#</a></dt>
-<dd><p>Number of characters in a message to define a short mesasge</p>
+<dd><p>Number of characters in a message to define a short message</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.predict" title="Link to this definition">#</a></dt>
 <dd><p>Predict the labels for a supplied Pandas data frame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_multi_processing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_processors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.preprocess" title="Link to this definition">#</a></dt>
+<dd><p>Sequentially execute functions in the preprocessor stack</p>
 </dd></dl>
 
 <dl class="py method">
@@ -355,9 +370,9 @@ received from the device so far, defaults to 0</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.register_csv_preprocessor">
-<span class="sig-name descname"><span class="pre">register_csv_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.register_csv_preprocessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.register_csv_preprocessor" title="Link to this definition">#</a></dt>
-<dd><p>Registers a CSV file to be used for preprocessing. This is different than
-the registering a CSV file for weak learning since we replace the strings
+<span class="sig-name descname"><span class="pre">register_csv_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.register_csv_preprocessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.register_csv_preprocessor" title="Link to this definition">#</a></dt>
+<dd><p>Registers a CSV file to be used for preprocessing. This is different from
+registering a CSV file for weak learning since we replace the strings
 before the weak learners are trained and applied. If you wish to use the CSV
 for weak learning then use the <code class="xref py py-meth docutils literal notranslate"><span class="pre">register_csv_weak_learner()</span></code> method instead.</p>
 <div class="admonition note">
@@ -373,6 +388,8 @@ CSV file is not necessary.</p>
 <li><p><strong>csv_path</strong> (<em>Path</em>) – Path to the CSV file.</p></li>
 <li><p><strong>search_idx</strong> (<em>int</em>) – Index of the column containing the string to be replaced (Defaults to 0).</p></li>
 <li><p><strong>replace_idx</strong> (<em>int</em>) – Index of the column containing the replacement string (Defaults to 1).</p></li>
+<li><p><strong>order</strong> (<em>int</em>) – The position in the call stack to place the preprocessor function.
+The default is None which places the caller at the end of the stack.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -383,7 +400,8 @@ CSV file is not necessary.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span><span class="o">.</span><span class="n">register_csv_preprocessor</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;replacement_text1.csv&quot;</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span> <span class="o">=</span> <span class="n">StringFilter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span><span class="o">.</span><span class="n">register_csv_preprocessor</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;replacement_text1.csv&quot;</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span><span class="o">.</span><span class="n">register_csv_preprocessor</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;replacement_text2.csv&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -396,14 +414,8 @@ CSV file is not necessary.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.register_new_labeling_fn">
-<span class="sig-name descname"><span class="pre">register_new_labeling_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">LabelingFunction</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.register_new_labeling_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.register_new_labeling_fn" title="Link to this definition">#</a></dt>
-<dd><p>Register any new labeling functions</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.register_preprocessor">
-<span class="sig-name descname"><span class="pre">register_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.register_preprocessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.register_preprocessor" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">register_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.register_preprocessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.register_preprocessor" title="Link to this definition">#</a></dt>
 <dd><p>Registers one or more preprocessing functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -414,11 +426,30 @@ in the call stack the function should be placed and the function itself.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>AssertionError</strong> – raised if no tuples are supplied, the index is not an integer, or the function is not callable.</p>
+<dd class="field-odd"><p><strong>AssertionError</strong> – raised if no tuples are supplied, the index is not an integer, or the function is not
+    callable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.remove_labeling_fn">
+<span class="sig-name descname"><span class="pre">remove_labeling_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LabelingFunction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.remove_labeling_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.remove_labeling_fn" title="Link to this definition">#</a></dt>
+<dd><p>Remove a labeling function from the filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn</strong> (<em>LabelingFunction</em>) – Labeling function to remove from the filter</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the labeling function is not in the filter</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span><span class="o">.</span><span class="n">register_preprocessor</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">())])</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">at_nlp.filters.string_filter</span> <span class="kn">import</span> <span class="n">StringFilter</span>
+<span class="gp">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -429,9 +460,25 @@ in the call stack the function should be placed and the function itself.</p>
 <dd><p>Replace acronyms with their meaningful names</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.reset">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.reset" title="Link to this definition">#</a></dt>
+<dd><p>Reset the class to its default state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span> <span class="o">=</span> <span class="n">StringFilter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sf</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.rf">
-<span class="sig-name descname"><span class="pre">rf</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">RandomForestClassifier()</span></em><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.rf" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">rf</span></span><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.rf" title="Link to this definition">#</a></dt>
 <dd><p>Random forest classifier for ensemble of weak learners</p>
 </dd></dl>
 
@@ -503,7 +550,7 @@ in the call stack the function should be placed and the function itself.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.template_miner_transform">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">template_miner_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TemplateMiner</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.template_miner_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.template_miner_transform" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">template_miner_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TemplateMiner</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.template_miner_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.template_miner_transform" title="Link to this definition">#</a></dt>
 <dd><p>Helper function to transform messages into their cluster templates</p>
 </dd></dl>
 
@@ -544,15 +591,36 @@ in the call stack the function should be placed and the function itself.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.use_random_forest">
+<span class="sig-name descname"><span class="pre">use_random_forest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_forest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RandomForestClassifier</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.use_random_forest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.use_random_forest" title="Link to this definition">#</a></dt>
+<dd><p>Sets up the StringFilter to use a provided RandomForest Classifier from sklearn</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>random_forest</strong> (<em>RandomForestClassifier</em>) – Sklearn RandomForest Classifier reference</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">at_nlp.filters.string_filter</span> <span class="kn">import</span> <span class="n">StringFilter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>  <span class="c1"># noqa</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">random_forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>  <span class="c1"># noqa</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">string_filter</span> <span class="o">=</span> <span class="n">StringFilter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@labeling_function</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">new_labeling_function</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="go">        x = cv.transform(ds)</span>
+<span class="go">        x =</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">string_filter</span><span class="o">.</span><span class="n">use_random_forest</span><span class="p">(</span><span class="n">random_forest</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.vectorize_text">
 <span class="sig-name descname"><span class="pre">vectorize_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/string_filter.html#StringFilter.vectorize_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.vectorize_text" title="Link to this definition">#</a></dt>
 <dd><p>Helper function to vectorize the messages in a pandas Series</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="at_nlp.filters.string_filter.StringFilter.vectorizer">
-<span class="sig-name descname"><span class="pre">vectorizer</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountVectorizer()</span></em><a class="headerlink" href="#at_nlp.filters.string_filter.StringFilter.vectorizer" title="Link to this definition">#</a></dt>
-<dd><p>Coverts messages to a sparse matrix of token counts</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -625,8 +693,11 @@ in the call stack the function should be placed and the function itself.</p>
 <li><a class="reference internal" href="#module-at_nlp.filters.string_filter">Overview</a><ul>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter"><code class="docutils literal notranslate"><span class="pre">StringFilter</span></code></a><ul>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.acronym_mapping"><code class="docutils literal notranslate"><span class="pre">StringFilter.acronym_mapping</span></code></a></li>
+<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.add_labeling_fn"><code class="docutils literal notranslate"><span class="pre">StringFilter.add_labeling_fn()</span></code></a></li>
+<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.add_labeling_fns"><code class="docutils literal notranslate"><span class="pre">StringFilter.add_labeling_fns()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.applier"><code class="docutils literal notranslate"><span class="pre">StringFilter.applier</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.class_likelihood"><code class="docutils literal notranslate"><span class="pre">StringFilter.class_likelihood</span></code></a></li>
+<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.cv"><code class="docutils literal notranslate"><span class="pre">StringFilter.cv</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.drain_config"><code class="docutils literal notranslate"><span class="pre">StringFilter.drain_config</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.drain_config_path"><code class="docutils literal notranslate"><span class="pre">StringFilter.drain_config_path</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.evaluate"><code class="docutils literal notranslate"><span class="pre">StringFilter.evaluate()</span></code></a></li>
@@ -640,13 +711,15 @@ in the call stack the function should be placed and the function itself.</p>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.mlp"><code class="docutils literal notranslate"><span class="pre">StringFilter.mlp</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.msg_len_cutoff"><code class="docutils literal notranslate"><span class="pre">StringFilter.msg_len_cutoff</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.predict"><code class="docutils literal notranslate"><span class="pre">StringFilter.predict()</span></code></a></li>
+<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.preprocess"><code class="docutils literal notranslate"><span class="pre">StringFilter.preprocess()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.print_preprocessor_stack"><code class="docutils literal notranslate"><span class="pre">StringFilter.print_preprocessor_stack()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.print_weak_learner_info"><code class="docutils literal notranslate"><span class="pre">StringFilter.print_weak_learner_info()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.register_csv_preprocessor"><code class="docutils literal notranslate"><span class="pre">StringFilter.register_csv_preprocessor()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.register_keywords"><code class="docutils literal notranslate"><span class="pre">StringFilter.register_keywords()</span></code></a></li>
-<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.register_new_labeling_fn"><code class="docutils literal notranslate"><span class="pre">StringFilter.register_new_labeling_fn()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.register_preprocessor"><code class="docutils literal notranslate"><span class="pre">StringFilter.register_preprocessor()</span></code></a></li>
+<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.remove_labeling_fn"><code class="docutils literal notranslate"><span class="pre">StringFilter.remove_labeling_fn()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.replace_acronyms"><code class="docutils literal notranslate"><span class="pre">StringFilter.replace_acronyms()</span></code></a></li>
+<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.reset"><code class="docutils literal notranslate"><span class="pre">StringFilter.reset()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.rf"><code class="docutils literal notranslate"><span class="pre">StringFilter.rf</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.salutations"><code class="docutils literal notranslate"><span class="pre">StringFilter.salutations</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.save_models"><code class="docutils literal notranslate"><span class="pre">StringFilter.save_models()</span></code></a></li>
@@ -666,8 +739,8 @@ in the call stack the function should be placed and the function itself.</p>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.train_template_miner"><code class="docutils literal notranslate"><span class="pre">StringFilter.train_template_miner()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.transform"><code class="docutils literal notranslate"><span class="pre">StringFilter.transform()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.update_applier"><code class="docutils literal notranslate"><span class="pre">StringFilter.update_applier()</span></code></a></li>
+<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.use_random_forest"><code class="docutils literal notranslate"><span class="pre">StringFilter.use_random_forest()</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.vectorize_text"><code class="docutils literal notranslate"><span class="pre">StringFilter.vectorize_text()</span></code></a></li>
-<li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.vectorizer"><code class="docutils literal notranslate"><span class="pre">StringFilter.vectorizer</span></code></a></li>
 <li><a class="reference internal" href="#at_nlp.filters.string_filter.StringFilter.verbose"><code class="docutils literal notranslate"><span class="pre">StringFilter.verbose</span></code></a></li>
 </ul>
 </li>

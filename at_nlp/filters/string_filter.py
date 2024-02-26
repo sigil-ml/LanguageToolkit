@@ -525,14 +525,59 @@ class StringFilter:
             raise ValueError(f"Supplied function must be a Snorkel labeling function; got {type(labeling_fn)}")
         self._labeling_fns.append(labeling_fn)
 
-
-    def remove_labeling_fn(self, fn: Callable | int) -> None:
+    def remove_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
         r"""Remove a labeling function from the filter.
 
         Args:
-            fn (Callable | int): List of
+            labeling_fn (LabelingFunction): Labeling function to remove from the filter
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: If the labeling function is not in the filter
+
+        Example:
+            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> from snorkel.labeling import LabelingFunction
+            >>> sf = StringFilter()
+            >>> # Define a labeling function
+            >>> @labeling_function()
+            >>> def lf_example(ds: pd.Series) -> int:
+            >>>     # This function will test for string lengths greater than 10
+            >>>     col_name = "Test"
+            >>>     if len(ds[col_name]) >= 10:
+            >>>         return 1
+            >>>     return 0
+            >>> sf.add_labeling_fn(lf_example)  # noqa
+            >>> # Remove the previously added labeling function
+            >>> sf.remove_labeling_fn(lf_example)  # noqa
         """
-        pass
+        for existing_fn in self._labeling_fns:
+            # Snorkel's labeling function does not have a _eq_ method, fallback to using __name__
+            if existing_fn.__name__ == labeling_fn.__name__:
+                try:
+                    self._labeling_fns.remove(existing_fn)
+                except ValueError:
+                    logging.warning(f"Labeling function: {labeling_fn} not in the filter")
+
+    def update_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
+        r"""Update an existing labeling function in the filter
+
+        Args:
+            labeling_fn (LabelingFunction): Updated labeling function
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: If the labeling function is not in the filter
+
+        Example:
+            >>> from at_nlp.filters.string_filter import StringFilter
+        """
+        self.remove_labeling_fn(labeling_fn)
+        self.add_labeling_fn(labeling_fn)
 
     def replace_acronyms(self, in_text: str) -> str:
         """Replace acronyms with their meaningful names"""
