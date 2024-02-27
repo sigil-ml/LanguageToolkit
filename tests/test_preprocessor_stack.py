@@ -136,7 +136,7 @@ class TestCSVPreprocessor:
             empty_stack.add_csv_preprocessor(self.csv_path, replace_idx=-1)
 
     def test_csv_search_eq_replace_idx(self, empty_stack):
-        with pytest.raises(IndexError):
+        with pytest.raises(AssertionError):
             empty_stack.add_csv_preprocessor(self.csv_path, search_idx=0, replace_idx=0)
 
     def test_csv_too_large_search_idx(self, empty_stack):
@@ -167,6 +167,6 @@ class TestCSVPreprocessor:
             return ds
 
         full_stack.update(t_preprocessor_fn1)
-        assert old_code != full_stack[-1].__code__.co_code  # noqa
+        assert old_code != full_stack[1].__code__.co_code  # noqa
 
     # TODO: Add Call Tests

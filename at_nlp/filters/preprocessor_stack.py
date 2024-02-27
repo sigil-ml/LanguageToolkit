@@ -243,9 +243,10 @@ class PreprocessorStack:
             >>>     return ds
             >>> stack.update(example_preprocessor)
         """
-        # TODO: keep index of original preprocessor
-        self.remove(preprocessor)
-        self.add(preprocessor)
+        for idx, fn in enumerate(self._stack):
+            if preprocessor.__name__ == fn.__name__:
+                self.remove(preprocessor)
+                self.add(preprocessor, idx - 1)
 
     def __call__(
             self,
