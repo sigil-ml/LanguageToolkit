@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Black">
-    <option name="enabledOnSave" value="true" />
-    <option name="sdkName" value="topic-model" />
+    <option name="sdkName" value="/home/dwalker/mambaforge/envs/topic-model" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="topic-model" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="/home/dwalker/mambaforge/envs/topic-model" project-jdk-type="Python SDK" />
+  <component name="PythonCompatibilityInspectionAdvertiser">
+    <option name="version" value="3" />
+  </component>
 </project>

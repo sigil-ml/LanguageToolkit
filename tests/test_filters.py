@@ -1,165 +1,165 @@
-from pathlib import Path
-import pytest
-import pandas as pd
-from at_nlp.filters.string_filter import StringFilter
-
-
-TEST_MSGS = ["1", "22", "333", "4444", "55555", "666666", "7777777" "hello", "hola"]
-
-# acronyms_path = Path("../../../nitmre/data/acronyms.csv")
-# assert acronyms_path.exists(), "Cannot find acronyms data"
-# drain3_conf = Path(
-#     "/Users/dalton/dev/SIGIL/natural_language_processing/at_nlp/at_nlp/filters/drain3.ini"
-# )
-# assert drain3_conf.exists(), "Cannot find drain3.ini"
-
-# test_data = pd.DataFrame(TEST_MSGS, columns=["Message"])
-# sf = StringFilter()
-# sf.load_models(
-#     Path(
-#         "/Users/dalton/dev/SIGIL/natural_language_processing/at_nlp/at_nlp/filters/test_model9345"
+# from pathlib import Path
+# import pytest
+# import pandas as pd
+# from at_nlp.filters.string_filter import StringFilter
+#
+#
+# TEST_MSGS = ["1", "22", "333", "4444", "55555", "666666", "7777777" "hello", "hola"]
+#
+# # acronyms_path = Path("../../../nitmre/data/acronyms.csv")
+# # assert acronyms_path.exists(), "Cannot find acronyms data"
+# # drain3_conf = Path(
+# #     "/Users/dalton/dev/SIGIL/natural_language_processing/at_nlp/at_nlp/filters/drain3.ini"
+# # )
+# # assert drain3_conf.exists(), "Cannot find drain3.ini"
+#
+# # test_data = pd.DataFrame(TEST_MSGS, columns=["Message"])
+# # sf = StringFilter()
+# # sf.load_models(
+# #     Path(
+# #         "/Users/dalton/dev/SIGIL/natural_language_processing/at_nlp/at_nlp/filters/test_model9345"
+# #     )
+# # )
+#
+#
+# # TODO: Add preprocess calls
+# class TestCSVPreprocessor:
+#     csv_path = Path("./tests/test.csv").absolute()
+#     test_df = pd.DataFrame(
+#         [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
+#         columns=["id", "text"],
 #     )
-# )
-
-
-# TODO: Add preprocess calls
-class TestCSVPreprocessor:
-    csv_path = Path("./tests/test.csv").absolute()
-    test_df = pd.DataFrame(
-        [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
-        columns=["id", "text"],
-    )
-    true_df = pd.DataFrame(
-        [
-            [0, "test"],
-            [1, "test2"],
-            [2, "Comma-seperated Values"],
-            [3, "test3"],
-            [4, "A Programming Language"],
-        ],
-        columns=["id", "text"],
-    )
-
-    @pytest.fixture
-    def sf(self):
-        _filter = StringFilter()
-        _filter.reset()
-        yield _filter
-
-    def test_csv_register_full(self, sf):
-        sf.register_csv_preprocessor(self.csv_path, 0, 1)
-        assert sf.test_data is not None, "CSV data not loaded"
-        assert (
-            sf._preprocessor_stack[-1].__name__ == "test_preprocessor"
-        ), "Preprocessor not registered"
-        assert callable(sf._preprocessor_stack[-1]), "Preprocessor not callable"
-
-    def test_csv_register_partial(self, sf):
-        sf.register_csv_preprocessor(self.csv_path)
-        assert sf.test_data is not None, "CSV data not loaded"
-        assert (
-            sf._preprocessor_stack[-1].__name__ == "test_preprocessor"
-        ), "Preprocessor not registered"
-        assert callable(sf._preprocessor_stack[-1]), "Preprocessor not callable"
-
-    def test_csv_partial_ordering_start(self, sf):
-        sf.register_csv_preprocessor(self.csv_path, order=0)
-        assert (
-            sf._preprocessor_stack[0].__name__ == "test_preprocessor"
-        ), "Order is incorrect!"
-
-    def test_csv_partial_ordering_end(self, sf):
-        def l1(x):
-            return x + 1
-
-        def l2(x):
-            return x + 2
-
-        sf.register_preprocessor([(0, l1), (1, l2)])
-        sf.register_csv_preprocessor(self.csv_path, order=-1)
-        assert (
-            sf._preprocessor_stack[-1].__name__ == "test_preprocessor"
-        ), "Order is incorrect!"
-
-    def test_csv_partial_ordering_end2(self, sf):
-        def l1(x):
-            return x + 1
-
-        def l2(x):
-            return x + 2
-
-        sf.register_preprocessor([(0, l1), (1, l2)])
-        sf.register_csv_preprocessor(self.csv_path)
-        assert (
-            sf._preprocessor_stack[-1].__name__ == "test_preprocessor"
-        ), "Order is incorrect!"
-
-    def test_csv_non_int_order(self, sf):
-        with pytest.raises(TypeError):
-            sf.register_csv_preprocessor(self.csv_path, order=0.1)
-
-    def test_csv_non_int_search_idx(self, sf):
-        with pytest.raises(IndexError):
-            sf.register_csv_preprocessor(self.csv_path, search_idx=0.1)
-
-    def test_csv_non_int_replace_idx(self, sf):
-        with pytest.raises(IndexError):
-            sf.register_csv_preprocessor(self.csv_path, replace_idx=0.1)
-
-    def test_csv_non_positive_search_idx(self, sf):
-        with pytest.raises(AssertionError):
-            sf.register_csv_preprocessor(self.csv_path, search_idx=-1)
-
-    def test_csv_non_positive_replace_idx(self, sf):
-        with pytest.raises(AssertionError):
-            sf.register_csv_preprocessor(self.csv_path, replace_idx=-1)
-
-    def test_csv_search_eq_replace_idx(self, sf):
-        with pytest.raises(AssertionError):
-            sf.register_csv_preprocessor(self.csv_path, search_idx=0, replace_idx=0)
-
-    def test_csv_too_large_search_idx(self, sf):
-        with pytest.raises(AssertionError):
-            sf.register_csv_preprocessor(self.csv_path, search_idx=100)
-
-    def test_csv_too_large_replace_idx(self, sf):
-        with pytest.raises(AssertionError):
-            sf.register_csv_preprocessor(self.csv_path, replace_idx=100)
-
-    def test_preprocessor_call_single(self, sf):
-        sf.register_csv_preprocessor(self.csv_path)
-        return_df = sf.preprocess(self.test_df, False, col_idx=1)
-        assert return_df == self.true_df
-
-
-# class TestStringFilterLen:
-#     y_true = np.array([2] * len(TEST_MSGS))
-#     """All items should be recycled besides 7777777"""
-
-#     def test_string_len(self):
-#         y_pred = sf.predict(test_data)
-#         percentage_correct = np.sum(y_pred == self.y_true) / len(self.y_true)
+#     true_df = pd.DataFrame(
+#         [
+#             [0, "test"],
+#             [1, "test2"],
+#             [2, "Comma-seperated Values"],
+#             [3, "test3"],
+#             [4, "A Programming Language"],
+#         ],
+#         columns=["id", "text"],
+#     )
+#
+#     @pytest.fixture
+#     def sf(self):
+#         _filter = StringFilter()
+#         _filter.reset()
+#         yield _filter
+#
+#     def test_csv_register_full(self, sf):
+#         sf.register_csv_preprocessor(self.csv_path, 0, 1)
+#         assert sf.test_data is not None, "CSV data not loaded"
 #         assert (
-#             percentage_correct > 0.9
-#         ), f"String length test failed. Percentage correct: {percentage_correct}"
-
-#     def test_string_bounds(self):
-#         sf.set_string_len_bounds(1, 2)
+#             sf._preprocessor_stack[-1].__name__ == "test_preprocessor"
+#         ), "Preprocessor not registered"
+#         assert callable(sf._preprocessor_stack[-1]), "Preprocessor not callable"
+#
+#     def test_csv_register_partial(self, sf):
+#         sf.register_csv_preprocessor(self.csv_path)
+#         assert sf.test_data is not None, "CSV data not loaded"
 #         assert (
-#             sf.min_str_len == 1 and sf.max_str_len == 2
-#         ), "String bounds not set correctly"
-
-#     def test_string_bounds_ordering(self):
+#             sf._preprocessor_stack[-1].__name__ == "test_preprocessor"
+#         ), "Preprocessor not registered"
+#         assert callable(sf._preprocessor_stack[-1]), "Preprocessor not callable"
+#
+#     def test_csv_partial_ordering_start(self, sf):
+#         sf.register_csv_preprocessor(self.csv_path, order=0)
+#         assert (
+#             sf._preprocessor_stack[0].__name__ == "test_preprocessor"
+#         ), "Order is incorrect!"
+#
+#     def test_csv_partial_ordering_end(self, sf):
+#         def l1(x):
+#             return x + 1
+#
+#         def l2(x):
+#             return x + 2
+#
+#         sf.register_preprocessor([(0, l1), (1, l2)])
+#         sf.register_csv_preprocessor(self.csv_path, order=-1)
+#         assert (
+#             sf._preprocessor_stack[-1].__name__ == "test_preprocessor"
+#         ), "Order is incorrect!"
+#
+#     def test_csv_partial_ordering_end2(self, sf):
+#         def l1(x):
+#             return x + 1
+#
+#         def l2(x):
+#             return x + 2
+#
+#         sf.register_preprocessor([(0, l1), (1, l2)])
+#         sf.register_csv_preprocessor(self.csv_path)
+#         assert (
+#             sf._preprocessor_stack[-1].__name__ == "test_preprocessor"
+#         ), "Order is incorrect!"
+#
+#     def test_csv_non_int_order(self, sf):
+#         with pytest.raises(TypeError):
+#             sf.register_csv_preprocessor(self.csv_path, order=0.1)
+#
+#     def test_csv_non_int_search_idx(self, sf):
+#         with pytest.raises(IndexError):
+#             sf.register_csv_preprocessor(self.csv_path, search_idx=0.1)
+#
+#     def test_csv_non_int_replace_idx(self, sf):
+#         with pytest.raises(IndexError):
+#             sf.register_csv_preprocessor(self.csv_path, replace_idx=0.1)
+#
+#     def test_csv_non_positive_search_idx(self, sf):
 #         with pytest.raises(AssertionError):
-#             sf.set_string_len_bounds(1, 0)
-
-#     def test_string_lowerbound_eq_zero(self):
+#             sf.register_csv_preprocessor(self.csv_path, search_idx=-1)
+#
+#     def test_csv_non_positive_replace_idx(self, sf):
 #         with pytest.raises(AssertionError):
-#             sf.set_string_len_bounds(0, 1)
-
-
-# class TestRegisterKeywords:
-
-#     def test_no_keywords_provided(self):
+#             sf.register_csv_preprocessor(self.csv_path, replace_idx=-1)
+#
+#     def test_csv_search_eq_replace_idx(self, sf):
 #         with pytest.raises(AssertionError):
-#             sf.register_keywords([])
+#             sf.register_csv_preprocessor(self.csv_path, search_idx=0, replace_idx=0)
+#
+#     def test_csv_too_large_search_idx(self, sf):
+#         with pytest.raises(AssertionError):
+#             sf.register_csv_preprocessor(self.csv_path, search_idx=100)
+#
+#     def test_csv_too_large_replace_idx(self, sf):
+#         with pytest.raises(AssertionError):
+#             sf.register_csv_preprocessor(self.csv_path, replace_idx=100)
+#
+#     def test_preprocessor_call_single(self, sf):
+#         sf.register_csv_preprocessor(self.csv_path)
+#         return_df = sf.preprocess(self.test_df, False, col_idx=1)
+#         assert return_df == self.true_df
+#
+#
+# # class TestStringFilterLen:
+# #     y_true = np.array([2] * len(TEST_MSGS))
+# #     """All items should be recycled besides 7777777"""
+#
+# #     def test_string_len(self):
+# #         y_pred = sf.predict(test_data)
+# #         percentage_correct = np.sum(y_pred == self.y_true) / len(self.y_true)
+# #         assert (
+# #             percentage_correct > 0.9
+# #         ), f"String length test failed. Percentage correct: {percentage_correct}"
+#
+# #     def test_string_bounds(self):
+# #         sf.set_string_len_bounds(1, 2)
+# #         assert (
+# #             sf.min_str_len == 1 and sf.max_str_len == 2
+# #         ), "String bounds not set correctly"
+#
+# #     def test_string_bounds_ordering(self):
+# #         with pytest.raises(AssertionError):
+# #             sf.set_string_len_bounds(1, 0)
+#
+# #     def test_string_lowerbound_eq_zero(self):
+# #         with pytest.raises(AssertionError):
+# #             sf.set_string_len_bounds(0, 1)
+#
+#
+# # class TestRegisterKeywords:
+#
+# #     def test_no_keywords_provided(self):
+# #         with pytest.raises(AssertionError):
+# #             sf.register_keywords([])
