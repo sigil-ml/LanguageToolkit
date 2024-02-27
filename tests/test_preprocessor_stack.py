@@ -55,7 +55,7 @@ class TestCSVPreprocessor:
     @pytest.fixture
     def full_stack(self):
         ps = PreprocessorStack()
-        ps.add_multiple([(0, t_preprocessor_fn0), (1, t_preprocessor_fn1), (2, t_preprocessor_fn2)])
+        ps.add_multiple([(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 1), (t_preprocessor_fn2, 2)])
         yield ps
 
     def test_add(self, empty_stack):
@@ -83,11 +83,31 @@ class TestCSVPreprocessor:
         assert callable(empty_stack[-1])
 
     def test_add_multiple(self, empty_stack):
-        empty_stack.add_multiple([(0, t_preprocessor_fn0), (1, t_preprocessor_fn1), (2, t_preprocessor_fn2)])
+        empty_stack.add_multiple([(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 1), (t_preprocessor_fn2, 2)])
         assert len(empty_stack) == 3
         for i in range(3):
             assert empty_stack[i].__name__ == f"t_preprocessor_fn{i}"
             assert callable(empty_stack[i])
+
+    def test_add_multiple_with_error_1(self, empty_stack):
+        with pytest.raises(IndexError):
+            empty_stack.add_multiple([(t_preprocessor_fn0, 0), (t_preprocessor_fn1, -100), (t_preprocessor_fn2, 1)])
+        assert len(empty_stack) == 0
+
+    def test_add_multiple_with_error_2(self, empty_stack):
+        with pytest.raises(IndexError):
+            empty_stack.add_multiple([(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 10000), (t_preprocessor_fn2, 1)])
+        assert len(empty_stack) == 0
+
+    def test_add_multiple_with_error_3(self, empty_stack):
+        with pytest.raises(IndexError):
+            empty_stack.add_multiple([(t_preprocessor_fn0, 0), (t_preprocessor_fn1, "Hello World"), (t_preprocessor_fn2, 1)])
+        assert len(empty_stack) == 0
+
+    def test_add_multiple_with_error_4(self, full_stack):
+        with pytest.raises(IndexError):
+            full_stack.add_multiple([(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 10000), (t_preprocessor_fn2, 1)])
+        assert len(full_stack) == 3
 
     def test_csv_register_full(self, empty_stack):
         empty_stack.add_csv_preprocessor(self.csv_path, 0, 1)

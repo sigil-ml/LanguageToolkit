@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import logging
 from functools import partial
 from pathlib import Path
-from typing import Callable, Iterable, TypeAlias
+from typing import Callable, Iterable, TypeAlias, SupportsIndex
 
 import dask
+from loguru import logger
 
 dask.config.set({'dataframe.query-planning': True})
 import dask.dataframe as dd  # noqa
@@ -15,13 +15,12 @@ from rich.table import Table  # noqa
 
 console = Console()
 
-Preprocessor: TypeAlias = Callable[[pd.Series, int | str], pd.Series]
+Preprocessor: TypeAlias = Callable[[pd.Series, int], pd.Series]
 
 
 class PreprocessorStack:
     r"""The PreprocessorStack is an iterable of preprocessors designed to operate on a dataframe. Each preprocessor
-    takes a single Pandas Series and a column index and returns a Pandas Series. Multiprocessing is available via the
-    'multiprocessing' flag.
+    takes a single Pandas Series and a column index and returns a Pandas Series.
     """
 
     def __init__(self):
@@ -33,9 +32,9 @@ class PreprocessorStack:
             preprocessor: Preprocessor,
             position: int = -1,
     ) -> None:
-        r"""Adds a preprocessor to the filter. Pre-processors must have the following
+        r"""Adds a preprocessor to the stack of preprocessors. Pre-processors must have the following
         function signature: (pd.Series, int) -> pd.Series. The second argument of the
-        function is column index or name of the item in the series to operate on.
+        function is the column index in the series to operate on.
 
         Args:
             preprocessor: A preprocessor function that operates on Pandas Series.
@@ -58,11 +57,14 @@ class PreprocessorStack:
             >>> # stack.add(make_lower_case, 0) # a position can be given in the range [0, len(stack))
 
         """
+        if not isinstance(position, SupportsIndex):
+            raise IndexError(f"Position {position} is not valid for list indexing.")
+
         if position > len(self._stack):
-            raise IndexError(f"Index {position} larger than the list length.")
+            raise IndexError(f"Index {position} larger than number of preprocessor functions.")
 
         if position < -1:
-            raise IndexError(f"Index {position} is negative.")
+            raise IndexError(f"Index {position} should be in range [0, len(stack)).")
 
         if position == -1:
             self._stack.append(preprocessor)
@@ -70,15 +72,15 @@ class PreprocessorStack:
             self._stack.insert(position, preprocessor)
 
     def append(self, preprocessor: Preprocessor) -> None:
-        r"""convenience function that calls add(fn, -1)"""
+        r"""Convenience function that calls add(fn, -1)"""
         self.add(preprocessor, -1)
 
-    def add_multiple(self, preprocessors: Iterable[tuple[int, Preprocessor]]):
-        r"""Adds multiple preprocessors to the stack. Takes in a tuple of indices and preprocessors, using the indices
-        for insertion position.
+    def add_multiple(self, preprocessors: Iterable[tuple[Preprocessor, int]]) -> None:
+        r"""Adds multiple preprocessors to the stack. Takes in an iterable of tuples of indices and preprocessors, 
+        using the indices for insertion position.
 
         Args:
-            preprocessors (Iterable[tuple[int, Callable[[pd.Series, int | str], pd.Series]]]
+            preprocessors (Iterable[tuple[Callable[[pd.Series, int], pd.Series], int]]
 
         Returns:
             None
@@ -88,12 +90,17 @@ class PreprocessorStack:
             >>> stack = PreprocessorStack()
             >>> processor0 = ... # func with signature (pd.Series, int) -> pd.Series
             >>> processor1 = ... # func with signature (pd.Series, int) -> pd.Series
-            >>> stack.add_multiple([(0, processor0), (1, processor1)])
+            >>> stack.add_multiple([(processor0, 0), (processor1, 1)])
         """
+        stack_copy = self._stack.copy()
+
+
         for preprocessor_tuple in preprocessors:
-            idx = preprocessor_tuple[0]
-            preprocessor = preprocessor_tuple[1]
-            self.add(preprocessor, idx)
+            try:
+                self.add(*preprocessor_tuple)
+            except IndexError as e:
+                self._stack = stack_copy
+                raise e
 
     def add_csv_preprocessor(
             self,
@@ -102,11 +109,8 @@ class PreprocessorStack:
             replace_idx: int = 1,
             order: int | None = None,
     ) -> None:
-        r"""Registers a CSV file to be used for preprocessing. This is different from
-        registering a CSV file for weak learning since we replace the strings
-        before the weak learners are trained and applied. If you wish to use the CSV
-        for weak learning then use the :meth:`register_csv_weak_learner` method instead.
-
+        r"""Registers a CSV file to be used for substring replacement preprocessing. 
+                
         Note:
             The CSV file will not be serialized when saving the StringFilter object.
             Internally we will store the search and replacement strings in a dictionary
@@ -132,7 +136,7 @@ class PreprocessorStack:
             >>> stack.add_csv_preprocessor(Path("replacement_text1.csv"), 0, 1)
             >>> stack.add_csv_preprocessor(Path("replacement_text2.csv"))
         """
-        console.log(f"Registering CSV for preprocessing: {csv_path.stem}")
+        logger.warning(f"Registering CSV for preprocessing: {csv_path.stem}")
 
         if not isinstance(csv_path, Path):
             raise ValueError("CSV path must be a pathlib.Path object.")
@@ -175,7 +179,7 @@ class PreprocessorStack:
             self.add(preprocessor, processor_stack_size)
         else:
             self.add(preprocessor, order)
-        console.log(
+        logger.info(
             f"CSV registered successfully at callstack position: {processor_stack_size}!"
         )
 
@@ -211,7 +215,7 @@ class PreprocessorStack:
         try:
             self._stack.remove(preprocessor)
         except ValueError:
-            logging.warning(
+            logger.warning(
                 f"Preprocessing function: {preprocessor} not in the stack."
             )
 
