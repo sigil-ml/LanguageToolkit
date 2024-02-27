@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 --><title>Index - Athena AIML NLP Tools main documentation</title>
-<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
@@ -157,6 +157,7 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="filters.html">String Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessor_stack.html">Preprocessor Stack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrieval_augmented_generation.html">Retrieval Augmented Generation (RAG)</a></li>
 </ul>
 
@@ -202,14 +203,29 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.acronym_mapping">acronym_mapping (at_nlp.filters.string_filter.StringFilter attribute)</a>
 </li>
+        <li><a href="preprocessor_stack.html#at_nlp.filters.preprocessor_stack.PreprocessorStack.add">add() (at_nlp.filters.preprocessor_stack.PreprocessorStack method)</a>
+</li>
+        <li><a href="preprocessor_stack.html#at_nlp.filters.preprocessor_stack.PreprocessorStack.add_csv_preprocessor">add_csv_preprocessor() (at_nlp.filters.preprocessor_stack.PreprocessorStack method)</a>
+</li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.add_labeling_fn">add_labeling_fn() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.add_labeling_fns">add_labeling_fns() (at_nlp.filters.string_filter.StringFilter method)</a>
+        <li><a href="preprocessor_stack.html#at_nlp.filters.preprocessor_stack.PreprocessorStack.add_multiple">add_multiple() (at_nlp.filters.preprocessor_stack.PreprocessorStack method)</a>
+</li>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.add_multiple_labeling_fns">add_multiple_labeling_fns() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="preprocessor_stack.html#at_nlp.filters.preprocessor_stack.PreprocessorStack.append">append() (at_nlp.filters.preprocessor_stack.PreprocessorStack method)</a>
+</li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.applier">applier (at_nlp.filters.string_filter.StringFilter attribute)</a>
 </li>
+        <li>
+    at_nlp.filters.preprocessor_stack
+
+        <ul>
+          <li><a href="preprocessor_stack.html#module-at_nlp.filters.preprocessor_stack">module</a>
+</li>
+        </ul></li>
         <li>
     at_nlp.filters.string_filter
 
@@ -311,6 +327,8 @@
     module
 
         <ul>
+          <li><a href="preprocessor_stack.html#module-at_nlp.filters.preprocessor_stack">at_nlp.filters.preprocessor_stack</a>
+</li>
           <li><a href="filters.html#module-at_nlp.filters.string_filter">at_nlp.filters.string_filter</a>
 </li>
         </ul></li>
@@ -326,11 +344,9 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.predict">predict() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.preprocess">preprocess() (at_nlp.filters.string_filter.StringFilter method)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.print_preprocessor_stack">print_preprocessor_stack() (at_nlp.filters.string_filter.StringFilter method)</a>
+        <li><a href="preprocessor_stack.html#at_nlp.filters.preprocessor_stack.PreprocessorStack">PreprocessorStack (class in at_nlp.filters.preprocessor_stack)</a>
 </li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.print_weak_learner_info">print_weak_learner_info() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
@@ -342,17 +358,13 @@
   <h2>R</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.register_csv_preprocessor">register_csv_preprocessor() (at_nlp.filters.string_filter.StringFilter method)</a>
-</li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.register_keywords">register_keywords() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.register_preprocessor">register_preprocessor() (at_nlp.filters.string_filter.StringFilter method)</a>
+        <li><a href="preprocessor_stack.html#at_nlp.filters.preprocessor_stack.PreprocessorStack.remove">remove() (at_nlp.filters.preprocessor_stack.PreprocessorStack method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.remove_labeling_fn">remove_labeling_fn() (at_nlp.filters.string_filter.StringFilter method)</a>
-</li>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.replace_acronyms">replace_acronyms() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.reset">reset() (at_nlp.filters.string_filter.StringFilter class method)</a>
 </li>
@@ -422,10 +434,12 @@
   <h2>U</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.update_applier">update_applier() (at_nlp.filters.string_filter.StringFilter method)</a>
+        <li><a href="preprocessor_stack.html#at_nlp.filters.preprocessor_stack.PreprocessorStack.update">update() (at_nlp.filters.preprocessor_stack.PreprocessorStack method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.update_labeling_fn">update_labeling_fn() (at_nlp.filters.string_filter.StringFilter method)</a>
+</li>
         <li><a href="filters.html#at_nlp.filters.string_filter.StringFilter.use_random_forest">use_random_forest() (at_nlp.filters.string_filter.StringFilter method)</a>
 </li>
     </ul></td>

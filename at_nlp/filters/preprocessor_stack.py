@@ -250,19 +250,18 @@ class PreprocessorStack:
             self,
             df: pd.DataFrame,
             col_idx: int = 0,
-            use_multi_processing: bool = False,
+            parallel: bool = False,
             num_processors: int = 2,
     ) -> pd.DataFrame:
         r"""Sequentially execute functions in the preprocessor stack"""
-        col_name = df.columns[col_idx]
-        if use_multi_processing:
-            ddf = dd.from_pandas(df, npartitions=num_processors)
-            for _fn in self._stack:
-                partial_fn = partial(_fn, col_idx=col_idx)
-                df = ddf.apply(partial_fn, axis=1, meta=ddf)
-        else:
-            for _fn in self._stack:
-                partial_fn = partial(_fn, col_idx=col_idx)
+        if parallel:
+            df = dd.from_pandas(df, npartitions=num_processors)
+
+        for preprocessor in self._stack:
+            partial_fn = partial(preprocessor, col_idx=col_idx)
+            if parallel:
+                df.apply(partial_fn, axis=1, meta=df)
+            else:
                 df = df.apply(partial_fn, axis=1)
         return df
 
@@ -290,7 +289,7 @@ class PreprocessorStack:
             self._idx = 0
             raise StopIteration
 
-    def __str__(self):
+    def __repr__(self):
         table = Table(title="Preprocessor Callstack", show_lines=True)
         table.add_column("Index")
         table.add_column("Function", style="bold")
@@ -298,3 +297,4 @@ class PreprocessorStack:
         for idx, fn in enumerate(self._stack):
             table.add_row(str(idx), fn.__name__, str(type(fn)))
         console.print(table)
+        return ""

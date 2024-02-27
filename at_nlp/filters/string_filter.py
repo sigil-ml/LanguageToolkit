@@ -1,46 +1,41 @@
 """Defines the StringFilter class which is used to filter Mattermost messages"""
+from __future__ import annotations
+
+import json
 import logging
 import os
 import sys
-
-# import csv
-import uuid
-import json
 import time
 import traceback
-
+# import csv
+import uuid
 # import inspect
 from collections import defaultdict
-from string import punctuation
-from functools import partial
-from pathlib import Path
 from enum import Enum
-from typing import Union, List, Dict, Callable, Optional, get_type_hints
+from pathlib import Path
+from typing import List, Dict, Callable
 
 import joblib
-import pandas as pd
 import numpy as np
-
+import pandas as pd
+from drain3 import TemplateMiner
+from drain3.template_miner_config import TemplateMinerConfig
+from rich.console import Console
+from rich.table import Table
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
+from snorkel.labeling import LFAnalysis
+from snorkel.labeling import PandasLFApplier
+from snorkel.labeling import labeling_function, LabelingFunction
+from snorkel.labeling.model import LabelModel
 # import rich
 from tqdm import tqdm
 
+from at_nlp.filters.preprocessor_stack import PreprocessorStack
+
 # from loguru import logger as log
-
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.svm import SVC
-from sklearn.neural_network import MLPClassifier
-from sklearn.ensemble import RandomForestClassifier
-
-from snorkel.labeling import labeling_function, LabelingFunction
-from snorkel.labeling import PandasLFApplier
-from snorkel.labeling import LFAnalysis
-from snorkel.labeling.model import LabelModel
-
-from drain3 import TemplateMiner
-from drain3.template_miner_config import TemplateMinerConfig
-from rich.table import Table
-from rich.console import Console
-
 
 console = Console()
 
@@ -184,6 +179,7 @@ class StringFilter:
         # self.template_miner = TemplateMiner(None, self.drain_config)
 
         self.keyword_register = []
+        self.preprocessors = PreprocessorStack()
 
         @labeling_function()
         def string_keyword_strainer(ds: pd.Series) -> int:
@@ -326,7 +322,7 @@ class StringFilter:
         # self.update_applier()
 
     def register_keywords(
-        self, keywords: list[str], make_lowercase: bool = True
+            self, keywords: list[str], make_lowercase: bool = True
     ) -> None:
         """Register new keywords to be used in the labeling functions"""
         assert len(keywords) != 0, "No keywords supplied!"
@@ -340,8 +336,6 @@ class StringFilter:
         assert lower_bound > 0, "Lower bound must be greater than 0!"
         self.min_str_len = lower_bound
         self.max_str_len = upper_bound
-
-
 
     # ========================================================================
 
@@ -399,7 +393,7 @@ class StringFilter:
 
     # TODO: Finish this function
     def add_multiple_labeling_fns(
-        self, labeling_fn_list: list[LabelingFunction]
+            self, labeling_fn_list: list[LabelingFunction]
     ) -> None:
         r"""Convenience function to add multiple labeling functions to the filter
 
@@ -487,9 +481,9 @@ class StringFilter:
         return ds_arr
 
     def transform(
-        self,
-        in_data: np.array,
-        pred_fun: MLPClassifier | SVC | RandomForestClassifier,
+            self,
+            in_data: np.array,
+            pred_fun: MLPClassifier | SVC | RandomForestClassifier,
     ) -> np.array:
         """Generic prediction function that calls the predict method of the supplied callable"""
         y_prob = pred_fun.predict_proba(in_data)
@@ -514,10 +508,10 @@ class StringFilter:
         return msg
 
     def evaluate(
-        self,
-        test_data: pd.DataFrame | np.array,
-        test_labels: pd.Series,
-        classifier_id: str = "rf",
+            self,
+            test_data: pd.DataFrame | np.array,
+            test_labels: pd.Series,
+            classifier_id: str = "rf",
     ) -> None:
         r"""Evaluate trained weak learners."""
         table_title = ""
