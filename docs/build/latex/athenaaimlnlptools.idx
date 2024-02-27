@@ -1,46 +1,57 @@
-\indexentry{module@\spxentry{module}!filters.string\_filter@\spxentry{filters.string\_filter}|hyperpage}{1}
-\indexentry{filters.string\_filter@\spxentry{filters.string\_filter}!module@\spxentry{module}|hyperpage}{1}
-\indexentry{StringFilter (class in filters.string\_filter)@\spxentry{StringFilter}\spxextra{class in filters.string\_filter}|hyperpage}{1}
-\indexentry{acronym\_mapping (filters.string\_filter.StringFilter attribute)@\spxentry{acronym\_mapping}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{1}
-\indexentry{applier (filters.string\_filter.StringFilter attribute)@\spxentry{applier}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{1}
-\indexentry{class\_likelihood (filters.string\_filter.StringFilter attribute)@\spxentry{class\_likelihood}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{1}
-\indexentry{drain\_config (filters.string\_filter.StringFilter attribute)@\spxentry{drain\_config}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{2}
-\indexentry{drain\_config\_path (filters.string\_filter.StringFilter attribute)@\spxentry{drain\_config\_path}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{2}
-\indexentry{evaluate() (filters.string\_filter.StringFilter method)@\spxentry{evaluate()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{2}
-\indexentry{filter\_result (filters.string\_filter.StringFilter attribute)@\spxentry{filter\_result}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{2}
-\indexentry{fix\_text() (filters.string\_filter.StringFilter method)@\spxentry{fix\_text()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{2}
-\indexentry{keyword\_register (filters.string\_filter.StringFilter attribute)@\spxentry{keyword\_register}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{label\_model (filters.string\_filter.StringFilter attribute)@\spxentry{label\_model}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{latency\_trace() (filters.string\_filter.StringFilter method)@\spxentry{latency\_trace()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{load\_models() (filters.string\_filter.StringFilter method)@\spxentry{load\_models()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{max\_str\_len (filters.string\_filter.StringFilter attribute)@\spxentry{max\_str\_len}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{min\_str\_len (filters.string\_filter.StringFilter attribute)@\spxentry{min\_str\_len}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{mlp (filters.string\_filter.StringFilter attribute)@\spxentry{mlp}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{msg\_len\_cutoff (filters.string\_filter.StringFilter attribute)@\spxentry{msg\_len\_cutoff}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{predict() (filters.string\_filter.StringFilter method)@\spxentry{predict()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{print\_weak\_learner\_info() (filters.string\_filter.StringFilter method)@\spxentry{print\_weak\_learner\_info()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{register\_keywords() (filters.string\_filter.StringFilter method)@\spxentry{register\_keywords()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{register\_new\_labeling\_fn() (filters.string\_filter.StringFilter method)@\spxentry{register\_new\_labeling\_fn()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{replace\_acronyms() (filters.string\_filter.StringFilter method)@\spxentry{replace\_acronyms()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{rf (filters.string\_filter.StringFilter attribute)@\spxentry{rf}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{salutations (filters.string\_filter.StringFilter attribute)@\spxentry{salutations}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{save\_models() (filters.string\_filter.StringFilter method)@\spxentry{save\_models()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{save\_template\_miner\_cluster\_information() (filters.string\_filter.StringFilter method)@\spxentry{save\_template\_miner\_cluster\_information()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{set\_string\_len\_bounds() (filters.string\_filter.StringFilter method)@\spxentry{set\_string\_len\_bounds()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{stage\_one\_test\_data (filters.string\_filter.StringFilter attribute)@\spxentry{stage\_one\_test\_data}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{3}
-\indexentry{stage\_one\_train() (filters.string\_filter.StringFilter method)@\spxentry{stage\_one\_train()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{3}
-\indexentry{stage\_one\_train\_data (filters.string\_filter.StringFilter attribute)@\spxentry{stage\_one\_train\_data}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{4}
-\indexentry{stage\_two\_test\_data (filters.string\_filter.StringFilter attribute)@\spxentry{stage\_two\_test\_data}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{4}
-\indexentry{stage\_two\_train() (filters.string\_filter.StringFilter method)@\spxentry{stage\_two\_train()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{4}
-\indexentry{stage\_two\_train\_data (filters.string\_filter.StringFilter attribute)@\spxentry{stage\_two\_train\_data}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{4}
-\indexentry{template\_miner (filters.string\_filter.StringFilter attribute)@\spxentry{template\_miner}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{4}
-\indexentry{template\_miner\_transform() (filters.string\_filter.StringFilter static method)@\spxentry{template\_miner\_transform()}\spxextra{filters.string\_filter.StringFilter static method}|hyperpage}{4}
-\indexentry{trace\_mode (filters.string\_filter.StringFilter attribute)@\spxentry{trace\_mode}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{4}
-\indexentry{trace\_stack (filters.string\_filter.StringFilter attribute)@\spxentry{trace\_stack}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{4}
-\indexentry{train() (filters.string\_filter.StringFilter method)@\spxentry{train()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{4}
-\indexentry{train\_template\_miner() (filters.string\_filter.StringFilter method)@\spxentry{train\_template\_miner()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{4}
-\indexentry{transform() (filters.string\_filter.StringFilter method)@\spxentry{transform()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{4}
-\indexentry{update\_applier() (filters.string\_filter.StringFilter method)@\spxentry{update\_applier()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{4}
-\indexentry{vectorize\_text() (filters.string\_filter.StringFilter method)@\spxentry{vectorize\_text()}\spxextra{filters.string\_filter.StringFilter method}|hyperpage}{4}
-\indexentry{vectorizer (filters.string\_filter.StringFilter attribute)@\spxentry{vectorizer}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{4}
-\indexentry{verbose (filters.string\_filter.StringFilter attribute)@\spxentry{verbose}\spxextra{filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{module@\spxentry{module}!at\_nlp.filters.string\_filter@\spxentry{at\_nlp.filters.string\_filter}|hyperpage}{3}
+\indexentry{at\_nlp.filters.string\_filter@\spxentry{at\_nlp.filters.string\_filter}!module@\spxentry{module}|hyperpage}{3}
+\indexentry{StringFilter (class in at\_nlp.filters.string\_filter)@\spxentry{StringFilter}\spxextra{class in at\_nlp.filters.string\_filter}|hyperpage}{3}
+\indexentry{acronym\_mapping (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{acronym\_mapping}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{3}
+\indexentry{add\_labeling\_fn() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{add\_labeling\_fn()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{3}
+\indexentry{add\_multiple\_labeling\_fns() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{add\_multiple\_labeling\_fns()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{3}
+\indexentry{applier (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{applier}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{class\_likelihood (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{class\_likelihood}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{cv (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{cv}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{drain\_config (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{drain\_config}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{drain\_config\_path (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{drain\_config\_path}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{evaluate() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{evaluate()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{4}
+\indexentry{filter\_result (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{filter\_result}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{keyword\_register (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{keyword\_register}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{label\_model (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{label\_model}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{latency\_trace() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{latency\_trace()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{4}
+\indexentry{load\_models() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{load\_models()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{4}
+\indexentry{max\_str\_len (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{max\_str\_len}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{min\_str\_len (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{min\_str\_len}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{mlp (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{mlp}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{msg\_len\_cutoff (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{msg\_len\_cutoff}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{4}
+\indexentry{predict() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{predict()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{4}
+\indexentry{print\_weak\_learner\_info() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{print\_weak\_learner\_info()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{4}
+\indexentry{register\_keywords() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{register\_keywords()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{4}
+\indexentry{remove\_labeling\_fn() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{remove\_labeling\_fn()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{5}
+\indexentry{reset() (at\_nlp.filters.string\_filter.StringFilter class method)@\spxentry{reset()}\spxextra{at\_nlp.filters.string\_filter.StringFilter class method}|hyperpage}{5}
+\indexentry{rf (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{rf}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{5}
+\indexentry{salutations (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{salutations}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{5}
+\indexentry{save\_models() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{save\_models()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{5}
+\indexentry{save\_template\_miner\_cluster\_information() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{save\_template\_miner\_cluster\_information()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{5}
+\indexentry{set\_string\_len\_bounds() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{set\_string\_len\_bounds()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{6}
+\indexentry{stage\_one\_test\_data (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{stage\_one\_test\_data}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{6}
+\indexentry{stage\_one\_train() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{stage\_one\_train()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{6}
+\indexentry{stage\_one\_train\_data (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{stage\_one\_train\_data}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{6}
+\indexentry{stage\_two\_test\_data (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{stage\_two\_test\_data}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{6}
+\indexentry{stage\_two\_train() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{stage\_two\_train()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{6}
+\indexentry{stage\_two\_train\_data (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{stage\_two\_train\_data}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{6}
+\indexentry{template\_miner (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{template\_miner}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{6}
+\indexentry{template\_miner\_transform() (at\_nlp.filters.string\_filter.StringFilter static method)@\spxentry{template\_miner\_transform()}\spxextra{at\_nlp.filters.string\_filter.StringFilter static method}|hyperpage}{6}
+\indexentry{trace\_mode (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{trace\_mode}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{6}
+\indexentry{trace\_stack (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{trace\_stack}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{6}
+\indexentry{train() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{train()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{6}
+\indexentry{train\_template\_miner() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{train\_template\_miner()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{6}
+\indexentry{transform() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{transform()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{6}
+\indexentry{update\_labeling\_fn() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{update\_labeling\_fn()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{6}
+\indexentry{use\_random\_forest() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{use\_random\_forest()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{7}
+\indexentry{vectorize\_text() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{vectorize\_text()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}|hyperpage}{7}
+\indexentry{verbose (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{verbose}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}|hyperpage}{7}
+\indexentry{module@\spxentry{module}!at\_nlp.filters.preprocessor\_stack@\spxentry{at\_nlp.filters.preprocessor\_stack}|hyperpage}{9}
+\indexentry{at\_nlp.filters.preprocessor\_stack@\spxentry{at\_nlp.filters.preprocessor\_stack}!module@\spxentry{module}|hyperpage}{9}
+\indexentry{PreprocessorStack (class in at\_nlp.filters.preprocessor\_stack)@\spxentry{PreprocessorStack}\spxextra{class in at\_nlp.filters.preprocessor\_stack}|hyperpage}{9}
+\indexentry{add() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{add()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}|hyperpage}{9}
+\indexentry{add\_csv\_preprocessor() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{add\_csv\_preprocessor()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}|hyperpage}{9}
+\indexentry{add\_multiple() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{add\_multiple()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}|hyperpage}{10}
+\indexentry{append() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{append()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}|hyperpage}{11}
+\indexentry{remove() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{remove()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}|hyperpage}{11}
+\indexentry{update() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{update()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}|hyperpage}{11}

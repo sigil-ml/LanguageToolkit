@@ -139,7 +139,7 @@ class PreprocessorStack:
 
         assert csv_path.exists(), f"CSV file {csv_path.absolute()} does not exist!"
 
-        csv_df = pd.DataFrame(pd.read_csv(csv_path))
+        csv_df = pd.read_csv(csv_path)
         num_cols = csv_df.columns.size
 
         if num_cols <= 1:
@@ -151,8 +151,7 @@ class PreprocessorStack:
         if replace_idx < 0 or replace_idx > num_cols:
             raise IndexError(f"Replacement index must be in [0, df.columns.size)")
 
-        if search_idx == replace_idx:
-            raise IndexError(f"Search/replace indices must be different.")
+        assert search_idx != replace_idx, "Search and replace must be different!"
 
         csv_name = csv_path.stem
         search_col_name = csv_df.columns[search_idx]
@@ -160,6 +159,7 @@ class PreprocessorStack:
         csv_df = csv_df.set_index(search_col_name)
         self.__dict__[f"{csv_name}_data"] = csv_df[replace_col_name].to_dict()
 
+        # TODO: make this faster
         def preprocessor(ds: pd.Series, col_idx: int) -> pd.Series:
             _d: dict = self.__dict__[f"{csv_name}_data"]
             _s: str = ds.iat[col_idx]
@@ -243,6 +243,7 @@ class PreprocessorStack:
             >>>     return ds
             >>> stack.update(example_preprocessor)
         """
+        # TODO: keep index of original preprocessor
         self.remove(preprocessor)
         self.add(preprocessor)
 
@@ -251,11 +252,11 @@ class PreprocessorStack:
             df: pd.DataFrame,
             col_idx: int = 0,
             parallel: bool = False,
-            num_processors: int = 2,
+            num_partitions: int = 2,
     ) -> pd.DataFrame:
         r"""Sequentially execute functions in the preprocessor stack"""
         if parallel:
-            df = dd.from_pandas(df, npartitions=num_processors)
+            df = dd.from_pandas(df, npartitions=num_partitions)
 
         for preprocessor in self._stack:
             partial_fn = partial(preprocessor, col_idx=col_idx)
@@ -276,7 +277,7 @@ class PreprocessorStack:
             raise TypeError("Preprocessor stack indices must be integers")
         return self._stack[item]
 
-    def __setitem__(self, item: int | str, preprocessor: Preprocessor) -> None:
+    def __setitem__(self, item: int, preprocessor: Preprocessor) -> None:
         if not isinstance(item, int):
             raise TypeError("Preprocessor stack indices must be integers")
         self._stack[item] = preprocessor

@@ -1,7 +1,9 @@
 \babel@toc {english}{}\relax 
-\contentsline {chapter}{\numberline {1}filters.string\_filter}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Overview}{1}{section.1.1}%
-\contentsline {chapter}{\numberline {2}Retrieval Augmented Generation (RAG)}{5}{chapter.2}%
-\contentsline {chapter}{\numberline {3}Indices and tables}{7}{chapter.3}%
-\contentsline {chapter}{Python Module Index}{9}{section*.47}%
-\contentsline {chapter}{Index}{11}{section*.48}%
+\contentsline {chapter}{\numberline {1}String Filter}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Overview}{3}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Preprocessor Stack}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Overview}{9}{section.2.1}%
+\contentsline {chapter}{\numberline {3}Retrieval Augmented Generation (RAG)}{13}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Indices and tables}{15}{chapter.4}%
+\contentsline {chapter}{Python Module Index}{17}{section*.56}%
+\contentsline {chapter}{Index}{19}{section*.57}%

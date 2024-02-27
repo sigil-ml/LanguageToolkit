@@ -158,7 +158,7 @@ class TestCSVPreprocessor:
 
     def test_remove_non_existent(self, empty_stack):
         with pytest.raises(ValueError):
-            empty_stack.remove("t_preprocessor_fn0")  # noqa
+            empty_stack.remove("t_preprocessor_fn0")
 
     def test_update_preprocessor(self, full_stack):
         old_code = full_stack[1].__code__.co_code  # noqa
@@ -167,6 +167,6 @@ class TestCSVPreprocessor:
             return ds
 
         full_stack.update(t_preprocessor_fn1)
-        assert old_code != t_preprocessor_fn1.__code__.co_code
+        assert old_code != full_stack[-1].__code__.co_code  # noqa
 
     # TODO: Add Call Tests

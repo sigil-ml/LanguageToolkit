@@ -9,3 +9,5 @@ Requires-Dist: scikit-learn
 Requires-Dist: pandas
 Requires-Dist: numpy
 Requires-Dist: tqdm
+Requires-Dist: dask-expr
+Requires-Dist: pyarrow

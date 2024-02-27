@@ -63,7 +63,7 @@
 
 
 \title{Athena AIML NLP Tools}
-\date{Feb 21, 2024}
+\date{Feb 27, 2024}
 \release{main}
 \author{Athena AIML Contributors}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -82,93 +82,117 @@
 \sphinxtableofcontents
 \pagestyle{normal}
 \phantomsection\label{\detokenize{index::doc}}
+\sphinxAtStartPar
+sphinx\sphinxhyphen{}quickstart on Wed Feb 21 22:09:41 2024.
+You can adapt this file completely to your liking, but it should at least
+contain the root \sphinxtitleref{toctree} directive.
+
 
 
 \sphinxstepscope
 
 
-\chapter{filters.string\_filter}
-\label{\detokenize{filters:filters-string-filter}}\label{\detokenize{filters::doc}}
+\chapter{String Filter}
+\label{\detokenize{filters:string-filter}}\label{\detokenize{filters::doc}}
 
 \section{Overview}
-\label{\detokenize{filters:module-filters.string_filter}}\label{\detokenize{filters:overview}}\index{module@\spxentry{module}!filters.string\_filter@\spxentry{filters.string\_filter}}\index{filters.string\_filter@\spxentry{filters.string\_filter}!module@\spxentry{module}}
+\label{\detokenize{filters:module-at_nlp.filters.string_filter}}\label{\detokenize{filters:overview}}\index{module@\spxentry{module}!at\_nlp.filters.string\_filter@\spxentry{at\_nlp.filters.string\_filter}}\index{at\_nlp.filters.string\_filter@\spxentry{at\_nlp.filters.string\_filter}!module@\spxentry{module}}
 \sphinxAtStartPar
 Defines the StringFilter class which is used to filter Mattermost messages
-\index{StringFilter (class in filters.string\_filter)@\spxentry{StringFilter}\spxextra{class in filters.string\_filter}}
+\index{StringFilter (class in at\_nlp.filters.string\_filter)@\spxentry{StringFilter}\spxextra{class in at\_nlp.filters.string\_filter}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{ }}}\sphinxcode{\sphinxupquote{filters.string\_filter.}}\sphinxbfcode{\sphinxupquote{StringFilter}}}{\sphinxparam{\DUrole{n}{verbose}\DUrole{o}{=}\DUrole{default_value}{True}}\sphinxparamcomma \sphinxparam{\DUrole{n}{model\_path}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Path\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }None}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{acronyms\_path}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Path\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }None}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{drain\_config\_path}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Path\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }None}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{ }}}\sphinxcode{\sphinxupquote{at\_nlp.filters.string\_filter.}}\sphinxbfcode{\sphinxupquote{StringFilter}}}{\sphinxparam{\DUrole{n}{verbose}\DUrole{o}{=}\DUrole{default_value}{True}}\sphinxparamcomma \sphinxparam{\DUrole{n}{model\_path}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Path\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }None}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 This is a conceptual class representation of a simple BLE device
 (GATT Server). It is essentially an extended combination of the
-\sphinxcode{\sphinxupquote{bluepy.btle.Peripheral}} and \sphinxcode{\sphinxupquote{bluepy.btle.ScanEntry}} classes
-\begin{quote}\begin{description}
-\sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{client}} (class:\sphinxtitleref{simpleble.SimpleBleClient}) \textendash{} A handle to the \sphinxcode{\sphinxupquote{simpleble.SimpleBleClient}} client
-object that detected the device
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{addr}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} Device MAC address, defaults to None
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{addrType}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} Device address type \sphinxhyphen{} one of ADDR\_TYPE\_PUBLIC or
-ADDR\_TYPE\_RANDOM, defaults to ADDR\_TYPE\_PUBLIC
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{iface}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} Bluetooth interface number (0 = /dev/hci0) used for the
-connection, defaults to 0
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{data}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} A list of tuples (adtype, description, value) containing the
-AD type code, human\sphinxhyphen{}readable description and value for all available
-advertising data items, defaults to None
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{rssi}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} Received Signal Strength Indication for the last received
-broadcast from the device. This is an integer value measured in dB,
-where 0 dB is the maximum (theoretical) signal strength, and more
-negative numbers indicate a weaker signal, defaults to 0
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{connectable}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} \sphinxtitleref{True} if the device supports connections, and \sphinxtitleref{False}
-otherwise (typically used for advertising ‘beacons’).,
-defaults to \sphinxtitleref{False}
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{updateCount}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} Integer count of the number of advertising packets
-received from the device so far, defaults to 0
-
-\end{itemize}
-
-\end{description}\end{quote}
-\index{acronym\_mapping (filters.string\_filter.StringFilter attribute)@\spxentry{acronym\_mapping}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{acronym\_mapping (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{acronym\_mapping}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.acronym_mapping}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.acronym_mapping}}
 \pysigstartsignatures
-\pysigline{\sphinxbfcode{\sphinxupquote{acronym\_mapping}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }Dict\DUrole{p}{{[}}str\DUrole{p}{,}\DUrole{w}{ }str\DUrole{p}{{]}}}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }\{\}}}}
+\pysigline{\sphinxbfcode{\sphinxupquote{acronym\_mapping}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }Dict\DUrole{p}{{[}}str\DUrole{p}{,}\DUrole{w}{ }str\DUrole{p}{{]}}}}}
 \pysigstopsignatures
 \sphinxAtStartPar
 Mapping of acronyms to their meanings from provided CSV
 
 \end{fulllineitems}
 
-\index{applier (filters.string\_filter.StringFilter attribute)@\spxentry{applier}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{add\_labeling\_fn() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{add\_labeling\_fn()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.applier}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.add_labeling_fn}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{add\_labeling\_fn}}}{\sphinxparam{\DUrole{n}{labeling\_fn}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{LabelingFunction}}}{{ $\rightarrow$ None}}
+\pysigstopsignatures
+\sphinxAtStartPar
+Adds a labeling function to the filter
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{labeling\_fn}} (\sphinxstyleliteralemphasis{\sphinxupquote{LabelingFunction}}) \textendash{} A Snorkel labeling function to be used in the ensemble. The labeling
+function takes in a Panda’s Series and returns an integer representing the label. See the provided
+example for more information.
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{ValueError}} \textendash{} If the supplied function is not a Snorkel labeling function
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{string\PYGZus{}filter} \PYG{k+kn}{import} \PYG{n}{StringFilter}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{snorkel}\PYG{n+nn}{.}\PYG{n+nn}{labeling} \PYG{k+kn}{import} \PYG{n}{LabelingFunction}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{sf} \PYG{o}{=} \PYG{n}{StringFilter}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n+nd}{@labeling\PYGZus{}function}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{def} \PYG{n+nf}{lf\PYGZus{}example}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n+nb}{int}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{c+c1}{\PYGZsh{} This function will test for string lengths greater than 10}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{col\PYGZus{}name} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Test}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{[}\PYG{n}{col\PYGZus{}name}\PYG{p}{]}\PYG{p}{)} \PYG{o}{\PYGZgt{}}\PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }        \PYG{k}{return} \PYG{l+m+mi}{1}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{return} \PYG{l+m+mi}{0}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{sf}\PYG{o}{.}\PYG{n}{add\PYGZus{}labeling\PYGZus{}fn}\PYG{p}{(}\PYG{n}{lf\PYGZus{}example}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} noqa}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{add\_multiple\_labeling\_fns() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{add\_multiple\_labeling\_fns()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.add_multiple_labeling_fns}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{add\_multiple\_labeling\_fns}}}{\sphinxparam{\DUrole{n}{labeling\_fn\_list}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{list\DUrole{p}{{[}}LabelingFunction\DUrole{p}{{]}}}}}{{ $\rightarrow$ None}}
+\pysigstopsignatures
+\sphinxAtStartPar
+Convenience function to add multiple labeling functions to the filter
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{labeling\_fn\_list}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{LabelingFunction}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} List of Snorkel labeling functions to be added
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\end{description}\end{quote}
+
+\sphinxAtStartPar
+Raises:
+
+\end{fulllineitems}
+
+\index{applier (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{applier}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.applier}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{applier}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }PandasLFApplier}}}
 \pysigstopsignatures
@@ -177,10 +201,10 @@ Applies functions to Pandas DataFrame
 
 \end{fulllineitems}
 
-\index{class\_likelihood (filters.string\_filter.StringFilter attribute)@\spxentry{class\_likelihood}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{class\_likelihood (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{class\_likelihood}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.class_likelihood}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.class_likelihood}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{class\_likelihood}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }0.6}}}
 \pysigstopsignatures
@@ -189,10 +213,22 @@ Threshold for class probabilities
 
 \end{fulllineitems}
 
-\index{drain\_config (filters.string\_filter.StringFilter attribute)@\spxentry{drain\_config}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{cv (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{cv}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.drain_config}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.cv}}
+\pysigstartsignatures
+\pysigline{\sphinxbfcode{\sphinxupquote{cv}}}
+\pysigstopsignatures
+\sphinxAtStartPar
+Coverts messages to a sparse matrix of token counts
+
+\end{fulllineitems}
+
+\index{drain\_config (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{drain\_config}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.drain_config}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{drain\_config}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }TemplateMinerConfig}}}
 \pysigstopsignatures
@@ -201,10 +237,10 @@ Configuration dictionary from drain3.ini file in cur dir
 
 \end{fulllineitems}
 
-\index{drain\_config\_path (filters.string\_filter.StringFilter attribute)@\spxentry{drain\_config\_path}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{drain\_config\_path (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{drain\_config\_path}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.drain_config_path}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.drain_config_path}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{drain\_config\_path}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }Path}}}
 \pysigstopsignatures
@@ -213,115 +249,34 @@ Path to drain3.ini file as pathlib.Path object
 
 \end{fulllineitems}
 
-\index{evaluate() (filters.string\_filter.StringFilter method)@\spxentry{evaluate()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{evaluate() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{evaluate()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.evaluate}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.evaluate}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{evaluate}}}{\sphinxparam{\DUrole{n}{test\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{DataFrame\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }array}}\sphinxparamcomma \sphinxparam{\DUrole{n}{test\_labels}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Series}}\sphinxparamcomma \sphinxparam{\DUrole{n}{classifier\_id}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\textquotesingle{}rf\textquotesingle{}}}}{{ $\rightarrow$ None}}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{evaluate}}}{\sphinxparam{\DUrole{n}{test\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{pd.DataFrame\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }np.array}}\sphinxparamcomma \sphinxparam{\DUrole{n}{test\_labels}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{pd.Series}}\sphinxparamcomma \sphinxparam{\DUrole{n}{classifier\_id}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\textquotesingle{}rf\textquotesingle{}}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
 \sphinxAtStartPar
-Return a list of random ingredients as strings.
-\begin{quote}\begin{description}
-\sphinxlineitem{Parameters}
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{kind}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{{]} or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) \textendash{} Optional “kind” of ingredients.
-
-\sphinxlineitem{Raises}
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{lumache.InvalidKindError}} \textendash{} If the kind is invalid.
-
-\sphinxlineitem{Returns}
-\sphinxAtStartPar
-The ingredients list.
-
-\sphinxlineitem{Return type}
-\sphinxAtStartPar
-list{[}str{]}
-
-\end{description}\end{quote}
+Evaluate trained weak learners.
 
 \end{fulllineitems}
 
-\index{filter\_result (filters.string\_filter.StringFilter attribute)@\spxentry{filter\_result}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{filter\_result (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{filter\_result}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.filter_result}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.filter_result}}
 \pysigstartsignatures
-\pysigline{\sphinxbfcode{\sphinxupquote{filter\_result}}}
+\pysigline{\sphinxbfcode{\sphinxupquote{filter\_result}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }FilterResult}}}
 \pysigstopsignatures
 \sphinxAtStartPar
 Enumeration of categories for each message
 
-\sphinxAtStartPar
-alias of \sphinxcode{\sphinxupquote{FilterResult}}
-
 \end{fulllineitems}
 
-\index{fix\_text() (filters.string\_filter.StringFilter method)@\spxentry{fix\_text()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{keyword\_register (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{keyword\_register}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.fix_text}}
-\pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{fix\_text}}}{\sphinxparam{\DUrole{n}{in\_text}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}}}{{ $\rightarrow$ str}}
-\pysigstopsignatures
-\sphinxAtStartPar
-fractional\_max\_pool2d(input, kernel\_size, output\_size=None, output\_ratio=None, return\_indices=False, \_random\_samples=None)
-
-\sphinxAtStartPar
-Applies 2D fractional max pooling over an input signal composed of several input planes.
-
-\sphinxAtStartPar
-Fractional MaxPooling is described in detail in the paper \sphinxhref{http://arxiv.org/abs/1412.6071}{Fractional MaxPooling} by Ben Graham
-
-\sphinxAtStartPar
-The max\sphinxhyphen{}pooling operation is applied in \(kH \times kW\) regions by a stochastic
-step size determined by the target output size.
-The number of output features is equal to the number of input planes.
-\begin{quote}\begin{description}
-\sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{kernel\_size}} \textendash{} the size of the window to take a max over.
-Can be a single number \(k\) (for a square kernel of \(k \times k\))
-or a tuple \sphinxtitleref{(kH, kW)}
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{output\_size}} \textendash{} the target output size of the image of the form \(oH \times oW\).
-Can be a tuple \sphinxtitleref{(oH, oW)} or a single number \(oH\) for a square image \(oH \times oH\)
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{output\_ratio}} \textendash{} If one wants to have an output size as a ratio of the input size, this option can be given.
-This has to be a number or tuple in the range (0, 1)
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{return\_indices}} \textendash{} if \sphinxcode{\sphinxupquote{True}}, will return the indices along with the outputs.
-Useful to pass to \sphinxcode{\sphinxupquote{max\_unpool2d()}}.
-
-\end{itemize}
-
-\end{description}\end{quote}
-\begin{description}
-\sphinxlineitem{Examples::}
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n+nb}{input} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{l+m+mi}{20}\PYG{p}{,} \PYG{l+m+mi}{16}\PYG{p}{,} \PYG{l+m+mi}{50}\PYG{p}{,} \PYG{l+m+mi}{32}\PYG{p}{)}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} pool of square window of size=3, and target output size 13x12}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{F}\PYG{o}{.}\PYG{n}{fractional\PYGZus{}max\PYGZus{}pool2d}\PYG{p}{(}\PYG{n+nb}{input}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{output\PYGZus{}size}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{13}\PYG{p}{,} \PYG{l+m+mi}{12}\PYG{p}{)}\PYG{p}{)}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} pool of square window and target output size being half of input image size}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{F}\PYG{o}{.}\PYG{n}{fractional\PYGZus{}max\PYGZus{}pool2d}\PYG{p}{(}\PYG{n+nb}{input}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{output\PYGZus{}ratio}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{p}{)}
-\end{sphinxVerbatim}
-
-\end{description}
-
-\end{fulllineitems}
-
-\index{keyword\_register (filters.string\_filter.StringFilter attribute)@\spxentry{keyword\_register}\spxextra{filters.string\_filter.StringFilter attribute}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.keyword_register}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.keyword_register}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{keyword\_register}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }List\DUrole{p}{{[}}str\DUrole{p}{{]}}}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }{[}{]}}}}
 \pysigstopsignatures
@@ -330,10 +285,10 @@ Iterable of keywords to strain
 
 \end{fulllineitems}
 
-\index{label\_model (filters.string\_filter.StringFilter attribute)@\spxentry{label\_model}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{label\_model (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{label\_model}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.label_model}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.label_model}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{label\_model}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }LabelModel}}}
 \pysigstopsignatures
@@ -342,22 +297,22 @@ Ensemble of labeling models
 
 \end{fulllineitems}
 
-\index{latency\_trace() (filters.string\_filter.StringFilter method)@\spxentry{latency\_trace()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{latency\_trace() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{latency\_trace()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.latency_trace}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.latency_trace}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{latency\_trace}}}{\sphinxparam{\DUrole{n}{test\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{DataFrame\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }array}}}{{ $\rightarrow$ None}}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{latency\_trace}}}{\sphinxparam{\DUrole{n}{test\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{pd.DataFrame\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }np.array}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
 \sphinxAtStartPar
-Evaluate the inferencing speed of the classifiers
+Evaluate the inference speed of the classifiers
 
 \end{fulllineitems}
 
-\index{load\_models() (filters.string\_filter.StringFilter method)@\spxentry{load\_models()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{load\_models() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{load\_models()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.load_models}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.load_models}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{load\_models}}}{\sphinxparam{\DUrole{n}{model\_dir}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Path}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
@@ -366,10 +321,10 @@ Restore models from a directory
 
 \end{fulllineitems}
 
-\index{max\_str\_len (filters.string\_filter.StringFilter attribute)@\spxentry{max\_str\_len}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{max\_str\_len (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{max\_str\_len}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.max_str_len}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.max_str_len}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{max\_str\_len}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }int}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }None}}}
 \pysigstopsignatures
@@ -378,10 +333,10 @@ Maximum length of a message
 
 \end{fulllineitems}
 
-\index{min\_str\_len (filters.string\_filter.StringFilter attribute)@\spxentry{min\_str\_len}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{min\_str\_len (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{min\_str\_len}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.min_str_len}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.min_str_len}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{min\_str\_len}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }int}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }None}}}
 \pysigstopsignatures
@@ -390,10 +345,10 @@ Minimum length of a message
 
 \end{fulllineitems}
 
-\index{mlp (filters.string\_filter.StringFilter attribute)@\spxentry{mlp}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{mlp (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{mlp}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.mlp}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.mlp}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{mlp}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }MLPClassifier(alpha=1, max\_iter=1000)}}}
 \pysigstopsignatures
@@ -402,22 +357,22 @@ Simple MLP classifier for ensemble of weak learners
 
 \end{fulllineitems}
 
-\index{msg\_len\_cutoff (filters.string\_filter.StringFilter attribute)@\spxentry{msg\_len\_cutoff}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{msg\_len\_cutoff (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{msg\_len\_cutoff}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.msg_len_cutoff}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.msg_len_cutoff}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{msg\_len\_cutoff}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }7}}}
 \pysigstopsignatures
 \sphinxAtStartPar
-Number of characters in a message to define a short mesasge
+Number of characters in a message to define a short message
 
 \end{fulllineitems}
 
-\index{predict() (filters.string\_filter.StringFilter method)@\spxentry{predict()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{predict() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{predict()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.predict}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.predict}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{predict}}}{\sphinxparam{\DUrole{n}{in\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{DataFrame}}}{{ $\rightarrow$ ndarray}}
 \pysigstopsignatures
@@ -426,10 +381,10 @@ Predict the labels for a supplied Pandas data frame
 
 \end{fulllineitems}
 
-\index{print\_weak\_learner\_info() (filters.string\_filter.StringFilter method)@\spxentry{print\_weak\_learner\_info()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{print\_weak\_learner\_info() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{print\_weak\_learner\_info()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.print_weak_learner_info}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.print_weak_learner_info}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{print\_weak\_learner\_info}}}{\sphinxparam{\DUrole{n}{l\_train}}}{}
 \pysigstopsignatures
@@ -438,58 +393,102 @@ Prints the weak learners collisions, etc.
 
 \end{fulllineitems}
 
-\index{register\_keywords() (filters.string\_filter.StringFilter method)@\spxentry{register\_keywords()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{register\_keywords() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{register\_keywords()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.register_keywords}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.register_keywords}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{register\_keywords}}}{\sphinxparam{\DUrole{n}{keywords}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{List\DUrole{p}{{[}}str\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{make\_lowercase}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{True}}}{{ $\rightarrow$ None}}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{register\_keywords}}}{\sphinxparam{\DUrole{n}{keywords}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{list\DUrole{p}{{[}}str\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{make\_lowercase}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{True}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
 \sphinxAtStartPar
 Register new keywords to be used in the labeling functions
 
 \end{fulllineitems}
 
-\index{register\_new\_labeling\_fn() (filters.string\_filter.StringFilter method)@\spxentry{register\_new\_labeling\_fn()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{remove\_labeling\_fn() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{remove\_labeling\_fn()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.register_new_labeling_fn}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.remove_labeling_fn}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{register\_new\_labeling\_fn}}}{\sphinxparam{\DUrole{n}{fns}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{List\DUrole{p}{{[}}LabelingFunction\DUrole{p}{{]}}}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{remove\_labeling\_fn}}}{\sphinxparam{\DUrole{n}{labeling\_fn}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{LabelingFunction}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
 \sphinxAtStartPar
-Register any new labeling functions
+Remove a labeling function from the filter.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{labeling\_fn}} (\sphinxstyleliteralemphasis{\sphinxupquote{LabelingFunction}}) \textendash{} Labeling function to remove from the filter
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{ValueError}} \textendash{} If the labeling function is not in the filter
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{string\PYGZus{}filter} \PYG{k+kn}{import} \PYG{n}{StringFilter}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{snorkel}\PYG{n+nn}{.}\PYG{n+nn}{labeling} \PYG{k+kn}{import} \PYG{n}{LabelingFunction}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{sf} \PYG{o}{=} \PYG{n}{StringFilter}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} Define a labeling function}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n+nd}{@labeling\PYGZus{}function}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{def} \PYG{n+nf}{lf\PYGZus{}example}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n+nb}{int}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{c+c1}{\PYGZsh{} This function will test for string lengths greater than 10}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{col\PYGZus{}name} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Test}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{[}\PYG{n}{col\PYGZus{}name}\PYG{p}{]}\PYG{p}{)} \PYG{o}{\PYGZgt{}}\PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }        \PYG{k}{return} \PYG{l+m+mi}{1}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{return} \PYG{l+m+mi}{0}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{sf}\PYG{o}{.}\PYG{n}{add\PYGZus{}labeling\PYGZus{}fn}\PYG{p}{(}\PYG{n}{lf\PYGZus{}example}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} noqa}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} Remove the previously added labeling function}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{sf}\PYG{o}{.}\PYG{n}{remove\PYGZus{}labeling\PYGZus{}fn}\PYG{p}{(}\PYG{n}{lf\PYGZus{}example}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} noqa}
+\end{sphinxVerbatim}
 
 \end{fulllineitems}
 
-\index{replace\_acronyms() (filters.string\_filter.StringFilter method)@\spxentry{replace\_acronyms()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{reset() (at\_nlp.filters.string\_filter.StringFilter class method)@\spxentry{reset()}\spxextra{at\_nlp.filters.string\_filter.StringFilter class method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.replace_acronyms}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.reset}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{replace\_acronyms}}}{\sphinxparam{\DUrole{n}{in\_text}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}}}{{ $\rightarrow$ str}}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{classmethod\DUrole{w}{ }}}\sphinxbfcode{\sphinxupquote{reset}}}{}{{ $\rightarrow$ None}}
 \pysigstopsignatures
 \sphinxAtStartPar
-Replace acronyms with their meaningful names
+Reset the class to its default state
+\begin{quote}\begin{description}
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{sf} \PYG{o}{=} \PYG{n}{StringFilter}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{sf}\PYG{o}{.}\PYG{n}{reset}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \end{fulllineitems}
 
-\index{rf (filters.string\_filter.StringFilter attribute)@\spxentry{rf}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{rf (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{rf}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.rf}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.rf}}
 \pysigstartsignatures
-\pysigline{\sphinxbfcode{\sphinxupquote{rf}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }RandomForestClassifier()}}}
+\pysigline{\sphinxbfcode{\sphinxupquote{rf}}}
 \pysigstopsignatures
 \sphinxAtStartPar
 Random forest classifier for ensemble of weak learners
 
 \end{fulllineitems}
 
-\index{salutations (filters.string\_filter.StringFilter attribute)@\spxentry{salutations}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{salutations (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{salutations}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.salutations}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.salutations}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{salutations}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }{[}\textquotesingle{}hello\textquotesingle{}, \textquotesingle{}hola\textquotesingle{}, \textquotesingle{}aloha\textquotesingle{}, \textquotesingle{}mornin\textquotesingle{}, \textquotesingle{}ello govna\textquotesingle{}, \textquotesingle{}good morning\textquotesingle{}, \textquotesingle{}good evening\textquotesingle{}, \textquotesingle{}good night\textquotesingle{}, \textquotesingle{}good \textless{}:*:\textgreater{}\textquotesingle{}, \textquotesingle{}hey \textless{}:*:\textgreater{}\textquotesingle{}, \textquotesingle{}hi \textless{}:*:\textgreater{}\textquotesingle{}, \textquotesingle{}haha \textless{}:*:\textgreater{}\textquotesingle{}{]}}}}
 \pysigstopsignatures
@@ -498,10 +497,10 @@ List of salutations to filter
 
 \end{fulllineitems}
 
-\index{save\_models() (filters.string\_filter.StringFilter method)@\spxentry{save\_models()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{save\_models() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{save\_models()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.save_models}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.save_models}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_models}}}{\sphinxparam{\DUrole{n}{save\_path\_stub}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Path}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
@@ -510,10 +509,10 @@ Save trained models to directory with a random uuid to prevent collisions
 
 \end{fulllineitems}
 
-\index{save\_template\_miner\_cluster\_information() (filters.string\_filter.StringFilter method)@\spxentry{save\_template\_miner\_cluster\_information()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{save\_template\_miner\_cluster\_information() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{save\_template\_miner\_cluster\_information()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.save_template_miner_cluster_information}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.save_template_miner_cluster_information}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_template\_miner\_cluster\_information}}}{}{{ $\rightarrow$ None}}
 \pysigstopsignatures
@@ -522,10 +521,10 @@ Save template miner clusters to a JSON for analysis
 
 \end{fulllineitems}
 
-\index{set\_string\_len\_bounds() (filters.string\_filter.StringFilter method)@\spxentry{set\_string\_len\_bounds()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{set\_string\_len\_bounds() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{set\_string\_len\_bounds()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.set_string_len_bounds}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.set_string_len_bounds}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_string\_len\_bounds}}}{\sphinxparam{\DUrole{n}{lower\_bound}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{upper\_bound}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
@@ -534,10 +533,10 @@ Set the lower and upper bounds for the string length labeling function
 
 \end{fulllineitems}
 
-\index{stage\_one\_test\_data (filters.string\_filter.StringFilter attribute)@\spxentry{stage\_one\_test\_data}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{stage\_one\_test\_data (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{stage\_one\_test\_data}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.stage_one_test_data}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.stage_one_test_data}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{stage\_one\_test\_data}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }DataFrame}}}
 \pysigstopsignatures
@@ -546,22 +545,22 @@ Data used to test stage one
 
 \end{fulllineitems}
 
-\index{stage\_one\_train() (filters.string\_filter.StringFilter method)@\spxentry{stage\_one\_train()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{stage\_one\_train() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{stage\_one\_train()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.stage_one_train}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.stage_one_train}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{stage\_one\_train}}}{\sphinxparam{\DUrole{n}{in\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{DataFrame}}\sphinxparamcomma \sphinxparam{\DUrole{n}{train\_config}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Dict}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{stage\_one\_train}}}{\sphinxparam{\DUrole{n}{in\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{DataFrame}}\sphinxparamcomma \sphinxparam{\DUrole{n}{train\_config}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{dict}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Train the MLP and RF on the reserved stage one training data
 
 \end{fulllineitems}
 
-\index{stage\_one\_train\_data (filters.string\_filter.StringFilter attribute)@\spxentry{stage\_one\_train\_data}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{stage\_one\_train\_data (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{stage\_one\_train\_data}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.stage_one_train_data}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.stage_one_train_data}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{stage\_one\_train\_data}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }DataFrame}}}
 \pysigstopsignatures
@@ -570,10 +569,10 @@ Data used to train stage one
 
 \end{fulllineitems}
 
-\index{stage\_two\_test\_data (filters.string\_filter.StringFilter attribute)@\spxentry{stage\_two\_test\_data}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{stage\_two\_test\_data (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{stage\_two\_test\_data}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.stage_two_test_data}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.stage_two_test_data}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{stage\_two\_test\_data}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }DataFrame}}}
 \pysigstopsignatures
@@ -582,10 +581,10 @@ Data used to test stage two
 
 \end{fulllineitems}
 
-\index{stage\_two\_train() (filters.string\_filter.StringFilter method)@\spxentry{stage\_two\_train()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{stage\_two\_train() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{stage\_two\_train()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.stage_two_train}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.stage_two_train}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{stage\_two\_train}}}{\sphinxparam{\DUrole{n}{in\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{DataFrame}}\sphinxparamcomma \sphinxparam{\DUrole{n}{train\_config}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Dict}}}{}
 \pysigstopsignatures
@@ -594,10 +593,10 @@ Train the ensemble on the reserved stage two training data
 
 \end{fulllineitems}
 
-\index{stage\_two\_train\_data (filters.string\_filter.StringFilter attribute)@\spxentry{stage\_two\_train\_data}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{stage\_two\_train\_data (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{stage\_two\_train\_data}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.stage_two_train_data}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.stage_two_train_data}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{stage\_two\_train\_data}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }DataFrame}}}
 \pysigstopsignatures
@@ -606,10 +605,10 @@ Data used to train stage two
 
 \end{fulllineitems}
 
-\index{template\_miner (filters.string\_filter.StringFilter attribute)@\spxentry{template\_miner}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{template\_miner (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{template\_miner}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.template_miner}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.template_miner}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{template\_miner}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }TemplateMiner}}}
 \pysigstopsignatures
@@ -618,22 +617,22 @@ Drain3 template miner to convert log messages to cluster templates
 
 \end{fulllineitems}
 
-\index{template\_miner\_transform() (filters.string\_filter.StringFilter static method)@\spxentry{template\_miner\_transform()}\spxextra{filters.string\_filter.StringFilter static method}}
+\index{template\_miner\_transform() (at\_nlp.filters.string\_filter.StringFilter static method)@\spxentry{template\_miner\_transform()}\spxextra{at\_nlp.filters.string\_filter.StringFilter static method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.template_miner_transform}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.template_miner_transform}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{static\DUrole{w}{ }}}\sphinxbfcode{\sphinxupquote{template\_miner\_transform}}}{\sphinxparam{\DUrole{n}{in\_row}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Series}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tm}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{TemplateMiner}}}{{ $\rightarrow$ None}}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{static\DUrole{w}{ }}}\sphinxbfcode{\sphinxupquote{template\_miner\_transform}}}{\sphinxparam{\DUrole{n}{in\_row}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Series}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tm}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{TemplateMiner}}}{{ $\rightarrow$ str}}
 \pysigstopsignatures
 \sphinxAtStartPar
 Helper function to transform messages into their cluster templates
 
 \end{fulllineitems}
 
-\index{trace\_mode (filters.string\_filter.StringFilter attribute)@\spxentry{trace\_mode}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{trace\_mode (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{trace\_mode}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.trace_mode}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.trace_mode}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{trace\_mode}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }bool}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }False}}}
 \pysigstopsignatures
@@ -642,10 +641,10 @@ Toggle tracing mode
 
 \end{fulllineitems}
 
-\index{trace\_stack (filters.string\_filter.StringFilter attribute)@\spxentry{trace\_stack}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{trace\_stack (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{trace\_stack}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.trace_stack}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.trace_stack}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{trace\_stack}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }Dict}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }\{\}}}}
 \pysigstopsignatures
@@ -654,10 +653,10 @@ Retain performance metrics for each classifier
 
 \end{fulllineitems}
 
-\index{train() (filters.string\_filter.StringFilter method)@\spxentry{train()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{train() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{train()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.train}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.train}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{train}}}{\sphinxparam{\DUrole{n}{in\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{DataFrame}}\sphinxparamcomma \sphinxparam{\DUrole{n}{train\_conf}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Dict}}\sphinxparamcomma \sphinxparam{\DUrole{n}{serialize}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
 \pysigstopsignatures
@@ -666,10 +665,10 @@ Trains both the first and second stages
 
 \end{fulllineitems}
 
-\index{train\_template\_miner() (filters.string\_filter.StringFilter method)@\spxentry{train\_template\_miner()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{train\_template\_miner() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{train\_template\_miner()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.train_template_miner}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.train_template_miner}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{train\_template\_miner}}}{\sphinxparam{\DUrole{n}{in\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{DataFrame}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
@@ -678,10 +677,10 @@ Train the drain3 template miner first on all available data
 
 \end{fulllineitems}
 
-\index{transform() (filters.string\_filter.StringFilter method)@\spxentry{transform()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{transform() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{transform()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.transform}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.transform}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{transform}}}{\sphinxparam{\DUrole{n}{in\_data}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{array}}\sphinxparamcomma \sphinxparam{\DUrole{n}{pred\_fun}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{MLPClassifier\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }SVC\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }RandomForestClassifier}}}{{ $\rightarrow$ array}}
 \pysigstopsignatures
@@ -690,22 +689,77 @@ Generic prediction function that calls the predict method of the supplied callab
 
 \end{fulllineitems}
 
-\index{update\_applier() (filters.string\_filter.StringFilter method)@\spxentry{update\_applier()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{update\_labeling\_fn() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{update\_labeling\_fn()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.update_applier}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.update_labeling_fn}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update\_applier}}}{}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update\_labeling\_fn}}}{\sphinxparam{\DUrole{n}{labeling\_fn}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{LabelingFunction}}}{{ $\rightarrow$ None}}
 \pysigstopsignatures
 \sphinxAtStartPar
-Update applier with new lists
+Update an existing labeling function in the filter
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{labeling\_fn}} (\sphinxstyleliteralemphasis{\sphinxupquote{LabelingFunction}}) \textendash{} Updated labeling function
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{ValueError}} \textendash{} If the labeling function is not in the filter
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{string\PYGZus{}filter} \PYG{k+kn}{import} \PYG{n}{StringFilter}
+\end{sphinxVerbatim}
 
 \end{fulllineitems}
 
-\index{vectorize\_text() (filters.string\_filter.StringFilter method)@\spxentry{vectorize\_text()}\spxextra{filters.string\_filter.StringFilter method}}
+\index{use\_random\_forest() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{use\_random\_forest()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.vectorize_text}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.use_random_forest}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{use\_random\_forest}}}{\sphinxparam{\DUrole{n}{random\_forest}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{RandomForestClassifier}}}{{ $\rightarrow$ None}}
+\pysigstopsignatures
+\sphinxAtStartPar
+Sets up the StringFilter to use a provided RandomForest Classifier from sklearn
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{random\_forest}} (\sphinxstyleliteralemphasis{\sphinxupquote{RandomForestClassifier}}) \textendash{} Sklearn RandomForest Classifier reference
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{string\PYGZus{}filter} \PYG{k+kn}{import} \PYG{n}{StringFilter}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{sklearn}\PYG{n+nn}{.}\PYG{n+nn}{ensemble} \PYG{k+kn}{import} \PYG{n}{RandomForestClassifier}  \PYG{c+c1}{\PYGZsh{} noqa}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{random\PYGZus{}forest} \PYG{o}{=} \PYG{n}{RandomForestClassifier}\PYG{p}{(}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} noqa}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{string\PYGZus{}filter} \PYG{o}{=} \PYG{n}{StringFilter}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n+nd}{@labeling\PYGZus{}function}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{def} \PYG{n+nf}{new\PYGZus{}labeling\PYGZus{}function}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{:}
+\PYG{g+go}{        x = cv.transform(ds)}
+\PYG{g+go}{        x =}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{string\PYGZus{}filter}\PYG{o}{.}\PYG{n}{use\PYGZus{}random\PYGZus{}forest}\PYG{p}{(}\PYG{n}{random\PYGZus{}forest}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{vectorize\_text() (at\_nlp.filters.string\_filter.StringFilter method)@\spxentry{vectorize\_text()}\spxextra{at\_nlp.filters.string\_filter.StringFilter method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.vectorize_text}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{vectorize\_text}}}{\sphinxparam{\DUrole{n}{ds}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Series}}}{{ $\rightarrow$ array}}
 \pysigstopsignatures
@@ -714,27 +768,290 @@ Helper function to vectorize the messages in a pandas Series
 
 \end{fulllineitems}
 
-\index{vectorizer (filters.string\_filter.StringFilter attribute)@\spxentry{vectorizer}\spxextra{filters.string\_filter.StringFilter attribute}}
+\index{verbose (at\_nlp.filters.string\_filter.StringFilter attribute)@\spxentry{verbose}\spxextra{at\_nlp.filters.string\_filter.StringFilter attribute}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.vectorizer}}
-\pysigstartsignatures
-\pysigline{\sphinxbfcode{\sphinxupquote{vectorizer}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }CountVectorizer()}}}
-\pysigstopsignatures
-\sphinxAtStartPar
-Coverts messages to a sparse matrix of token counts
-
-\end{fulllineitems}
-
-\index{verbose (filters.string\_filter.StringFilter attribute)@\spxentry{verbose}\spxextra{filters.string\_filter.StringFilter attribute}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{filters:filters.string_filter.StringFilter.verbose}}
+\phantomsection\label{\detokenize{filters:at_nlp.filters.string_filter.StringFilter.verbose}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{verbose}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }bool}}}
 \pysigstopsignatures
 \sphinxAtStartPar
 Whether to print diagnostic information to stdout
+
+\end{fulllineitems}
+
+
+\end{fulllineitems}
+
+
+\sphinxstepscope
+
+
+\chapter{Preprocessor Stack}
+\label{\detokenize{preprocessor_stack:preprocessor-stack}}\label{\detokenize{preprocessor_stack::doc}}
+
+\section{Overview}
+\label{\detokenize{preprocessor_stack:module-at_nlp.filters.preprocessor_stack}}\label{\detokenize{preprocessor_stack:overview}}\index{module@\spxentry{module}!at\_nlp.filters.preprocessor\_stack@\spxentry{at\_nlp.filters.preprocessor\_stack}}\index{at\_nlp.filters.preprocessor\_stack@\spxentry{at\_nlp.filters.preprocessor\_stack}!module@\spxentry{module}}\index{PreprocessorStack (class in at\_nlp.filters.preprocessor\_stack)@\spxentry{PreprocessorStack}\spxextra{class in at\_nlp.filters.preprocessor\_stack}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{preprocessor_stack:at_nlp.filters.preprocessor_stack.PreprocessorStack}}
+\pysigstartsignatures
+\pysigline{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{ }}}\sphinxcode{\sphinxupquote{at\_nlp.filters.preprocessor\_stack.}}\sphinxbfcode{\sphinxupquote{PreprocessorStack}}}
+\pysigstopsignatures
+\sphinxAtStartPar
+The PreprocessorStack is an iterable of preprocessors designed to operate on a dataframe. Each preprocessor
+takes a single Pandas Series and a column index and returns a Pandas Series. Multiprocessing is available via the
+‘multiprocessing’ flag.
+\index{add() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{add()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{preprocessor_stack:at_nlp.filters.preprocessor_stack.PreprocessorStack.add}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{add}}}{\sphinxparam{\DUrole{n}{preprocessor}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Callable\DUrole{p}{{[}}\DUrole{p}{{[}}Series\DUrole{p}{,}\DUrole{w}{ }int\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }str\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }Series\DUrole{p}{{]}}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{position}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\sphinxhyphen{}1}}}{{ $\rightarrow$ None}}
+\pysigstopsignatures
+\sphinxAtStartPar
+Adds a preprocessor to the filter. Pre\sphinxhyphen{}processors must have the following
+function signature: (pd.Series, int) \sphinxhyphen{}\textgreater{} pd.Series. The second argument of the
+function is column index or name of the item in the series to operate on.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{preprocessor}} \textendash{} A preprocessor function that operates on Pandas Series.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{position}} \textendash{} Index position of the preprocessor in the stack
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{IndexError}} \textendash{} If the preprocessor function is not callable or has the wrong signature.
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{preprocessor\PYGZus{}stack} \PYG{k+kn}{import} \PYG{n}{PreprocessorStack}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{def} \PYG{n+nf}{make\PYGZus{}lower\PYGZus{}case}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{,} \PYG{n}{col\PYGZus{}idx}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{s}\PYG{p}{:} \PYG{n+nb}{str} \PYG{o}{=} \PYG{n}{ds}\PYG{o}{.}\PYG{n}{iat}\PYG{p}{[}\PYG{n}{col\PYGZus{}idx}\PYG{p}{]}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{ds}\PYG{o}{.}\PYG{n}{iat}\PYG{p}{[}\PYG{n}{col\PYGZus{}idx}\PYG{p}{]} \PYG{o}{=} \PYG{n}{s}\PYG{o}{.}\PYG{n}{lower}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{return} \PYG{n}{ds}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack} \PYG{o}{=} \PYG{n}{PreprocessorStack}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{make\PYGZus{}lower\PYGZus{}case}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} stack.add(make\PYGZus{}lower\PYGZus{}case, 0) \PYGZsh{} a position can be given in the range [0, len(stack))}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{add\_csv\_preprocessor() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{add\_csv\_preprocessor()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{preprocessor_stack:at_nlp.filters.preprocessor_stack.PreprocessorStack.add_csv_preprocessor}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{add\_csv\_preprocessor}}}{\sphinxparam{\DUrole{n}{csv\_path}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Path}}\sphinxparamcomma \sphinxparam{\DUrole{n}{search\_idx}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{replace\_idx}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1}}\sphinxparamcomma \sphinxparam{\DUrole{n}{order}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }None}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}}{{ $\rightarrow$ None}}
+\pysigstopsignatures
+\sphinxAtStartPar
+Registers a CSV file to be used for preprocessing. This is different from
+registering a CSV file for weak learning since we replace the strings
+before the weak learners are trained and applied. If you wish to use the CSV
+for weak learning then use the \sphinxcode{\sphinxupquote{register\_csv\_weak\_learner()}} method instead.
+
+\begin{sphinxadmonition}{note}{Note:}
+\sphinxAtStartPar
+The CSV file will not be serialized when saving the StringFilter object.
+Internally we will store the search and replacement strings in a dictionary
+that will get pickled with the object. Thus, when loading the object the
+CSV file is not necessary.
+\end{sphinxadmonition}
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{csv\_path}} (\sphinxstyleliteralemphasis{\sphinxupquote{Path}}) \textendash{} Path to the CSV file.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{search\_idx}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Index of the column containing the string to be replaced (Defaults to 0).
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{replace\_idx}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Index of the column containing the replacement string (Defaults to 1).
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{order}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{| }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) \textendash{} The position in the call stack to place the preprocessor function.
+The default is None which places the caller at the end of the stack.
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{AssertionError}} \textendash{} raised if the CSV file does not exist, or the indices are not integers.
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{preprocessor\PYGZus{}stack} \PYG{k+kn}{import} \PYG{n}{PreprocessorStack}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack} \PYG{o}{=} \PYG{n}{PreprocessorStack}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack}\PYG{o}{.}\PYG{n}{add\PYGZus{}csv\PYGZus{}preprocessor}\PYG{p}{(}\PYG{n}{Path}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{replacement\PYGZus{}text1.csv}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack}\PYG{o}{.}\PYG{n}{add\PYGZus{}csv\PYGZus{}preprocessor}\PYG{p}{(}\PYG{n}{Path}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{replacement\PYGZus{}text2.csv}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{add\_multiple() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{add\_multiple()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{preprocessor_stack:at_nlp.filters.preprocessor_stack.PreprocessorStack.add_multiple}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{add\_multiple}}}{\sphinxparam{\DUrole{n}{preprocessors}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Iterable\DUrole{p}{{[}}tuple\DUrole{p}{{[}}int\DUrole{p}{,}\DUrole{w}{ }Callable\DUrole{p}{{[}}\DUrole{p}{{[}}Series\DUrole{p}{,}\DUrole{w}{ }int\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }str\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }Series\DUrole{p}{{]}}\DUrole{p}{{]}}\DUrole{p}{{]}}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Adds multiple preprocessors to the stack. Takes in a tuple of indices and preprocessors, using the indices
+for insertion position.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{(}}\sphinxstyleliteralstrong{\sphinxupquote{Iterable}}\sphinxstyleliteralstrong{\sphinxupquote{{[}}}\sphinxstyleliteralstrong{\sphinxupquote{tuple}}\sphinxstyleliteralstrong{\sphinxupquote{{[}}}\sphinxstyleliteralstrong{\sphinxupquote{int}} (\sphinxstyleliteralemphasis{\sphinxupquote{preprocessors}}) \textendash{} 
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{Callable}}\sphinxstyleliteralstrong{\sphinxupquote{{[}}}\sphinxstyleliteralstrong{\sphinxupquote{{[}}}\sphinxstyleliteralstrong{\sphinxupquote{pd.Series}} \textendash{} 
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{str}}\sphinxstyleliteralstrong{\sphinxupquote{{]}}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{ |}}) \textendash{} 
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{pd.Series}}\sphinxstyleliteralstrong{\sphinxupquote{{]}}}\sphinxstyleliteralstrong{\sphinxupquote{{]}}}\sphinxstyleliteralstrong{\sphinxupquote{{]}}} \textendash{} 
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{preprocessor\PYGZus{}stack} \PYG{k+kn}{import} \PYG{n}{PreprocessorStack}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack} \PYG{o}{=} \PYG{n}{PreprocessorStack}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{processor0} \PYG{o}{=} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.} \PYG{c+c1}{\PYGZsh{} func with signature (pd.Series, int) \PYGZhy{}\PYGZgt{} pd.Series}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{processor1} \PYG{o}{=} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.} \PYG{c+c1}{\PYGZsh{} func with signature (pd.Series, int) \PYGZhy{}\PYGZgt{} pd.Series}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack}\PYG{o}{.}\PYG{n}{add\PYGZus{}multiple}\PYG{p}{(}\PYG{p}{[}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{processor0}\PYG{p}{)}\PYG{p}{,} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{processor1}\PYG{p}{)}\PYG{p}{]}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{append() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{append()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{preprocessor_stack:at_nlp.filters.preprocessor_stack.PreprocessorStack.append}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{append}}}{\sphinxparam{\DUrole{n}{preprocessor}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Callable\DUrole{p}{{[}}\DUrole{p}{{[}}Series\DUrole{p}{,}\DUrole{w}{ }int\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }str\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }Series\DUrole{p}{{]}}}}}{{ $\rightarrow$ None}}
+\pysigstopsignatures
+\sphinxAtStartPar
+convenience function that calls add(fn, \sphinxhyphen{}1)
+
+\end{fulllineitems}
+
+\index{remove() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{remove()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{preprocessor_stack:at_nlp.filters.preprocessor_stack.PreprocessorStack.remove}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{remove}}}{\sphinxparam{\DUrole{n}{preprocessor}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Callable\DUrole{p}{{[}}\DUrole{p}{{[}}Series\DUrole{p}{,}\DUrole{w}{ }int\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }str\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }Series\DUrole{p}{{]}}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Remove a preprocessor from the stack.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{preprocessor}} (\sphinxstyleliteralemphasis{\sphinxupquote{Callable}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{pd.Series}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{ | }}\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{pd.Series}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} Preprocessor reference to be removed
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{ValueError}} \textendash{} If the preprocessor is not callable or the preprocessor is not in the stack.
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{preprocessor\PYGZus{}stack} \PYG{k+kn}{import} \PYG{n}{PreprocessorStack}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack} \PYG{o}{=} \PYG{n}{PreprocessorStack}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} Define a preprocessor}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{def} \PYG{n+nf}{example\PYGZus{}preprocessor}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{,} \PYG{n}{position}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{c+c1}{\PYGZsh{} This function will test for string lengths greater than 10}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{ds}\PYG{o}{.}\PYG{n}{iat}\PYG{p}{[}\PYG{n}{position}\PYG{p}{]}\PYG{p}{)} \PYG{o}{\PYGZgt{}}\PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }        \PYG{k}{return} \PYG{n}{ds}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{ds}\PYG{o}{.}\PYG{n}{iat}\PYG{p}{[}\PYG{n}{position}\PYG{p}{]} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{return} \PYG{n}{ds}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{example\PYGZus{}preprocessor}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} Remove the previously added preprocessor}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{example\PYGZus{}preprocessor}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{update() (at\_nlp.filters.preprocessor\_stack.PreprocessorStack method)@\spxentry{update()}\spxextra{at\_nlp.filters.preprocessor\_stack.PreprocessorStack method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{preprocessor_stack:at_nlp.filters.preprocessor_stack.PreprocessorStack.update}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update}}}{\sphinxparam{\DUrole{n}{preprocessor}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{Callable\DUrole{p}{{[}}\DUrole{p}{{[}}Series\DUrole{p}{,}\DUrole{w}{ }int\DUrole{w}{ }\DUrole{p}{|}\DUrole{w}{ }str\DUrole{p}{{]}}\DUrole{p}{,}\DUrole{w}{ }Series\DUrole{p}{{]}}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Update an existing preprocessor in the stack
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{preprocessor}} (\sphinxstyleliteralemphasis{\sphinxupquote{Preprocessor}}) \textendash{} Updated preprocessor
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+None
+
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{ValueError}} \textendash{} If the preprocessor is not in the stack.
+
+\end{description}\end{quote}
+\subsubsection*{Example}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{at\PYGZus{}nlp}\PYG{n+nn}{.}\PYG{n+nn}{filters}\PYG{n+nn}{.}\PYG{n+nn}{preprocessor\PYGZus{}stack} \PYG{k+kn}{import} \PYG{n}{PreprocessorStack}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack} \PYG{o}{=} \PYG{n}{PreprocessorStack}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} Define a preprocessor}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{def} \PYG{n+nf}{example\PYGZus{}preprocessor}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{,} \PYG{n}{position}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{s}\PYG{p}{:} \PYG{n+nb}{str} \PYG{o}{=} \PYG{n}{ds}\PYG{o}{.}\PYG{n}{iat}\PYG{p}{[}\PYG{n}{position}\PYG{p}{]}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{ds}\PYG{o}{.}\PYG{n}{iat}\PYG{p}{[}\PYG{n}{position}\PYG{p}{]} \PYG{o}{=} \PYG{n}{s}\PYG{o}{.}\PYG{n}{lower}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{return} \PYG{n}{ds}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{example\PYGZus{}preprocessor}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} event necessitates changing a preprocessor}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{def} \PYG{n+nf}{example\PYGZus{}preprocessor}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{,} \PYG{n}{position}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{:}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{s}\PYG{p}{:} \PYG{n+nb}{str} \PYG{o}{=} \PYG{n}{ds}\PYG{o}{.}\PYG{n}{iat}\PYG{p}{[}\PYG{n}{position}\PYG{p}{]}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{n}{ds}\PYG{o}{.}\PYG{n}{iat}\PYG{p}{[}\PYG{n}{position}\PYG{p}{]} \PYG{o}{=} \PYG{n}{s}\PYG{o}{.}\PYG{n}{upper}\PYG{p}{(}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} \PYGZlt{}\PYGZhy{}\PYGZhy{} change}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }    \PYG{k}{return} \PYG{n}{ds}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{stack}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{example\PYGZus{}preprocessor}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \end{fulllineitems}
 
@@ -768,8 +1085,9 @@ Whether to print diagnostic information to stdout
 \renewcommand{\indexname}{Python Module Index}
 \begin{sphinxtheindex}
 \let\bigletter\sphinxstyleindexlettergroup
-\bigletter{f}
-\item\relax\sphinxstyleindexentry{filters.string\_filter}\sphinxstyleindexpageref{filters:\detokenize{module-filters.string_filter}}
+\bigletter{a}
+\item\relax\sphinxstyleindexentry{at\_nlp.filters.preprocessor\_stack}\sphinxstyleindexpageref{preprocessor_stack:\detokenize{module-at_nlp.filters.preprocessor_stack}}
+\item\relax\sphinxstyleindexentry{at\_nlp.filters.string\_filter}\sphinxstyleindexpageref{filters:\detokenize{module-at_nlp.filters.string_filter}}
 \end{sphinxtheindex}
 
 \renewcommand{\indexname}{Index}
