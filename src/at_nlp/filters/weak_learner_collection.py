@@ -173,75 +173,41 @@ class WeakLearners:
         for fn in fns:
             self.add(fn)
 
-    # def remove(self, preprocessor: Preprocessor):
-    #     r"""Remove a weak learner from the collection.
-    #
-    #     Args:
-    #         preprocessor (Callable[[pd.Series, int | str], pd.Series]): Preprocessor reference to be removed
-    #
-    #     Returns:
-    #         None
-    #
-    #     Raises:
-    #         ValueError: If the preprocessor is not callable or the preprocessor is not in the stack.
-    #
-    #     Example:
-    #         >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
-    #         >>> stack = PreprocessorStack()
-    #         >>> # Define a preprocessor
-    #         >>> def example_preprocessor(ds: pd.Series, position: int) -> pd.Series:
-    #         >>>     # This function will test for string lengths greater than 10
-    #         >>>     if len(ds.iat[position]) >= 10:
-    #         >>>         return ds
-    #         >>>     ds.iat[position] = ""
-    #         >>>     return ds
-    #         >>> stack.append(example_preprocessor)
-    #         >>> # Remove the previously added preprocessor
-    #         >>> stack.remove(example_preprocessor)
-    #     """
-    #     if not callable(preprocessor):
-    #         raise ValueError("Must provide preprocessor reference")
-    #
-    #     try:
-    #         self._stack.remove(preprocessor)
-    #     except ValueError:
-    #         logger.warning(
-    #             f"Preprocessing function: {preprocessor} not in the stack."
-    #         )
-    #
-    # def update(self, preprocessor: Preprocessor):
-    #     r"""Update an existing preprocessor in the stack
-    #
-    #     Args:
-    #         preprocessor (Preprocessor): Updated preprocessor
-    #
-    #     Returns:
-    #         None
-    #
-    #     Raises:
-    #         ValueError: If the preprocessor is not in the stack.
-    #
-    #     Example:
-    #         >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
-    #         >>> stack = PreprocessorStack()
-    #         >>> # Define a preprocessor
-    #         >>> def example_preprocessor(ds: pd.Series, position: int) -> pd.Series:
-    #         >>>     s: str = ds.iat[position]
-    #         >>>     ds.iat[position] = s.lower()
-    #         >>>     return ds
-    #         >>> stack.append(example_preprocessor)
-    #         >>> # event necessitates changing a preprocessor
-    #         >>> def example_preprocessor(ds: pd.Series, position: int) -> pd.Series:
-    #         >>>     s: str = ds.iat[position]
-    #         >>>     ds.iat[position] = s.upper() # <-- change
-    #         >>>     return ds
-    #         >>> stack.update(example_preprocessor)
-    #     """
-    #     for idx, fn in enumerate(self._stack):
-    #         if preprocessor.__name__ == fn.__name__:
-    #             self.remove(preprocessor)
-    #             self.add(preprocessor, idx - 1)
-    #
+    def remove(self, fn_name: str) -> None:
+        r"""Remove a weak learner from the collection.
+
+        Args:
+            fn_name (str): Snorkel LabelingFunction name
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: If the given fn_name is not in the collection
+
+        Example:
+            >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
+            >>> stack = PreprocessorStack()
+            >>> # Define a preprocessor
+            >>> def example_preprocessor(ds: pd.Series, position: int) -> pd.Series:
+            >>>     # This function will test for string lengths greater than 10
+            >>>     if len(ds.iat[position]) >= 10:
+            >>>         return ds
+            >>>     ds.iat[position] = ""
+            >>>     return ds
+            >>> stack.append(example_preprocessor)
+            >>> # Remove the previously added preprocessor
+            >>> stack.remove(example_preprocessor)
+        """
+        name_located = False
+        for idx, item in enumerate(self.m_learners):
+            if fn_name == item.fn.name:
+                del self.m_learners[idx]
+                name_located = True
+
+        if not name_located:
+            raise ValueError("Function with name {} not found" % fn_name)
+
     # def __call__(
     #         self,
     #         df: pd.DataFrame,

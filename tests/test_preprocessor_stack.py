@@ -31,7 +31,7 @@ def t_preprocessor_fn2(ds: pd.Series, position: int) -> pd.Series:
 
 # TODO: Add preprocess calls
 class TestCSVPreprocessor:
-    csv_path = Path("./tests/test.csv").absolute()
+    csv_path = Path("test.csv").absolute()
     test_df = pd.DataFrame(
         [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
         columns=["id", "text"],

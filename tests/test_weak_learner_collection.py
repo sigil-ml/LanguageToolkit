@@ -63,7 +63,7 @@ mlp = MLPClassifier()
 
 
 # TODO: Add preprocess calls
-class TestAddLabelingFunctions:
+class TestCRUDLabelingFunctions:
     # test_df = pd.DataFrame(
     #     [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
     #     columns=["id", "text"],
@@ -74,12 +74,11 @@ class TestAddLabelingFunctions:
         wl_col = WeakLearners(col_name="text")
         yield wl_col
 
-    # @pytest.fixture
-    # def full_stack(self):
-    #     ps = PreprocessorStack()
-    #     ps.add_multiple(
-    #         [(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 1), (t_preprocessor_fn2, 2)])
-    #     yield ps
+    @pytest.fixture
+    def full_learner_collection(self):
+        wl_col = WeakLearners(col_name="text")
+        wl_col.extend([lf_fn_ex_01, lf_fn_ex_02])
+        yield wl_col
 
     def test_add_base(self, empty_learner_collection):
         empty_learner_collection.add(lf_fn_ex_01)
@@ -99,8 +98,18 @@ class TestAddLabelingFunctions:
         assert empty_learner_collection[0].fn.name == "test_weak_learner_01"
         assert empty_learner_collection[1].fn.name == "test_weak_learner_02"
 
+    def test_remove_base(self, full_learner_collection):
+        full_learner_collection.remove("test_weak_learner_01")
+        assert len(full_learner_collection) == 1
+        assert full_learner_collection[0].fn.name == "test_weak_learner_02"
 
-class TestAddPrimativeFunctions:
+    def test_remove_induction(self, full_learner_collection):
+        full_learner_collection.remove("test_weak_learner_01")
+        full_learner_collection.remove("test_weak_learner_02")
+        assert len(full_learner_collection) == 0
+
+
+class TestCRUDPrimativeFunctions:
     # test_df = pd.DataFrame(
     #     [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
     #     columns=["id", "text"],
@@ -111,12 +120,11 @@ class TestAddPrimativeFunctions:
         wl_col = WeakLearners(col_name="text")
         yield wl_col
 
-    # @pytest.fixture
-    # def full_stack(self):
-    #     ps = PreprocessorStack()
-    #     ps.add_multiple(
-    #         [(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 1), (t_preprocessor_fn2, 2)])
-    #     yield ps
+    @pytest.fixture
+    def full_learner_collection(self):
+        wl_col = WeakLearners(col_name="text")
+        wl_col.extend([pr_fn_ex_01, pr_fn_ex_02])
+        yield wl_col
 
     def test_add_base(self, empty_learner_collection):
         empty_learner_collection.add(pr_fn_ex_01)
@@ -136,8 +144,18 @@ class TestAddPrimativeFunctions:
         assert empty_learner_collection[0].fn.name == "PR_pr_fn_ex_01"
         assert empty_learner_collection[1].fn.name == "PR_pr_fn_ex_02"
 
+    def test_remove_base(self, full_learner_collection):
+        full_learner_collection.remove("PR_pr_fn_ex_01")
+        assert len(full_learner_collection) == 1
+        assert full_learner_collection[0].fn.name == "PR_pr_fn_ex_02"
 
-class TestAddSKLearnFunctions:
+    def test_remove_induction(self, full_learner_collection):
+        full_learner_collection.remove("PR_pr_fn_ex_01")
+        full_learner_collection.remove("PR_pr_fn_ex_02")
+        assert len(full_learner_collection) == 0
+
+
+class TestCRUDSKLearnFunctions:
     # test_df = pd.DataFrame(
     #     [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
     #     columns=["id", "text"],
@@ -148,12 +166,11 @@ class TestAddSKLearnFunctions:
         wl_col = WeakLearners(col_name="text")
         yield wl_col
 
-    # @pytest.fixture
-    # def full_stack(self):
-    #     ps = PreprocessorStack()
-    #     ps.add_multiple(
-    #         [(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 1), (t_preprocessor_fn2, 2)])
-    #     yield ps
+    @pytest.fixture
+    def full_learner_collection(self):
+        wl_col = WeakLearners(col_name="text")
+        wl_col.extend([rf, sv, mlp])
+        yield wl_col
 
     def test_add_base(self, empty_learner_collection):
         empty_learner_collection.add(rf)
@@ -175,3 +192,14 @@ class TestAddSKLearnFunctions:
         assert empty_learner_collection[0].fn.name == "SK_RandomForestClassifier"
         assert empty_learner_collection[1].fn.name == "SK_SVC"
         assert empty_learner_collection[2].fn.name == "SK_MLPClassifier"
+
+    def test_remove_base(self, full_learner_collection):
+        full_learner_collection.remove("SK_RandomForestClassifier")
+        assert len(full_learner_collection) == 2
+        assert full_learner_collection[0].fn.name == "SK_SVC"
+
+    def test_remove_induction(self, full_learner_collection):
+        full_learner_collection.remove("SK_RandomForestClassifier")
+        full_learner_collection.remove("SK_SVC")
+        full_learner_collection.remove("SK_MLPClassifier")
+        assert len(full_learner_collection) == 0
