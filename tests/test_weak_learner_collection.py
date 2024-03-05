@@ -2,7 +2,7 @@ from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
-from snorkel.labeling import labeling_function
+from snorkel.labeling import labeling_function, LabelingFunction
 from enum import Enum, unique
 
 import pandas as pd
@@ -131,6 +131,14 @@ class TestCRUDPrimativeFunctions:
         assert len(empty_learner_collection) == 1
         assert empty_learner_collection[0].fn.name == "PR_pr_fn_ex_01"
 
+    def test_add_anon(self, empty_learner_collection):
+        empty_learner_collection.add(lambda s: int(len(s) > 6))
+        item = empty_learner_collection.get_labeling_fn("PR_anon1")
+        assert isinstance(item.fn, LabelingFunction)
+        assert item.fn.name == "PR_anon1"
+        assert not item.learnable
+        assert item.item_type is None
+
     def test_add_induction(self, empty_learner_collection):
         empty_learner_collection.add(pr_fn_ex_01)
         empty_learner_collection.add(pr_fn_ex_02)
@@ -203,3 +211,35 @@ class TestCRUDSKLearnFunctions:
         full_learner_collection.remove("SK_SVC")
         full_learner_collection.remove("SK_MLPClassifier")
         assert len(full_learner_collection) == 0
+
+
+class TestWeakLearnerCollectionUtilities:
+    @pytest.fixture
+    def empty_learner_collection(self):
+        wl_col = WeakLearners(col_name="text")
+        yield wl_col
+
+    @pytest.fixture
+    def full_learner_collection(self):
+        wl_col = WeakLearners(col_name="text")
+        wl_col.extend([lf_fn_ex_01, pr_fn_ex_01, rf])
+        yield wl_col
+
+    def test_get_by_name(self, full_learner_collection):
+        item = full_learner_collection.get_labeling_fn("test_weak_learner_01")
+        assert isinstance(item.fn, LabelingFunction)
+        assert item.fn.name == "test_weak_learner_01"
+        assert not item.learnable
+        assert item.item_type is None
+
+        item2 = full_learner_collection.get_labeling_fn("PR_pr_fn_ex_01")
+        assert isinstance(item2.fn, LabelingFunction)
+        assert item2.fn.name == "PR_pr_fn_ex_01"
+        assert not item2.learnable
+        assert item2.item_type is None
+
+        item3 = full_learner_collection.get_labeling_fn("SK_RandomForestClassifier")
+        assert isinstance(item2.fn, LabelingFunction)
+        assert item3.fn.name == "SK_RandomForestClassifier"
+        assert item3.learnable
+        assert item3.item_type == "sklearn"

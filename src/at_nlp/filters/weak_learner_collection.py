@@ -122,6 +122,8 @@ class WeakLearners:
             >>> wl_col.add(primative_ex2)
 
         """
+        if fn.__name__ == "<lambda>":
+            fn.__name__ = "anon" + str(len(self) + 1)
 
         @labeling_function(name=f"PR_{fn.__name__}", resources=self.m_rsrcs)
         def wrapper(series: pd.Series, col_name: str) -> int:
@@ -207,6 +209,67 @@ class WeakLearners:
 
         if not name_located:
             raise ValueError("Function with name {} not found" % fn_name)
+
+    def get_labeling_fn(self, fn_name: str) -> LearnerItem:
+        r"""Returns the first LearnerItem that matches the supplied name.
+
+        Args:
+            fn_name (str): The learner to retrieve
+
+        Returns:
+            LearnerItem: The first LearnerItem that matches the supplied name. Learner
+            items have the following structure:
+                .fn = The labeling function
+                .learnable = Whether the function contains trainable parameters
+                .item_type = The underlying type of the fn
+
+        Raises:
+            ValueError: If the function is not in the collection
+
+        Examples:
+            >>> from at_nlp.filters.weak_learner_collection import WeakLearners
+            >>> from sklearn.ensemble import RandomForestClassifier
+            >>> from snorkel.labeling import labeling_function
+            >>>
+            >>> wl_col = WeakLearners()
+            >>>
+            >>> # ex1
+            >>> rf = RandomForestClassifier()
+            >>> wl_col.add(rf)
+            >>> sk_item = wl_col.get_labeling_fn("SK_RandomForestClassifier")
+            >>> assert isinstance(sk_item.fn, LabelingFunction)         # True
+            >>> assert sk_item.fn.name == "SK_RandomForestClassifier"   # True
+            >>> assert sk_item.learnable                                # True
+            >>> assert sk_item.item_type == "sklearn"                   # True
+            >>>
+            >>> # ex2
+            >>> wl_col.add(lambda s: int(len(s) > 6))
+            >>> pr_item = wl_col.get_labeling_fn('PR_anon2')
+            >>> assert isinstance(pr_item.fn, LabelingFunction) # True
+            >>> assert pr_item.fn.name == 'PR_anon2'            # True
+            >>> assert not pr_item.learnable                    # True
+            >>> assert pr_item.item_type is None                # True
+            >>>
+            >>> # ex3
+            >>> rscrs = dict(col_name = "Messages")
+            >>> @labeling_function(name="test_fn", resources=rscrs)
+            >>> def test_fn_01(series: pd.Series, col_name: str) -> int:
+            >>>     s: str = series[col_name]
+            >>>     if s == s.lower()
+            >>>         return 1
+            >>>     return 0
+            >>> wl_col.add(test_fn_01)
+            >>> lf_item = wl_col.get_labeling_fn("test_fn")
+            >>> assert isinstance(lf_item.fn, LabelingFunction) # True
+            >>> assert lf_item.fn.name = "test_fn"              # True
+            >>> assert not lf_item.learnable                    # True
+            >>> assert lf_item.item_type is None                # True
+
+        """
+        for item in self.m_learners:
+            if fn_name == item.fn.name:
+                return item
+        raise ValueError("Function with name {} not found" % fn_name)
 
     # def __call__(
     #         self,
