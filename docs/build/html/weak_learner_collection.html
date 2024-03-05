@@ -377,7 +377,7 @@ document.write(`
 <dt>Dispatches to one of the following methods:</dt><dd><ol class="arabic simple">
 <li><p><a class="reference internal" href="#at_nlp.filters.weak_learner_collection.WeakLearners.add_labeling_function" title="at_nlp.filters.weak_learner_collection.WeakLearners.add_labeling_function"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_labeling_function()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#at_nlp.filters.weak_learner_collection.WeakLearners.add_primative" title="at_nlp.filters.weak_learner_collection.WeakLearners.add_primative"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_primative()</span></code></a></p></li>
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_sklearn()</span></code></p></li>
+<li><p><a class="reference internal" href="#at_nlp.filters.weak_learner_collection.WeakLearners.add_sklearn" title="at_nlp.filters.weak_learner_collection.WeakLearners.add_sklearn"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_sklearn()</span></code></a></p></li>
 </ol>
 </dd>
 </dl>
@@ -417,13 +417,14 @@ supplied function.</p></li>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">at_nlp.filters.weak_learner_collection</span> <span class="kn">import</span> <span class="n">WeakLearners</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snorkel.labeling</span> <span class="kn">import</span> <span class="n">labeling_function</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span> <span class="o">=</span> <span class="n">WeakLearners</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nd">@labeling_function</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">static_fn_ex</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">predicate</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rsrcs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;col_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Messages&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@labeling_function</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Example&quot;</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="n">rsrcs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fn_ex0</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">series</span><span class="p">[</span><span class="n">col_name</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="k">return</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">else</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="k">return</span> <span class="mi">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">static_fn_ex</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fn_ex0</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -459,6 +460,152 @@ We will wrap this function so that it is a proper Snorkel labeling function.</p>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="k">return</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">primative_ex2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.weak_learner_collection.WeakLearners.add_sklearn">
+<span class="sig-name descname"><span class="pre">add_sklearn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEstimator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/at_nlp/filters/weak_learner_collection.html#WeakLearners.add_sklearn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.weak_learner_collection.WeakLearners.add_sklearn" title="Link to this definition">#</a></dt>
+<dd><p>Adds an estimator from Sci-kit learn to the collection. Assumes the function
+has trainable parameters. All inputs will be vectorized beforehand.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn</strong> (<em>BaseEstimator</em>) – A valid sklearn estimator</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">at_nlp.filters.weak_learner_collection</span> <span class="kn">import</span> <span class="n">WeakLearners</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>  <span class="c1"># noqa</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span> <span class="o">=</span> <span class="n">WeakLearners</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.weak_learner_collection.WeakLearners.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">LabelingFunction</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">BaseEstimator</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/weak_learner_collection.html#WeakLearners.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.weak_learner_collection.WeakLearners.extend" title="Link to this definition">#</a></dt>
+<dd><p>Extends internal collection with a list of fns. Assumes each function is
+non-trainable unless it subclasses BaseEstimator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.weak_learner_collection.WeakLearners.get_labeling_fn">
+<span class="sig-name descname"><span class="pre">get_labeling_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">LearnerItem</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/weak_learner_collection.html#WeakLearners.get_labeling_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.weak_learner_collection.WeakLearners.get_labeling_fn" title="Link to this definition">#</a></dt>
+<dd><p>Returns the first LearnerItem that matches the supplied name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn_name</strong> (<em>str</em>) – The learner to retrieve</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The first LearnerItem that matches the supplied name. Learner</dt><dd><p>items have the following structure:
+1. fn = The labeling function
+2. learnable = Whether the function contains trainable parameters
+3. item_type = The underlying type of the fn</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LearnerItem</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the function is not in the collection</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">at_nlp.filters.weak_learner_collection</span> <span class="kn">import</span> <span class="n">WeakLearners</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snorkel.labeling</span> <span class="kn">import</span> <span class="n">labeling_function</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span> <span class="o">=</span> <span class="n">WeakLearners</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ex1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sk_item</span> <span class="o">=</span> <span class="n">wl_col</span><span class="o">.</span><span class="n">get_labeling_fn</span><span class="p">(</span><span class="s2">&quot;SK_RandomForestClassifier&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sk_item</span><span class="o">.</span><span class="n">fn</span><span class="p">,</span> <span class="n">LabelingFunction</span><span class="p">)</span>         <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">sk_item</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;SK_RandomForestClassifier&quot;</span>   <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">sk_item</span><span class="o">.</span><span class="n">learnable</span>                                <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">sk_item</span><span class="o">.</span><span class="n">item_type</span> <span class="o">==</span> <span class="s2">&quot;sklearn&quot;</span>                   <span class="c1"># True</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ex2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pr_item</span> <span class="o">=</span> <span class="n">wl_col</span><span class="o">.</span><span class="n">get_labeling_fn</span><span class="p">(</span><span class="s1">&#39;PR_anon2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pr_item</span><span class="o">.</span><span class="n">fn</span><span class="p">,</span> <span class="n">LabelingFunction</span><span class="p">)</span> <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">pr_item</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;PR_anon2&#39;</span>            <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="ow">not</span> <span class="n">pr_item</span><span class="o">.</span><span class="n">learnable</span>                    <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">pr_item</span><span class="o">.</span><span class="n">item_type</span> <span class="ow">is</span> <span class="kc">None</span>                <span class="c1"># True</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ex3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rscrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">col_name</span> <span class="o">=</span> <span class="s2">&quot;Messages&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@labeling_function</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_fn&quot;</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="n">rscrs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">test_fn_01</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">s</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">series</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="k">return</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">test_fn_01</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lf_item</span> <span class="o">=</span> <span class="n">wl_col</span><span class="o">.</span><span class="n">get_labeling_fn</span><span class="p">(</span><span class="s2">&quot;test_fn&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lf_item</span><span class="o">.</span><span class="n">fn</span><span class="p">,</span> <span class="n">LabelingFunction</span><span class="p">)</span> <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">lf_item</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;test_fn&quot;</span>              <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="ow">not</span> <span class="n">lf_item</span><span class="o">.</span><span class="n">learnable</span>                    <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">lf_item</span><span class="o">.</span><span class="n">item_type</span> <span class="ow">is</span> <span class="kc">None</span>                <span class="c1"># True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="at_nlp.filters.weak_learner_collection.WeakLearners.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/at_nlp/filters/weak_learner_collection.html#WeakLearners.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#at_nlp.filters.weak_learner_collection.WeakLearners.remove" title="Link to this definition">#</a></dt>
+<dd><p>Remove a weak learner from the collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn_name</strong> (<em>str</em>) – Snorkel LabelingFunction name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the given fn_name is not in the collection</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">at_nlp.filters.weak_learner_collection</span> <span class="kn">import</span> <span class="n">WeakLearners</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snorkel.labeling</span> <span class="kn">import</span> <span class="n">labeling_function</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span> <span class="o">=</span> <span class="n">WeakLearners</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">))</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rscrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">col_name</span> <span class="o">=</span> <span class="s2">&quot;Messages&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@labeling_function</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_fn&quot;</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="n">rscrs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">test_fn_01</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">s</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">series</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="k">return</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">test_fn_01</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">wl_col</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;test_fn&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">wl_col</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;SK_RandomForestClassifier&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">wl_col</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wl_col</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;PR_anon1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">wl_col</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -519,6 +666,10 @@ We will wrap this function so that it is a proper Snorkel labeling function.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#at_nlp.filters.weak_learner_collection.WeakLearners.add"><code class="docutils literal notranslate"><span class="pre">WeakLearners.add()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#at_nlp.filters.weak_learner_collection.WeakLearners.add_labeling_function"><code class="docutils literal notranslate"><span class="pre">WeakLearners.add_labeling_function()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#at_nlp.filters.weak_learner_collection.WeakLearners.add_primative"><code class="docutils literal notranslate"><span class="pre">WeakLearners.add_primative()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#at_nlp.filters.weak_learner_collection.WeakLearners.add_sklearn"><code class="docutils literal notranslate"><span class="pre">WeakLearners.add_sklearn()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#at_nlp.filters.weak_learner_collection.WeakLearners.extend"><code class="docutils literal notranslate"><span class="pre">WeakLearners.extend()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#at_nlp.filters.weak_learner_collection.WeakLearners.get_labeling_fn"><code class="docutils literal notranslate"><span class="pre">WeakLearners.get_labeling_fn()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#at_nlp.filters.weak_learner_collection.WeakLearners.remove"><code class="docutils literal notranslate"><span class="pre">WeakLearners.remove()</span></code></a></li>
 </ul>
 </li>
 </ul>
