@@ -3,16 +3,11 @@ from __future__ import annotations
 from functools import singledispatchmethod
 from dataclasses import dataclass
 from collections import abc
-from typing import SupportsIndex, TypeAlias, Callable, Iterable, Optional
 
 import pandas as pd
 from snorkel.labeling import LabelingFunction, labeling_function
 from sklearn.base import BaseEstimator
 from sklearn.feature_extraction.text import CountVectorizer
-from snorkel.preprocess import preprocessor
-
-
-# LabelingFunctionPrimative: TypeAlias = abc.Callable[pd.Series], int]]
 
 
 @dataclass
@@ -188,18 +183,32 @@ class WeakLearners:
             ValueError: If the given fn_name is not in the collection
 
         Example:
-            >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
-            >>> stack = PreprocessorStack()
-            >>> # Define a preprocessor
-            >>> def example_preprocessor(ds: pd.Series, position: int) -> pd.Series:
-            >>>     # This function will test for string lengths greater than 10
-            >>>     if len(ds.iat[position]) >= 10:
-            >>>         return ds
-            >>>     ds.iat[position] = ""
-            >>>     return ds
-            >>> stack.append(example_preprocessor)
-            >>> # Remove the previously added preprocessor
-            >>> stack.remove(example_preprocessor)
+            >>> from at_nlp.filters.weak_learner_collection import WeakLearners
+            >>> from sklearn.ensemble import RandomForestClassifier
+            >>> from snorkel.labeling import labeling_function
+            >>>
+            >>> wl_col = WeakLearners()
+            >>>
+            >>> rf = RandomForestClassifier()
+            >>> wl_col.add(rf)
+            >>> wl_col.add(lambda s: int(len(s) > 6))
+            >>>
+            >>> rscrs = dict(col_name = "Messages")
+            >>> @labeling_function(name="test_fn", resources=rscrs)
+            >>> def test_fn_01(series: pd.Series, col_name: str) -> int:
+            >>>     s: str = series[col_name]
+            >>>     if s == s.lower()
+            >>>         return 1
+            >>>     return 0
+            >>> wl_col.add(test_fn_01)
+            >>>
+            >>> assert len(wl_col) == 3
+            >>> wl_col.remove("test_fn")
+            >>> assert len(wl_col) == 2
+            >>> wl_col.remove("SK_RandomForestClassifier")
+            >>> assert len(wl_col) == 1
+            >>> wl_col.remove("PR_anon1")
+            >>> assert len(wl_col) == 0
         """
         name_located = False
         for idx, item in enumerate(self.m_learners):
@@ -208,7 +217,7 @@ class WeakLearners:
                 name_located = True
 
         if not name_located:
-            raise ValueError("Function with name {} not found" % fn_name)
+            raise ValueError(f"Function with name {fn_name} not found")
 
     def get_labeling_fn(self, fn_name: str) -> LearnerItem:
         r"""Returns the first LearnerItem that matches the supplied name.
@@ -218,10 +227,10 @@ class WeakLearners:
 
         Returns:
             LearnerItem: The first LearnerItem that matches the supplied name. Learner
-            items have the following structure:
-                .fn = The labeling function
-                .learnable = Whether the function contains trainable parameters
-                .item_type = The underlying type of the fn
+                items have the following structure:
+                1. fn = The labeling function
+                2. learnable = Whether the function contains trainable parameters
+                3. item_type = The underlying type of the fn
 
         Raises:
             ValueError: If the function is not in the collection
@@ -269,27 +278,11 @@ class WeakLearners:
         for item in self.m_learners:
             if fn_name == item.fn.name:
                 return item
-        raise ValueError("Function with name {} not found" % fn_name)
+        raise ValueError(f"Function with name {fn_name} not found")
 
-    # def __call__(
-    #         self,
-    #         df: pd.DataFrame,
-    #         col_idx: int = 0,
-    #         parallel: bool = False,
-    #         num_partitions: int = 2,
-    # ) -> pd.DataFrame:
-    #     r"""Sequentially execute functions in the preprocessor stack"""
-    #     if parallel:
-    #         df = dd.from_pandas(df, npartitions=num_partitions)
-    #
-    #     for preprocessor in self._stack:
-    #         partial_fn = partial(preprocessor, col_idx=col_idx)
-    #         if parallel:
-    #             df.apply(partial_fn, axis=1, meta=df)
-    #         else:
-    #             df = df.apply(partial_fn, axis=1)
-    #     return df
-    #
+    # TODO: Implement __call__?, train_wl, train_ens, save?, load?, print,
+    # TODO: display_train_wl_to_term, display_train_ens_to_term
+
     def __iter__(self):
         return self
 

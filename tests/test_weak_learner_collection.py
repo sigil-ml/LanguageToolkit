@@ -243,3 +243,15 @@ class TestWeakLearnerCollectionUtilities:
         assert item3.fn.name == "SK_RandomForestClassifier"
         assert item3.learnable
         assert item3.item_type == "sklearn"
+
+    def test_add_wrong_type(self, empty_learner_collection):
+        with pytest.raises(TypeError):
+            empty_learner_collection.add(1)
+
+    def test_remove_non_existent_fn(self, empty_learner_collection):
+        with pytest.raises(ValueError):
+            empty_learner_collection.remove("test_weak_learner_01")
+    
+    def test_get_non_existent_fn(self, empty_learner_collection):
+        with pytest.raises(ValueError):
+            empty_learner_collection.get_labeling_fn("test_weak_learner_01")
