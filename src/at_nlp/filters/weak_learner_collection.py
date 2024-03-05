@@ -17,7 +17,7 @@ from snorkel.preprocess import preprocessor
 
 @dataclass
 class LearnerItem:
-    labeling_fn: abc.Callable | LabelingFunction
+    fn: abc.Callable | LabelingFunction
     learnable: bool
     item_type: str | None
 
@@ -30,6 +30,7 @@ class WeakLearners:
         self.m_col_name = col_name
         self.m_vectorizer = CountVectorizer()
         self.m_rsrcs = dict(col_name=self.m_col_name)
+        self.m_idx = 0
 
     @singledispatchmethod
     def add(
@@ -122,7 +123,7 @@ class WeakLearners:
 
         """
 
-        @labeling_function(name=f"WL_{fn.__name__}", resources=self.m_rsrcs)
+        @labeling_function(name=f"PR_{fn.__name__}", resources=self.m_rsrcs)
         def wrapper(series: pd.Series, col_name: str) -> int:
             s = series[col_name]
             return fn(s)
@@ -154,7 +155,7 @@ class WeakLearners:
         """
 
         # noinspection PyUnresolvedReferences
-        @labeling_function(name=f"WL_{fn.__name__}", resources=self.m_rsrcs)
+        @labeling_function(name=f"SK_{fn.__class__.__name__}", resources=self.m_rsrcs)
         def wrapper(series: pd.Series, col_name: str) -> int:
             s = series[col_name]
             s = self.m_vectorizer.transform(s)
@@ -162,6 +163,15 @@ class WeakLearners:
 
         item = LearnerItem(wrapper, learnable=True, item_type="sklearn")
         self.m_learners.append(item)
+
+    def extend(self,
+               fns: abc.Iterable[LabelingFunction | abc.Callable | BaseEstimator]
+               ) -> None:
+        """Extends internal collection with a list of fns. Assumes each function is
+        non-trainable unless it subclasses BaseEstimator.
+        """
+        for fn in fns:
+            self.add(fn)
 
     # def remove(self, preprocessor: Preprocessor):
     #     r"""Remove a weak learner from the collection.
@@ -251,37 +261,29 @@ class WeakLearners:
     #             df = df.apply(partial_fn, axis=1)
     #     return df
     #
-    # def __iter__(self):
-    #     return self
-    #
+    def __iter__(self):
+        return self
 
     def __len__(self):
         return len(self.m_learners)
-    #
-    # def __getitem__(self, item: int) -> Preprocessor:
-    #     if not isinstance(item, int):
-    #         raise TypeError("Preprocessor stack indices must be integers")
-    #     return self._stack[item]
-    #
-    # def __setitem__(self, item: int, preprocessor: Preprocessor) -> None:
-    #     if not isinstance(item, int):
-    #         raise TypeError("Preprocessor stack indices must be integers")
-    #     self._stack[item] = preprocessor
-    #
-    # def __next__(self) -> Preprocessor:
-    #     self._idx += 1
-    #     try:
-    #         return self._stack[self._idx - 1]
-    #     except IndexError:
-    #         self._idx = 0
-    #         raise StopIteration
-    #
-    # def __repr__(self):
-    #     table = Table(title="Preprocessor Callstack", show_lines=True)
-    #     table.add_column("Index")
-    #     table.add_column("Function", style="bold")
-    #     table.add_column("Type")
-    #     for idx, fn in enumerate(self._stack):
-    #         table.add_row(str(idx), fn.__name__, str(type(fn)))
-    #     console.print(table)
-    #     return ""
+
+    def __getitem__(self, item: int) -> LearnerItem:
+        if not isinstance(item, int):
+            raise TypeError("Collection indices must be integers")
+        return self.m_learners[item]
+
+    def __setitem__(self, item: int, learner_item: LearnerItem) -> None:
+        if not isinstance(item, int):
+            raise TypeError("Collection indices must be integers")
+        self.m_learners[item] = learner_item
+
+    def __next__(self) -> LearnerItem:
+        self.m_idx += 1
+        try:
+            return self.m_learners[self.m_idx - 1]
+        except IndexError:
+            self.m_idx = 0
+            raise StopIteration
+
+    def __repr__(self):
+        print(self.m_learners)

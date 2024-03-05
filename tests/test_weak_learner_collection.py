@@ -64,10 +64,10 @@ mlp = MLPClassifier()
 
 # TODO: Add preprocess calls
 class TestAddLabelingFunctions:
-    test_df = pd.DataFrame(
-        [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
-        columns=["id", "text"],
-    )
+    # test_df = pd.DataFrame(
+    #     [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
+    #     columns=["id", "text"],
+    # )
 
     @pytest.fixture
     def empty_learner_collection(self):
@@ -81,6 +81,97 @@ class TestAddLabelingFunctions:
     #         [(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 1), (t_preprocessor_fn2, 2)])
     #     yield ps
 
-    def test_add(self, empty_learner_collection):
+    def test_add_base(self, empty_learner_collection):
         empty_learner_collection.add(lf_fn_ex_01)
         assert len(empty_learner_collection) == 1
+        assert empty_learner_collection[0].fn.name == "test_weak_learner_01"
+
+    def test_add_induction(self, empty_learner_collection):
+        empty_learner_collection.add(lf_fn_ex_01)
+        empty_learner_collection.add(lf_fn_ex_02)
+        assert len(empty_learner_collection) == 2
+        assert empty_learner_collection[0].fn.name == "test_weak_learner_01"
+        assert empty_learner_collection[1].fn.name == "test_weak_learner_02"
+
+    def test_add_multi_lf(self, empty_learner_collection):
+        empty_learner_collection.extend([lf_fn_ex_01, lf_fn_ex_02])
+        assert len(empty_learner_collection) == 2
+        assert empty_learner_collection[0].fn.name == "test_weak_learner_01"
+        assert empty_learner_collection[1].fn.name == "test_weak_learner_02"
+
+
+class TestAddPrimativeFunctions:
+    # test_df = pd.DataFrame(
+    #     [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
+    #     columns=["id", "text"],
+    # )
+
+    @pytest.fixture
+    def empty_learner_collection(self):
+        wl_col = WeakLearners(col_name="text")
+        yield wl_col
+
+    # @pytest.fixture
+    # def full_stack(self):
+    #     ps = PreprocessorStack()
+    #     ps.add_multiple(
+    #         [(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 1), (t_preprocessor_fn2, 2)])
+    #     yield ps
+
+    def test_add_base(self, empty_learner_collection):
+        empty_learner_collection.add(pr_fn_ex_01)
+        assert len(empty_learner_collection) == 1
+        assert empty_learner_collection[0].fn.name == "PR_pr_fn_ex_01"
+
+    def test_add_induction(self, empty_learner_collection):
+        empty_learner_collection.add(pr_fn_ex_01)
+        empty_learner_collection.add(pr_fn_ex_02)
+        assert len(empty_learner_collection) == 2
+        assert empty_learner_collection[0].fn.name == "PR_pr_fn_ex_01"
+        assert empty_learner_collection[1].fn.name == "PR_pr_fn_ex_02"
+
+    def test_add_multi_pr(self, empty_learner_collection):
+        empty_learner_collection.extend([pr_fn_ex_01, pr_fn_ex_02])
+        assert len(empty_learner_collection) == 2
+        assert empty_learner_collection[0].fn.name == "PR_pr_fn_ex_01"
+        assert empty_learner_collection[1].fn.name == "PR_pr_fn_ex_02"
+
+
+class TestAddSKLearnFunctions:
+    # test_df = pd.DataFrame(
+    #     [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
+    #     columns=["id", "text"],
+    # )
+
+    @pytest.fixture
+    def empty_learner_collection(self):
+        wl_col = WeakLearners(col_name="text")
+        yield wl_col
+
+    # @pytest.fixture
+    # def full_stack(self):
+    #     ps = PreprocessorStack()
+    #     ps.add_multiple(
+    #         [(t_preprocessor_fn0, 0), (t_preprocessor_fn1, 1), (t_preprocessor_fn2, 2)])
+    #     yield ps
+
+    def test_add_base(self, empty_learner_collection):
+        empty_learner_collection.add(rf)
+        assert len(empty_learner_collection) == 1
+        assert empty_learner_collection[0].fn.name == "SK_RandomForestClassifier"
+
+    def test_add_induction(self, empty_learner_collection):
+        empty_learner_collection.add(rf)
+        empty_learner_collection.add(sv)
+        empty_learner_collection.add(mlp)
+        assert len(empty_learner_collection) == 3
+        assert empty_learner_collection[0].fn.name == "SK_RandomForestClassifier"
+        assert empty_learner_collection[1].fn.name == "SK_SVC"
+        assert empty_learner_collection[2].fn.name == "SK_MLPClassifier"
+
+    def test_add_multi_sk(self, empty_learner_collection):
+        empty_learner_collection.extend([rf, sv, mlp])
+        assert len(empty_learner_collection) == 3
+        assert empty_learner_collection[0].fn.name == "SK_RandomForestClassifier"
+        assert empty_learner_collection[1].fn.name == "SK_SVC"
+        assert empty_learner_collection[2].fn.name == "SK_MLPClassifier"
