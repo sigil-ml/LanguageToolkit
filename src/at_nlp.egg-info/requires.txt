@@ -1,0 +1,14 @@
+pydantic
+scikit-learn
+pandas
+numpy
+tqdm
+dask-expr
+pyarrow
+
+[doc]
+sphinx
+sphinxcontrib.katex
+sphinx_copybutton
+myst-parser
+pydata-sphinx-theme

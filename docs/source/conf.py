@@ -15,16 +15,14 @@ import sys
 
 sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
 
-
 # -- Project information -----------------------------------------------------
 
-project = "Athena AIML NLP Tools"
+project = "Athena NLP Toolkit"
 copyright = "2024, Athena AIML Contributors"
-author = "Athena AIML Contributors"
+author = "Athena-AIML"
 
 # The full version, including alpha/beta/rc tags
 release = "main"
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -54,13 +52,12 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "furo"
+html_theme = "pydata_sphinx_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

@@ -16,3 +16,6 @@ dependencies = [
     "dask-expr",
     "pyarrow"
 ]
+
+[project.optional-dependencies]
+doc = ["sphinx", "sphinxcontrib.katex", "sphinx_copybutton", "myst-parser", "pydata-sphinx-theme"]

@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: at_nlp
+Version: 0.0.1a0
+License: MIT License
+Requires-Python: >=3.10
+License-File: LICENSE
+Requires-Dist: pydantic
+Requires-Dist: scikit-learn
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: tqdm
+Requires-Dist: dask-expr
+Requires-Dist: pyarrow
+Provides-Extra: doc
+Requires-Dist: sphinx; extra == "doc"
+Requires-Dist: sphinxcontrib.katex; extra == "doc"
+Requires-Dist: sphinx_copybutton; extra == "doc"
+Requires-Dist: myst-parser; extra == "doc"
+Requires-Dist: pydata-sphinx-theme; extra == "doc"

@@ -8,9 +8,10 @@ Welcome to at_nlp's documentation!
 
 .. toctree::
 
-   filters
-   preprocessor_stack
-   retrieval_augmented_generation
+    filters
+    preprocessor_stack
+    weak_learner_collection
+    retrieval_augmented_generation
 
 
 
