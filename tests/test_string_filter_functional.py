@@ -5,7 +5,7 @@ import pytest
 from zipfile import ZipFile
 from loguru import logger
 from at_nlp.filters.string_filter import StringFilter
-from snorkel.labeling import labeling_function
+from snorkel.labeling import labeling_function, LabelingFunction
 from enum import Enum, unique
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
@@ -475,22 +475,72 @@ class TestRemovePreprocessor:
             empty_filter.remove_preprocessor(0)
 
 class TestRemoveWeakLearner:
+
+    def test_del(self, full_lf_filter):
+        del full_lf_filter.labeling_fns[1]
+        assert len(full_lf_filter.labeling_fns) == 2
+        assert all([isinstance(fn, LabelingFunction) for fn in full_pre_filter.labeling_fns])
+
+    def test_remove_via_method(self, full_lf_filter):
+        full_lf_filter.remove_labeling_function("rf")
+        assert len(full_lf_filter.labeling_fns) == 2
+        assert all([isinstance(fn, LabelingFunction) for fn in full_pre_filter.labeling_fns])
+
+    def test_remove_non_existent(self, empty_filter):
+        with pytest.raises(ValueError):
+            empty_filter.remove_labeling_function("rf")
+
+class TestLoad:  # TODO
     pass
 
-class TestLoad:
+class TestSave:  # TODO
     pass
 
-class TestSave:
+class TestEval:  # TODO
     pass
 
-class TestEval:
-    pass
-
-class TestMetrics:
+class TestMetrics:  # TODO
     pass
 
 class TestGetPreprocessor:
-    pass
+
+    def test_get_by_name(self, full_pre_filter):
+        item = full_pre_filter.get_preprocessor("pre_fn_ex0")
+        assert callable(item)
+
+    def test_get_by_position(self, full_pre_filter):
+        item = full_pre_filter.get_preprocessor(0)
+        assert item.name == "pre_fn_ex0"
+        assert callable(item)
+
+    def test_wrong_type(self, full_pre_filter):
+        with pytest.raises(IndexError):
+            full_pre_filter.get_preprocessor(0.1)
+
+    def test_non_existent_name(self, empty_filter):
+        with pytest.raises(ValueError):
+            empty_filter.get_preprocessor("pre_fn_ex100")
 
 class TestGetWeakLearner:
-    pass
+
+    def test_get_by_name(self, full_lf_filter):
+        item = full_lf_filter.get_labeling_function("test_weak_learner_01")
+        assert isinstance(item.fn, LabelingFunction)
+        assert item.fn.name == "test_weak_learner_01"
+        assert not item.learnable
+        assert item.item_type is None
+
+    def test_get_sklearn_estimator(self, full_lf_filter):
+        item = full_lf_filter.get_labeling_function("SK_RandomForestClassifier")
+        assert isinstance(item.fn, RandomForestClassifier)
+        assert item.fn.name == "SK_RandomForestClassifier"
+        assert item.learnable
+        assert item.item_type == "sklearn"
+
+    def test_get_wrong_type(self, full_lf_filter):
+        with pytest.raises(IndexError):
+            full_lf_filter.get_labeling_function(0)
+
+    def test_non_existent_name(self, empty_filter):
+        with pytest.raises(ValueError):
+            empty_filter.get_labeling_function("test_weak_learner_100")
