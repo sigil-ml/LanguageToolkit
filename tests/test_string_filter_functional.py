@@ -53,7 +53,7 @@ class TestTrainTestSplit:
 
     @pytest.fixture(scope="class")
     def splits(self, empty_filter):
-        train, test = empty_filter.train_test_split(test_data, 0.8)
+        train, test = empty_filter.train_test_split(test_data, train_size=0.8)
         yield train, test
 
     def test_split_amt(self, splits):
@@ -75,7 +75,7 @@ class TestTrainTestSplit:
 
     def test_train_data_shuffle(self, empty_filter, splits):
         train, test = splits
-        train_shuffle, test_shuffle = empty_filter.train_test_split(test_data, 0.8, shuffle=True)
+        train_shuffle, test_shuffle = empty_filter.train_test_split(test_data, train_size=0.8, shuffle=True)
         test_data_len = len(test_data)
         assert not train.equals(train_shuffle)
         assert not test.equals(test_shuffle)
@@ -83,9 +83,47 @@ class TestTrainTestSplit:
         assert int(0.2 * test_data_len) == len(test_shuffle)
         assert test_data_len == len(train_shuffle) + len(test_shuffle)
 
+    def test_train_data_1_normal(self, empty_filter):
+        with pytest.raises(ValueError):
+            train, test = empty_filter.train_test_split(test_data, train_size=0.8)
+
+    def test_train_data_1_shuffle(self, empty_filter):
+        with pytest.raises(ValueError):
+            train, test = empty_filter.train_test_split(test_data, train_size=0.8, shuffle=True)
+
+    def test_train_data_invalid_size_1(self, empty_filter):
+        with pytest.raises(ValueError):
+            train, test = empty_filter.train_test_split(test_data, train_size=0, shuffle=True)
+
+    def test_train_data_invalid_size_2(self, empty_filter):
+        with pytest.raises(ValueError):
+            train, test = empty_filter.train_test_split(test_data, train_size=-1, shuffle=True)
+
+    def test_train_data_invalid_size_3(self, empty_filter):
+        with pytest.raises(ValueError):
+            train, test = empty_filter.train_test_split(test_data, train_size=1, shuffle=True)
+
+    def test_train_data_invalid_size_4(self, empty_filter):
+        with pytest.raises(ValueError):
+            train, test = empty_filter.train_test_split(test_data, train_size=2, shuffle=True)
+
+    def test_train_data_invalid_size_5(self, empty_filter):
+        with pytest.raises(ValueError):
+            train, test = empty_filter.train_test_split(test_data, train_size="2", shuffle=True)
+
+
 
 class TestFit:
-    pass
+
+    @pytest.fixture(scope="class")
+    def splits(self, empty_filter):
+        train, test = empty_filter.train_test_split(test_data, 0.8)
+        yield train, test
+
+    def test_fit(self, splits, empty_filter):
+        train, test = splits
+        train_metrics = empty_filter.fit(train)
+        assert isinstance(train_metrics, TrainingMetrics)
 
 class TestTransform:
     pass
