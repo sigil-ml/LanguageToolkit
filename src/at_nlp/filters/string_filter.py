@@ -34,6 +34,7 @@ from snorkel.labeling.model import LabelModel
 from tqdm import tqdm
 
 from at_nlp.filters.preprocessor_stack import PreprocessorStack
+from at_nlp.filters.weak_learner_collection import WeakLearners
 
 # from loguru import logger as log
 
@@ -60,306 +61,63 @@ class FilterResult(Enum):
 
 
 class StringFilter:
-    r"""This is a conceptual class representation of a simple BLE device
-    (GATT Server). It is essentially an extended combination of the
 
-    """
+    def __init__(self, col_name: str):
+        self._preprocessors = PreprocessorStack()
+        self._weak_learners = WeakLearners(col_name)
+        self._count_vectorizer = None
 
-    """
-    ---------------------------------------------
-    Pre-processor Add/Delete/Update Methods
-    ---------------------------------------------
-    Labeling Add/Delete/Update Methods
-        1. Generic labeling function
-        2. Sklearn labeling function
-        3. Delete labeling function
-        4. Update labeling function
-    ---------------------------------------------
-    Training Methods
-        1. Train template miner
-        2. Train weak learners
-        3. Train ensemble learners
-    ---------------------------------------------
-    Execute Methods
-        1. Call template miner
-        2. Call pre-processors
-        3. Call Ensemble
-    ---------------------------------------------
-    Save/Load Methods
-    ---------------------------------------------
-    """
+    def add_preprocessor(self):
+        pass
 
-    mlp = MLPClassifier(alpha=1, max_iter=1000)
-    """Simple MLP classifier for ensemble of weak learners"""
-    class_likelihood = 0.6
-    """Threshold for class probabilities"""
-    salutations = [
-        "hello",
-        "hola",
-        "aloha",
-        "mornin",  # noqa
-        "ello govna",  # noqa
-        "good morning",
-        "good evening",
-        "good night",
-        "good <:*:>",
-        "hey <:*:>",
-        "hi <:*:>",
-        "haha <:*:>",
-    ]
-    """List of salutations to filter"""
-    verbose: bool
-    """Whether to print diagnostic information to stdout"""
-    msg_len_cutoff = 7
-    """Number of characters in a message to define a short message"""
-    applier: PandasLFApplier
-    """Applies functions to Pandas DataFrame"""
-    label_model: LabelModel
-    """Ensemble of labeling models"""
-    drain_config: TemplateMinerConfig
-    """Configuration dictionary from drain3.ini file in cur dir"""
-    drain_config_path: Path
-    """Path to drain3.ini file as pathlib.Path object"""
-    template_miner: TemplateMiner
-    """Drain3 template miner to convert log messages to cluster templates"""
-    stage_one_train_data: pd.DataFrame
-    """Data used to train stage one"""
-    stage_one_test_data: pd.DataFrame
-    """Data used to test stage one"""
-    stage_two_train_data: pd.DataFrame
-    """Data used to train stage two"""
-    stage_two_test_data: pd.DataFrame
-    """Data used to test stage two"""
-    trace_stack: Dict = defaultdict(lambda: list())
-    """Retain performance metrics for each classifier"""
-    trace_mode: bool = False
-    """Toggle tracing mode"""
-    keyword_register: List[str] = []
-    """Iterable of keywords to strain"""
-    min_str_len: int = None
-    """Minimum length of a message"""
-    max_str_len: int = None
-    """Maximum length of a message"""
-    _preprocessor_stack: list[Callable[[pd.Series, int], pd.Series]] = []
-    """Call stack of preprocessing functions"""
+    def add_labeling_function(self):
+        pass
 
-    # TODO: add source dir as a parameter to make importing the CSV and INI files easier
-    def __init__(self, verbose=True, model_path: Path = None):
-        self.acronym_mapping: Dict[str, str] = dict()  # marked for deletion
-        """Mapping of acronyms to their meanings from provided CSV"""
-        self.filter_result: FilterResult = FilterResult
-        """Enumeration of categories for each message"""
-        self._labeling_fns: list[LabelingFunction] = []
-        self.cv = CountVectorizer()
-        """Coverts messages to a sparse matrix of token counts"""
-        self.rf = RandomForestClassifier()
-        """Random forest classifier for ensemble of weak learners"""
+    def train_test_split(self):
+        pass
 
-        # assert acronyms_path is not None, "Acronyms CSV is required!"
-        # assert (
-        #     acronyms_path.exists()
-        # ), f"Provided acronyms path: {acronyms_path.absolute()} does not exist!"
-        # assert drain_config_path is not None, "Drain3 config file is required!"
-        # assert (
-        #     drain_config_path.exists()
-        # ), f"Provided drain3.ini path: {drain_config_path.absolute()} does not exist!"
+    def fit(self):
+        pass
 
-        self.verbose = verbose
+    def transform(self):
+        pass
 
-        # with open(acronyms_path.absolute(), "r", encoding="utf-8-sig") as f:
-        #     for line in csv.DictReader(f):
-        #         line: dict
-        #         self.acronym_mapping[line["Jargon"]] = (
-        #             line["Meaning"] + " (" + line["Jargon"] + ")"
-        #         )
+    def fit_transform(self):
+        pass
 
-        # self.drain_config = TemplateMinerConfig()
-        # self.drain_config.load(str(drain_config_path))
-        # self.drain_config.profiling_enabled = False
-        # self.template_miner = TemplateMiner(None, self.drain_config)
+    def print_preprocessors(self):
+        pass
 
-        self.keyword_register = []
-        self.preprocessors = PreprocessorStack()
+    def print_labeling_functions(self):
+        pass
 
-        @labeling_function()
-        def string_keyword_strainer(ds: pd.Series) -> int:
-            """
-            Return a list of random ingredients as strings.
-            """
-            pred = self.filter_result.ABSTAIN.value
-            for keyword in self.keyword_register:
-                if ds["Message"].find(keyword) >= 0:
-                    pred = self.filter_result.RECYCLE.value
-                    break
-            return pred
+    def __repr__(self):
+        pass
 
-        @labeling_function()
-        def string_len_strainer() -> int:
-            """Classify based on the length of the string"""
-            pass
+    def remove_preprocessor(self):
+        pass
 
-        @labeling_function()
-        def lf_rf_rbf(ds: pd.Series) -> int:
-            """Classify a post using the SVC"""
-            start_time = time.time()
-            ds_arr = self.vectorize_text(ds)
-            ds_arr = self.transform(ds_arr, self.rf)
-            end_time = time.time()
-            if self.trace_mode:
-                total_time = end_time - start_time
-                self.trace_stack["rf"] += total_time
-            return ds_arr
+    def remove_labeling_function(self):
+        pass
 
-        @labeling_function()
-        def lf_mlp(ds: pd.Series) -> int:
-            """Classify a post using the MLP"""
-            start_time = time.time()
-            ds_arr = self.vectorize_text(ds)
-            ds_arr = self.transform(ds_arr, self.mlp)
-            end_time = time.time()
-            if self.trace_mode:
-                total_time = end_time - start_time
-                self.trace_stack["mlp"] += total_time
-            return ds_arr
+    def save(self):
+        pass
 
-        # @labeling_function()
-        # def lf_channel(ds: pd.Series) -> int:
-        #     """Classify a post as RECYCLE if it's a system message otherwise ABSTAIN"""
-        #     start_time = time.time()
-        #     msg = ds["Message"]
+    def load(self):
+        pass
 
-        #     # TODO: Prune with Mercury
-        #     r_val = self.filter_result.ABSTAIN.value
-        #     if (
-        #         msg.find("joined the channel") >= 0
-        #         or msg.find("added to the channel") >= 0
-        #     ):
-        #         r_val = self.filter_result.RECYCLE.value
-        #     end_time = time.time()
-        #     if self.trace_mode:
-        #         total_time = end_time - start_time
-        #         self.trace_stack.append(["channel", f"{total_time:.4f}s"])
-        #     return r_val
+    def eval(self):
+        pass
 
-        @labeling_function()
-        def lf_length(ds: pd.Series) -> int:
-            start_time = time.time()
-            msg = ds["Message"]
-            msg_len = len(msg)
-            r_val = self.filter_result.ABSTAIN.value
-            if msg_len < self.msg_len_cutoff:
-                r_val = self.filter_result.RECYCLE.value
-            end_time = time.time()
-            if self.trace_mode:
-                total_time = end_time - start_time
-                self.trace_stack["length"] += total_time
-            return r_val
+    def get_preprocessors(self):
+        pass
 
-        # @labeling_function()
-        # def lf_hello(ds: pd.Series) -> int:
-        #     """Classify a post as RECYCLE if it's a greeting/farewell otherwise ABSTAIN"""
-        #     start_time = time.time()
-        #     msg = ds["Message"].lower()
-        #     for item in self.salutations:
-        #         if msg.find(item.lower()) >= 0:
-        #             end_time = time.time()
-        #             if self.trace_mode:
-        #                 total_time = end_time - start_time
-        #                 self.trace_stack.append(["hello", f"{total_time:.4f}s"])
-        #             return self.filter_result.RECYCLE.value
+    def get_labeling_functions(self):
+        pass
 
-        #     end_time = time.time()
-        #     if self.trace_mode:
-        #         total_time = end_time - start_time
-        #         self.trace_stack.append(["hello", f"{total_time:.4f}s"])
-        #     return self.filter_result.ABSTAIN.value
 
-        # @labeling_function()
-        # def lf_roger(ds: pd.Series) -> int:
-        #     """Classify a post as RECYCLE if it's just a confirmation otherwise ABSTAIN"""
-        #     start_time = time.time()
-        #     msg = ds["Message"].lower()
-        #     r_val = self.filter_result.ABSTAIN.value
-        #     if msg.find("rgr") >= 0 or msg.find("roger") >= 0:
-        #         r_val = self.filter_result.RECYCLE.value
-        #     end_time = time.time()
-        #     if self.trace_mode:
-        #         total_time = end_time - start_time
-        #         self.trace_stack.append(["roger", f"{total_time:.4f}s"])
-        #     return r_val
 
-        # @labeling_function()
-        # def lf_lunch(ds: pd.Series) -> int:
-        #     """Classify a post as RECYCLE if it is about food otherwise ABSTAIN"""
-        #     start_time = time.time()
-        #     msg = ds["Message"].lower()
-        #     for item in ["lunch", "dinner", "food"]:
-        #         if msg.find(item) >= 0:
-        #             end_time = time.time()
-        #             if self.trace_mode:
-        #                 total_time = end_time - start_time
-        #                 self.trace_stack.append(["lunch", f"{total_time:.4f}s"])
-        #             return self.filter_result.RECYCLE.value
-        #     end_time = time.time()
-        #     if self.trace_mode:
-        #         total_time = end_time - start_time
-        #         self.trace_stack.append(["lunch", f"{total_time:.4f}s"])
-        #     return self.filter_result.ABSTAIN.value
 
-        if model_path is not None and model_path.exists():
-            console.log("Loading from directory: %s", model_path)
-            self.load_models(model_path)
-
-        # self.transform_template = partial(
-        #     self.template_miner_transform, tm=self.template_miner
-        # )
-        # self.labeling_functions = [
-        #     lf_rf_rbf,
-        #     lf_mlp,
-        #     string_keyword_strainer,
-        #     lf_length,
-        # ]
-        # self.update_applier()
-
-    def register_keywords(
-            self, keywords: list[str], make_lowercase: bool = True
-    ) -> None:
-        """Register new keywords to be used in the labeling functions"""
-        assert len(keywords) != 0, "No keywords supplied!"
-        if make_lowercase:
-            keywords = [x.lower() for x in keywords]
-        self.keyword_register.extend(keywords)
-
-    def set_string_len_bounds(self, lower_bound: int, upper_bound: int) -> None:
-        """Set the lower and upper bounds for the string length labeling function"""
-        assert lower_bound < upper_bound, "Lower bound must be less than upper bound!"
-        assert lower_bound > 0, "Lower bound must be greater than 0!"
-        self.min_str_len = lower_bound
-        self.max_str_len = upper_bound
-
-    # ========================================================================
-
-    def use_random_forest(self, random_forest: RandomForestClassifier) -> None:
-        r"""Sets up the StringFilter to use a provided RandomForest Classifier from sklearn
-
-        Args:
-            random_forest (RandomForestClassifier): Sklearn RandomForest Classifier reference
-
-        Returns:
-            None
-
-        Example:
-            >>> from at_nlp.filters.string_filter import StringFilter
-            >>> from sklearn.ensemble import RandomForestClassifier  # noqa
-            >>> random_forest = RandomForestClassifier()  # noqa
-            >>> string_filter = StringFilter()
-            >>> @labeling_function()
-            >>> def new_labeling_function(ds: pd.Series) -> pd.Series:
-                    x = cv.transform(ds)
-                    x =
-            >>>
-            >>> string_filter.use_random_forest(random_forest)
-        """
 
     def add_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
         r"""Adds a labeling function to the filter

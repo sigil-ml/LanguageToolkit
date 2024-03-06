@@ -380,6 +380,10 @@ class TestFit:
         with pytest.raises(ValueError):
             _ = std_filter.fit(train)
 
+    def test_with_template_miner(self, std_filter, splits):
+        train, test = splits
+        _ = std_filter.fit(train, col_name="text", template_miner=True)
+
 
 class TestTransform:
 
@@ -426,6 +430,10 @@ class TestFitTransform:
         train, test = splits
         with pytest.raises(ValueError):
             _ = std_filter.fit_transform(train)
+
+    def test_with_template_miner(self, std_filter, splits):
+        train, test = splits
+        _ = std_filter.fit_transform(train, col_name="text", template_miner=True)
 
 class TestPrintPreprocessors:  # TODO
     pass
