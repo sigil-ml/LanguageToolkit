@@ -44,9 +44,121 @@ def preprocess(s: str) -> int:
 
 test_data["label"] = test_data["label"].apply(preprocess)
 
+csv_path = Path("test.csv").absolute()
+
+
+def pre_fn_ex0(ds: pd.Series, position: int) -> pd.Series:
+    r"""Test function for testing CRUD operations"""
+    s: str = ds.iat[position]
+    ds.iat[position] = s.lower()
+    return ds
+
+
+def pre_fn_ex1(ds: pd.Series, position: int) -> pd.Series:
+    r"""Test function for testing CRUD operations"""
+    s: str = ds.iat[position]
+    ds.iat[position] = s.upper()
+    return ds
+
+
+def pre_fn_ex2(ds: pd.Series, position: int) -> pd.Series:
+    r"""Test function for testing CRUD operations"""
+    s: str = ds.iat[position]
+    ds.iat[position] = s.capitalize()
+    return ds
+
 @pytest.fixture
 def empty_filter():
     yield StringFilter()
+
+@pytest.fixture
+def full_pre_filter():
+    pre_filter = StringFilter()
+    pre_filter.add_preprocessor(pre_fn_ex0)
+    pre_filter.add_preprocessor(pre_fn_ex1)
+    pre_filter.add_preprocessor(pre_fn_ex2)
+    yield pre_filter
+
+
+class TestAddPreprocessor:
+
+    def test_add_empty_csv_default(self, empty_filter):
+        empty_filter.add_preprocessor(csv_path)
+        assert len(empty_filter.preprocessors) == 1
+        assert empty_filter.preprocessors.__dict__["test_data"] is not None
+        assert isinstance(empty_filter.preprocessors.__dict__["test_data"], dict)
+        assert empty_filter.preprocessors[-1].__name__ == "test_preprocessor"
+        assert callable(empty_filter.preprocessors[-1])
+
+    def test_add_full_csv_default(self, full_pre_filter):
+        full_pre_filter.add_preprocessor(csv_path)
+        assert len(full_pre_filter.preprocessors) == 4
+        assert full_pre_filter.preprocessors.__dict__["test_data"] is not None
+        assert isinstance(full_pre_filter.preprocessors.__dict__["test_data"], dict)
+        assert full_pre_filter.preprocessors[-1].__name__ == "test_preprocessor"
+        assert callable(full_pre_filter.preprocessors[-1])
+
+    def test_add_empty_pre(self, empty_filter):
+        empty_filter.add_preprocessor(pre_fn_ex0)
+        assert len(empty_filter.preprocessors) == 1
+        assert empty_filter.preprocessors[-1].__name__ == "pre_fn_ex0"
+        assert callable(empty_filter.preprocessors[-1])
+
+    def test_add_full_pre(self, full_pre_filter):
+        full_pre_filter.add_preprocessor(pre_fn_ex0)
+        assert len(full_pre_filter.preprocessors) == 4
+        assert full_pre_filter.preprocessors[-1].__name__ == "pre_fn_ex0"
+        assert callable(full_pre_filter.preprocessors[-1])
+
+    def test_add_full_pre_pos(self, full_pre_filter):
+        full_pre_filter.add_preprocessor(pre_fn_ex0, 3)
+        assert len(full_pre_filter.preprocessors) == 4
+        assert full_pre_filter.preprocessors[3].__name__ == "pre_fn_ex0"
+        assert callable(full_pre_filter.preprocessors[3])
+
+    def test_add_multiple_empty(self, empty_filter):
+        empty_filter.add_preprocessor([pre_fn_ex0, csv_path, pre_fn_ex2])
+        assert len(empty_filter.preprocessors) == 3
+        assert empty_filter.preprocessors[0].__name__ == "pre_fn_ex0"
+        assert empty_filter.preprocessors[1].__name__ == "test_preprocessor"
+        assert empty_filter.preprocessors[2].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in empty_filter.preprocessors])
+
+    def test_add_multiple_full(self, full_pre_filter):
+        full_pre_filter.add_preprocessor([pre_fn_ex0, csv_path, pre_fn_ex2])
+        assert len(full_pre_filter.preprocessors) == 3
+        assert full_pre_filter.preprocessors[0].__name__ == "pre_fn_ex0"
+        assert full_pre_filter.preprocessors[1].__name__ == "test_preprocessor"
+        assert full_pre_filter.preprocessors[2].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter.preprocessors])
+
+    def test_add_multiple_empty_pos(self, empty_filter):
+        empty_filter.add_preprocessor([
+            (pre_fn_ex0, 2),
+            (csv_path, 0),
+            (pre_fn_ex2, 1)
+        ])
+        assert len(empty_filter.preprocessors) == 3
+        assert empty_filter.preprocessors[2].__name__ == "pre_fn_ex0"
+        assert empty_filter.preprocessors[0].__name__ == "test_preprocessor"
+        assert empty_filter.preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in empty_filter.preprocessors])
+
+    def test_add_multiple_full_pos(self, full_pre_filter):
+        full_pre_filter.add_preprocessor([
+            (pre_fn_ex0, 4),
+            (csv_path, 5),
+            (pre_fn_ex2, 2)
+        ])
+        assert len(full_pre_filter.preprocessors) == 3
+        assert full_pre_filter.preprocessors[4].__name__ == "pre_fn_ex0"
+        assert full_pre_filter.preprocessors[5].__name__ == "test_preprocessor"
+        assert full_pre_filter.preprocessors[2].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter.preprocessors])
+
+
+
+
 
 
 class TestTrainTestSplit:
@@ -85,31 +197,31 @@ class TestTrainTestSplit:
 
     def test_train_data_1_normal(self, empty_filter):
         with pytest.raises(ValueError):
-            train, test = empty_filter.train_test_split(test_data, train_size=0.8)
+            _ = empty_filter.train_test_split(test_data, train_size=0.8)
 
     def test_train_data_1_shuffle(self, empty_filter):
         with pytest.raises(ValueError):
-            train, test = empty_filter.train_test_split(test_data, train_size=0.8, shuffle=True)
+            _ = empty_filter.train_test_split(test_data, train_size=0.8, shuffle=True)
 
     def test_train_data_invalid_size_1(self, empty_filter):
         with pytest.raises(ValueError):
-            train, test = empty_filter.train_test_split(test_data, train_size=0, shuffle=True)
+            _ = empty_filter.train_test_split(test_data, train_size=0, shuffle=True)
 
     def test_train_data_invalid_size_2(self, empty_filter):
         with pytest.raises(ValueError):
-            train, test = empty_filter.train_test_split(test_data, train_size=-1, shuffle=True)
+            _ = empty_filter.train_test_split(test_data, train_size=-1, shuffle=True)
 
     def test_train_data_invalid_size_3(self, empty_filter):
         with pytest.raises(ValueError):
-            train, test = empty_filter.train_test_split(test_data, train_size=1, shuffle=True)
+            _ = empty_filter.train_test_split(test_data, train_size=1, shuffle=True)
 
     def test_train_data_invalid_size_4(self, empty_filter):
         with pytest.raises(ValueError):
-            train, test = empty_filter.train_test_split(test_data, train_size=2, shuffle=True)
+            _ = empty_filter.train_test_split(test_data, train_size=2, shuffle=True)
 
     def test_train_data_invalid_size_5(self, empty_filter):
         with pytest.raises(ValueError):
-            train, test = empty_filter.train_test_split(test_data, train_size="2", shuffle=True)
+            _ = empty_filter.train_test_split(test_data, train_size="2", shuffle=True)
 
 
 
@@ -122,8 +234,9 @@ class TestFit:
 
     def test_fit(self, splits, empty_filter):
         train, test = splits
-        train_metrics = empty_filter.fit(train)
-        assert isinstance(train_metrics, TrainingMetrics)
+        with pytest.raises(ValueError):  # no weak learners
+            train_metrics = empty_filter.fit(train)
+
 
 class TestTransform:
     pass
