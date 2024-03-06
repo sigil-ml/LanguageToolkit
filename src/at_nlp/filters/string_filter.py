@@ -4,17 +4,20 @@ from __future__ import annotations
 import json
 import logging
 import os
+import pathlib
 import sys
 import time
 import traceback
+from collections import abc
 # import csv
 import uuid
 # import inspect
 from collections import defaultdict
 from enum import Enum
 from pathlib import Path
-from typing import List, Dict, Callable
-
+from typing import List, Dict, Callable, TypeAlias, Iterable, SupportsIndex
+from sklearn.base import BaseEstimator
+from dataclasses import dataclass
 import joblib
 import numpy as np
 import pandas as pd
@@ -34,7 +37,7 @@ from snorkel.labeling.model import LabelModel
 from tqdm import tqdm
 
 from at_nlp.filters.preprocessor_stack import PreprocessorStack
-from at_nlp.filters.weak_learner_collection import WeakLearners
+from at_nlp.filters.weak_learner_collection import WeakLearners, LearnerItem
 
 # from loguru import logger as log
 
@@ -60,29 +63,52 @@ class FilterResult(Enum):
     RECYCLE = 2
 
 
+Preprocessor: TypeAlias = (
+        abc.Callable |
+        pathlib.Path |
+        Iterable[abc.Callable | pathlib.Path] |
+        Iterable[tuple[abc.Callable | pathlib.Path, int]]
+)
+
+LabelingFunctionItem: TypeAlias = (
+        abc.Callable |
+        LabelingFunction |
+        BaseEstimator |
+        Iterable[abc.Callable | LabelingFunction | BaseEstimator]
+)
+
+
+@dataclass
+class TrainingResult:
+    accuracy: float
+    precision: float
+    n_correct: int
+    n_incorrect: int
+
+
 class StringFilter:
 
     def __init__(self, col_name: str):
         self._preprocessors = PreprocessorStack()
-        self._weak_learners = WeakLearners(col_name)
+        self._labeling_fns = WeakLearners(col_name)
         self._count_vectorizer = None
 
-    def add_preprocessor(self):
+    def add_preprocessor(self, fn: Preprocessor, position: int | None = None) -> int:
         pass
 
-    def add_labeling_function(self):
+    def add_labeling_function(self, fn: LabelingFunctionItem) -> None:
         pass
 
-    def train_test_split(self):
+    def train_test_split(self, data: pd.DataFrame | pd.Series, train_size: float = 0.8, shuffle: bool = False) -> tuple:
         pass
 
-    def fit(self):
+    def fit(self, data: pd.DataFrame | pd.Series, col_name: str, template_miner: bool = False) -> TrainingResult:
         pass
 
-    def transform(self):
+    def transform(self, data: pd.DataFrame | pd.Series, col_name: str) -> pd.DataFrame | pd.Series:
         pass
 
-    def fit_transform(self):
+    def fit_transform(self, data: pd.DataFrame | pd.Series, col_name: str, template_miner: bool = False) -> tuple[pd.DataFrame | pd.Series, TrainingResult]:
         pass
 
     def print_preprocessors(self):
@@ -94,10 +120,10 @@ class StringFilter:
     def __repr__(self):
         pass
 
-    def remove_preprocessor(self):
+    def remove_preprocessor(self, item: Preprocessor | str | SupportsIndex) -> None:
         pass
 
-    def remove_labeling_function(self):
+    def remove_labeling_function(self, item: str) -> LearnerItem:
         pass
 
     def save(self):
@@ -109,10 +135,10 @@ class StringFilter:
     def eval(self):
         pass
 
-    def get_preprocessors(self):
+    def get_preprocessor(self, item: str | SupportsIndex) -> Preprocessor:
         pass
 
-    def get_labeling_functions(self):
+    def get_labeling_function(self, item: str) -> LabelingItem:
         pass
 
 
