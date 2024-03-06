@@ -43,7 +43,7 @@ def lf_fn_ex_02(series: pd.Series, col_name: str) -> int:
     return FilterResult.RECYCLE.value
 
 
-# Create some primative fns
+# Create some primitive fns
 def pr_fn_ex_01(s: str) -> int:
     if s.lower() == s:
         return FilterResult.ABSTAIN.value
@@ -109,7 +109,7 @@ class TestCRUDLabelingFunctions:
         assert len(full_learner_collection) == 0
 
 
-class TestCRUDPrimativeFunctions:
+class TestCRUDPrimitiveFunctions:
     # test_df = pd.DataFrame(
     #     [[0, "test"], [1, "test2"], [2, "csv"], [3, "test3"], [4, "APL"]],
     #     columns=["id", "text"],

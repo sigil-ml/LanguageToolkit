@@ -87,8 +87,8 @@ class WeakLearners:
         self.m_learners.append(item)
 
     @add.register
-    def add_primative(self, fn: abc.Callable) -> None:
-        """:meth:`add_primative` creates a labeling function from a simple python
+    def add_primitive(self, fn: abc.Callable) -> None:
+        """:meth:`add_primitive` creates a labeling function from a simple python
         function ``fn``. The function ``fn`` should accept a `str` and produce an `int`.
         We will wrap this function so that it is a proper Snorkel labeling function.
 
@@ -110,11 +110,11 @@ class WeakLearners:
             >>> wl_col.add(lambda s: int(len(s) > 6))
             >>>
             >>> # Ex2
-            >>> def primative_ex2(s: str) -> int:
+            >>> def primitive_ex2(s: str) -> int:
             >>>     if s.find("some substring to find") == -1:
             >>>         return 0
             >>>     return 1
-            >>> wl_col.add(primative_ex2)
+            >>> wl_col.add(primitive_ex2)
 
         """
         if fn.__name__ == "<lambda>":

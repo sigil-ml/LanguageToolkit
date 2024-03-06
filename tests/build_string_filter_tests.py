@@ -81,7 +81,7 @@ def test_factory(inclusion_tuple: tuple) -> str:
         test_string = f"def {test_name}(template_miner: TemplateMiner):\n"
         test_string += f"\t\"\"\"Test id: {inclusion_tuple[0]} | {inclusion_tuple[1:]}\"\"\"\n"
         test_string += f"\tsf = StringFilter()\n"
-        test_string += f"\tsf.add_template_miner(tm)\n"
+        test_string += f"\tsf.add_template_miner(template_miner)\n"
     else:
         test_string = f"def {test_name}():\n"
         test_string += f"\t\"\"\"Test id: {inclusion_tuple[0]} | {inclusion_tuple[1:]}\"\"\"\n"
