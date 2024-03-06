@@ -427,17 +427,52 @@ class TestFitTransform:
         with pytest.raises(ValueError):
             _ = std_filter.fit_transform(train)
 
-class TestPrintPreprocessors:
+class TestPrintPreprocessors:  # TODO
     pass
 
-class TestPrintWeakLearners:
+class TestPrintWeakLearners:  # TODO
     pass
 
-class TestPrintFilter:
+class TestPrintFilter:  # TODO
     pass
 
 class TestRemovePreprocessor:
-    pass
+
+    def test_del(self, full_pre_filter):
+        del full_pre_filter.preprocessors[1]
+        assert len(full_pre_filter.preprocessors) == 2
+        assert full_pre_filter.preprocessors[0].__name__ == "pre_fn_ex0"
+        assert full_pre_filter.preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter.preprocessors])
+
+    def test_remove_via_method(self, full_pre_filter):
+        full_pre_filter.remove_preprocessor("pre_fn_ex0")
+        assert len(full_pre_filter.preprocessors) == 2
+        assert full_pre_filter.preprocessors[0].__name__ == "pre_fn_ex1"
+        assert full_pre_filter.preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter.preprocessors])
+
+    def test_remove_via_method(self, full_pre_filter):
+        full_pre_filter.remove_preprocessor(pre_fn_ex0)
+        assert len(full_pre_filter.preprocessors) == 2
+        assert full_pre_filter.preprocessors[0].__name__ == "pre_fn_ex1"
+        assert full_pre_filter.preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter.preprocessors])
+
+    def test_remove_via_method_pos(self, full_pre_filter):
+        full_pre_filter.remove_preprocessor(0)
+        assert len(full_pre_filter.preprocessors) == 2
+        assert full_pre_filter.preprocessors[0].__name__ == "pre_fn_ex1"
+        assert full_pre_filter.preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter.preprocessors])
+
+    def test_remove_non_existent(self, empty_filter):
+        with pytest.raises(ValueError):
+            empty_filter.remove_preprocessor("pre_fn_ex0")
+        with pytest.raises(ValueError):
+            empty_filter.remove_preprocessor(pre_fn_ex0)
+        with pytest.raises(ValueError):
+            empty_filter.remove_preprocessor(0)
 
 class TestRemoveWeakLearner:
     pass
