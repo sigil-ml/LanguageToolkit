@@ -1,7 +1,6 @@
 LICENSE
 README.rst
 pyproject.toml
-src/__init__.py
 src/at_nlp/__init__.py
 src/at_nlp.egg-info/PKG-INFO
 src/at_nlp.egg-info/SOURCES.txt
@@ -27,3 +26,4 @@ src/at_nlp/retrieval_augmented_generation/utils/build_containers.py
 src/at_nlp/retrieval_augmented_generation/utils/run_containers.py
 tests/test_filters.py
 tests/test_preprocessor_stack.py
+tests/test_weak_learner_collection.py

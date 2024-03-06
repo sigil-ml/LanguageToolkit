@@ -33,7 +33,7 @@ from snorkel.labeling.model import LabelModel
 # import rich
 from tqdm import tqdm
 
-from src.at_nlp.filters.preprocessor_stack import PreprocessorStack
+from at_nlp.filters.preprocessor_stack import PreprocessorStack
 
 # from loguru import logger as log
 
