@@ -127,20 +127,36 @@ def empty_filter():
 
 @pytest.fixture
 def full_pre_filter():
-    pre_filter = StringFilter()
-    pre_filter.add_preprocessor(pre_fn_ex0)
-    pre_filter.add_preprocessor(pre_fn_ex1)
-    pre_filter.add_preprocessor(pre_fn_ex2)
-    yield pre_filter
+    sf = StringFilter()
+    sf.add_preprocessor(pre_fn_ex0)
+    sf.add_preprocessor(pre_fn_ex1)
+    sf.add_preprocessor(pre_fn_ex2)
+    yield sf
 
 @pytest.fixture
 def full_lf_filter():
-    pre_filter = StringFilter()
-    pre_filter.add_labeling_function(lf_fn_ex_01)
-    pre_filter.add_labeling_function(pr_fn_ex_01)
-    pre_filter.add_labeling_function(rf)
-    yield pre_filter
+    sf = StringFilter()
+    sf.add_labeling_function(lf_fn_ex_01)
+    sf.add_labeling_function(pr_fn_ex_01)
+    sf.add_labeling_function(rf)
+    yield sf
 
+@pytest.fixture
+def std_filter():
+    sf = StringFilter()
+    sf.add_preprocessor(csv_path)
+    sf.add_preprocessor(pre_fn_ex0)
+    sf.add_labeling_function(lf_fn_ex_01)
+    sf.add_labeling_function(rf)
+    yield sf
+
+@pytest.fixture
+def no_learners_filter():
+    sf = StringFilter()
+    sf.add_preprocessor(csv_path)
+    sf.add_preprocessor(pre_fn_ex0)
+    sf.add_labeling_function(lf_fn_ex_01)
+    yield sf
 
 class TestAddPreprocessor:
 
@@ -340,21 +356,76 @@ class TestTrainTestSplit:
 class TestFit:
 
     @pytest.fixture(scope="class")
-    def splits(self, empty_filter):
-        train, test = empty_filter.train_test_split(test_data, 0.8)
+    def splits(self, std_filter):
+        train, test = std_filter.train_test_split(test_data, train_size=0.8)
         yield train, test
 
-    def test_fit(self, splits, empty_filter):
-        train, test = splits
+    def test_fit_no_learners(self, empty_filter):
+        train, test = empty_filter.train_test_split(test_data, train_size=0.8)
         with pytest.raises(ValueError):  # no weak learners
-            train_metrics = empty_filter.fit(train)
+            _ = empty_filter.fit(train, col_name="text")
+
+    def test_fit_no_learners_2(self, no_learners_filter):
+        train, test = no_learners_filter.train_test_split(test_data, train_size=0.8)
+        with pytest.raises(ValueError):  # no weak learners
+            _ = no_learners_filter.fit(train, col_name="text")
+
+    def test_fit_wrong_type(self, std_filter):
+        train = [1, 2, 3, 4, 5]
+        with pytest.raises(TypeError):
+            _ = std_filter.fit(train)
+
+    def test_fit_unsupplied_column_name(self, std_filter, splits):
+        train, test = splits
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(train)
 
 
 class TestTransform:
-    pass
+
+    @pytest.fixture(scope="class")
+    def splits(self, std_filter):
+        train, test = std_filter.train_test_split(test_data, train_size=0.8)
+        yield train, test
+
+    def test_transform_wrong_type(self, std_filter):
+        train = [1, 2, 3, 4, 5]
+        with pytest.raises(TypeError):
+            _ = std_filter.transform(train)
+
+    def test_transform_unsupplied_column_name(self, std_filter, splits):
+        train, test = splits
+        with pytest.raises(ValueError):
+            _ = std_filter.transform(train)
+
+
 
 class TestFitTransform:
-    pass
+
+    @pytest.fixture(scope="class")
+    def splits(self, std_filter):
+        train, test = std_filter.train_test_split(test_data, train_size=0.8)
+        yield train, test
+
+    def test_fit_transform_no_learners(self, empty_filter):
+        train, test = empty_filter.train_test_split(test_data, train_size=0.8)
+        with pytest.raises(ValueError):
+            _ = empty_filter.fit_transform(train, col_name="text")
+
+    def test_fit_transform_no_learners_2(self, no_learners_filter):
+        train, test = no_learners_filter.train_test_split(test_data, train_size=0.8)
+        with pytest.raises(ValueError):
+            _ = no_learners_filter.fit_transform(train, col_name="text")
+
+    def test_fit_transform_wrong_type(self, std_filter):
+        train = [1, 2, 3, 4, 5]
+        with pytest.raises(TypeError):
+            _ = std_filter.fit_transform(train)
+
+    def test_fit_transform_unsupplied_column_name(self, std_filter, splits):
+        train, test = splits
+        with pytest.raises(ValueError):
+            _ = std_filter.fit_transform(train)
 
 class TestPrintPreprocessors:
     pass
