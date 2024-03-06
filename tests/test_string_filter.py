@@ -6,15 +6,30 @@ import pandas as pd
 from loguru import logger
 from at_nlp.filters.string_filter import StringFilter
 
-compressed_test_data_path = Path("./tests/News_Category_Dataset_v3.json.zip")
+compressed_test_data_path = Path("./tests/test_data.zip")
 assert compressed_test_data_path.exists(), "Cannot find test data!"
 
-test_data_path = Path("./tests/News_Category_Dataset_v3.json")
+test_data_path = Path("./tests/spam.csv")
 if not test_data_path.exists():
     with zipfile.ZipFile(compressed_test_data_path, 'r') as z:
         z.extractall(Path('./tests/'))
 
-test_data = pd.read_json(test_data_path.absolute(), lines=True)
+test_data = pd.read_csv(test_data_path.absolute(), encoding="ISO-8859-1")
+test_data.rename(columns={"v1": "label", "v2": "text"}, inplace=True)
+test_data.drop(["Unnamed: 2", "Unnamed: 3", "Unnamed: 4"], axis=1, inplace=True)
+
+
+def preprocess(s: str) -> int:
+    match s:
+        case "ham":
+            return 0
+        case "spam":
+            return 2
+        case _:
+            return -1
+
+
+test_data["label"] = test_data["label"].apply(preprocess)
 
 # Clear old log files
 log_path = Path('./tests/tests.log')
@@ -40,22 +55,17 @@ class TestTrainStringFilter:
         yield str_filter
 
     def test_training_data_exists(self):
-        assert len(test_data) == 209_527
+        assert len(test_data) == 5_572
         logger.info("Training data loaded!")
         logger.info("====================================")
+        logger.info(test_data.head())
         logger.info(f"Num rows: {len(test_data)}")
         logger.info(f"Num cols: {len(test_data.columns)}")
         logger.info(f"Columns: {test_data.columns}")
         logger.info("====================================")
 
-
     # def test_train_string_filter(self, new_filter):
     #     new_filter.fit()
-
-
-
-
-
 
 #
 #

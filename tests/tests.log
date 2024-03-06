@@ -1,6 +1,12 @@
-2024-03-05 21:51:51.203 | INFO     | test_string_filter:test_training_data_exists:44 - Training data loaded!
-2024-03-05 21:51:51.203 | INFO     | test_string_filter:test_training_data_exists:45 - ====================================
-2024-03-05 21:51:51.203 | INFO     | test_string_filter:test_training_data_exists:46 - Num rows: 209527
-2024-03-05 21:51:51.203 | INFO     | test_string_filter:test_training_data_exists:47 - Num cols: 6
-2024-03-05 21:51:51.203 | INFO     | test_string_filter:test_training_data_exists:48 - Columns: Index(['link', 'headline', 'category', 'short_description', 'authors', 'date'], dtype='object')
-2024-03-05 21:51:51.203 | INFO     | test_string_filter:test_training_data_exists:49 - ====================================
+2024-03-05 22:11:44.217 | INFO     | test_string_filter:test_training_data_exists:59 - Training data loaded!
+2024-03-05 22:11:44.217 | INFO     | test_string_filter:test_training_data_exists:60 - ====================================
+2024-03-05 22:11:44.217 | INFO     | test_string_filter:test_training_data_exists:61 -    label                                               text
+0      0  Go until jurong point, crazy.. Available only ...
+1      0                      Ok lar... Joking wif u oni...
+2      2  Free entry in 2 a wkly comp to win FA Cup fina...
+3      0  U dun say so early hor... U c already then say...
+4      0  Nah I don't think he goes to usf, he lives aro...
+2024-03-05 22:11:44.220 | INFO     | test_string_filter:test_training_data_exists:62 - Num rows: 5572
+2024-03-05 22:11:44.220 | INFO     | test_string_filter:test_training_data_exists:63 - Num cols: 2
+2024-03-05 22:11:44.220 | INFO     | test_string_filter:test_training_data_exists:64 - Columns: Index(['label', 'text'], dtype='object')
+2024-03-05 22:11:44.220 | INFO     | test_string_filter:test_training_data_exists:65 - ====================================
