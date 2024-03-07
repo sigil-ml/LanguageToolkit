@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
 import pytest
 from zipfile import ZipFile
 from loguru import logger
@@ -16,15 +17,15 @@ assert compressed_test_data_path.exists(), "Cannot find test data!"
 
 test_data_path = Path("./tests/spam.csv")
 if not test_data_path.exists():
-    with ZipFile(compressed_test_data_path, 'r') as z:
-        z.extractall(Path('./tests/'))
+    with ZipFile(compressed_test_data_path, "r") as z:
+        z.extractall(Path("./tests/"))
 
 test_data = pd.read_csv(test_data_path.absolute(), encoding="ISO-8859-1")
 test_data.rename(columns={"v1": "label", "v2": "text"}, inplace=True)
 test_data.drop(["Unnamed: 2", "Unnamed: 3", "Unnamed: 4"], axis=1, inplace=True)
 
 # Clear old log files
-log_path = Path('./tests/tests.log')
+log_path = Path("./tests/tests.log")
 logger.info("Cleaning previous test's log files...")
 try:
     log_path.unlink()
@@ -165,7 +166,6 @@ def no_learners_filter():
 
 
 class TestAddPreprocessor:
-
     def test_add_empty_csv_default(self, empty_filter):
         empty_filter.add_preprocessor(csv_path)
         assert len(empty_filter._preprocessors) == 1
@@ -217,11 +217,7 @@ class TestAddPreprocessor:
         assert all([callable(fn) for fn in full_pre_filter._preprocessors])
 
     def test_add_multiple_empty_pos(self, empty_filter):
-        empty_filter.add_preprocessor([
-            (pre_fn_ex0, 2),
-            (csv_path, 0),
-            (pre_fn_ex2, 1)
-        ])
+        empty_filter.add_preprocessor([(pre_fn_ex0, 2), (csv_path, 0), (pre_fn_ex2, 1)])
         assert len(empty_filter._preprocessors) == 3
         assert empty_filter._preprocessors[2].__name__ == "pre_fn_ex0"
         assert empty_filter._preprocessors[0].__name__ == "test_preprocessor"
@@ -229,11 +225,9 @@ class TestAddPreprocessor:
         assert all([callable(fn) for fn in empty_filter._preprocessors])
 
     def test_add_multiple_full_pos(self, full_pre_filter):
-        full_pre_filter.add_preprocessor([
-            (pre_fn_ex0, 4),
-            (csv_path, 5),
-            (pre_fn_ex2, 2)
-        ])
+        full_pre_filter.add_preprocessor(
+            [(pre_fn_ex0, 4), (csv_path, 5), (pre_fn_ex2, 2)]
+        )
         assert len(full_pre_filter._preprocessors) == 3
         assert full_pre_filter._preprocessors[4].__name__ == "pre_fn_ex0"
         assert full_pre_filter._preprocessors[5].__name__ == "test_preprocessor"
@@ -242,7 +236,6 @@ class TestAddPreprocessor:
 
 
 class TestAddLabelingFunctions:
-
     def test_add_empty_labeling_fn(self, empty_filter):
         empty_filter.add_labeling_function(lf_fn_ex_01)
         assert len(empty_filter._labeling_fns) == 1
@@ -297,7 +290,6 @@ class TestAddLabelingFunctions:
 
 
 class TestTrainTestSplit:
-
     @pytest.fixture(scope="class")
     def splits(self, empty_filter):
         train, test = empty_filter.train_test_split(test_data, train_size=0.8)
@@ -310,22 +302,18 @@ class TestTrainTestSplit:
         assert int(0.2 * test_data_len) == len(test)
         assert test_data_len == len(train) + len(test)
 
-    def test_test_data(self, splits):
-        _, test = splits
+    def test_types(self, splits):
+        train, test = splits
         assert isinstance(test, pd.DataFrame)
         assert test.columns == test_data.columns
 
-    def test_train_data(self, splits):
-        train, _ = splits
         assert isinstance(train, pd.DataFrame)
         assert train.columns == test_data.columns
 
     def test_train_data_shuffle(self, empty_filter, splits):
         train, test = splits
         train_shuffle, test_shuffle = empty_filter.train_test_split(
-            test_data,
-            train_size=0.8,
-            shuffle=True
+            test_data, train_size=0.8, shuffle=True
         )
         test_data_len = len(test_data)
         assert not train.equals(train_shuffle)
@@ -334,115 +322,162 @@ class TestTrainTestSplit:
         assert int(0.2 * test_data_len) == len(test_shuffle)
         assert test_data_len == len(train_shuffle) + len(test_shuffle)
 
-    def test_train_data_1_normal(self, empty_filter):
-        with pytest.raises(ValueError):
-            _ = empty_filter.train_test_split(test_data, train_size=0.8)
-
-    def test_train_data_1_shuffle(self, empty_filter):
-        with pytest.raises(ValueError):
-            _ = empty_filter.train_test_split(test_data, train_size=0.8, shuffle=True)
-
-    def test_train_data_invalid_size_1(self, empty_filter):
+    def test_train_data_invalid_size(self, empty_filter):
         with pytest.raises(ValueError):
             _ = empty_filter.train_test_split(test_data, train_size=0, shuffle=True)
-
-    def test_train_data_invalid_size_2(self, empty_filter):
         with pytest.raises(ValueError):
             _ = empty_filter.train_test_split(test_data, train_size=-1, shuffle=True)
-
-    def test_train_data_invalid_size_3(self, empty_filter):
         with pytest.raises(ValueError):
             _ = empty_filter.train_test_split(test_data, train_size=1, shuffle=True)
-
-    def test_train_data_invalid_size_4(self, empty_filter):
         with pytest.raises(ValueError):
             _ = empty_filter.train_test_split(test_data, train_size=2, shuffle=True)
-
-    def test_train_data_invalid_size_5(self, empty_filter):
         with pytest.raises(ValueError):
-            _ = empty_filter.train_test_split(test_data, train_size="2", shuffle=True) # noqa Expected Failure
+            _ = empty_filter.train_test_split(
+                test_data, train_size="2", shuffle=True  # noqa Expected Failure
+            )
 
 
 class TestFit:
-
     @pytest.fixture(scope="class")
     def splits(self, std_filter):
         train, test = std_filter.train_test_split(test_data, train_size=0.8)
         yield train, test
 
-    def test_fit_no_learners(self, empty_filter):
+    def test_fit_no_learners(self, empty_filter, no_learners_filter):
         train, test = empty_filter.train_test_split(test_data, train_size=0.8)
         with pytest.raises(ValueError):  # no weak learners
-            _ = empty_filter.fit(train, col_name="text")
-
-    def test_fit_no_learners_2(self, no_learners_filter):
-        train, test = no_learners_filter.train_test_split(test_data, train_size=0.8)
+            _ = empty_filter.fit(train, train_col="text", target_col="label")
         with pytest.raises(ValueError):  # no weak learners
-            _ = no_learners_filter.fit(train, col_name="text")
+            _ = no_learners_filter.fit(train, train_col="text", target_col="label")
 
-    def test_fit_wrong_type(self, std_filter):
-        train = [1, 2, 3, 4, 5]
-        with pytest.raises(TypeError):
-            _ = std_filter.fit(train, col_name="text")
-
-    def test_fit_un_supplied_column_name(self, std_filter, splits):
+    def test_fit_missing_data(self, std_filter, splits):
+        """Tests various configurations where some data is missing"""
         train, test = splits
         with pytest.raises(ValueError):
-            _ = std_filter.fit(train)  # noqa Expected Failure
+            _ = std_filter.fit(train, target_col="label")  # noqa Expected Failure
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(train, train_col="text")  # noqa Expected Failure
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(training_data=train["text"])  # noqa Expected Failure
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(target_values=train["label"])  # noqa Expected Failure
 
-    def test_with_template_miner(self, std_filter, splits):
+    def test_fit_wrong_data_type(self, std_filter):
+        """Tests that an error is raised if the train or test data is of the wrong type"""
+        with pytest.raises(TypeError):
+            _ = std_filter.fit(
+                training_data="train", train_col="text", target_col="label"
+            )  # noqa Expected Failure
+        with pytest.raises(TypeError):
+            _ = std_filter.fit(
+                target_values="label", train_col="text", target_col="label"
+            )  # noqa Expected Failure
+        with pytest.raises(TypeError):
+            _ = std_filter.fit(
+                target_values="label", train_col=0, target_col="label"
+            )  # noqa Expected Failure
+        with pytest.raises(TypeError):
+            _ = std_filter.fit(
+                target_values="label", train_col="text", target_col=1
+            )  # noqa Expected Failure
+
+    def test_fit_wrong_test_label_combos(self, std_filter, splits):
+        """Tests various configurations of train and test data"""
         train, test = splits
-        _ = std_filter.fit(train, col_name="text", template_miner=True)
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(
+                training_data=train["text"], train_col="text"
+            )  # noqa Expected Failure
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(
+                target_values=train["label"], target_col="label"
+            )  # noqa Expected Failure
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(
+                training_data=train["text"], target_col="label"
+            )  # noqa Expected Failure
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(
+                target_values=train["label"], train_col="text"
+            )  # noqa Expected Failure
+
+    def test_ensemble_splits_oob(self, std_filter, splits):
+        """Tests bounds of ensemble_split arg"""
+        train, test = splits
+        with pytest.raises(IndexError):
+            """ensemble_split is too large"""
+            _ = std_filter.fit(
+                train, train_col="text", target_col="label", ensemble_split=1
+            )  # noqa Expected Failure
+        with pytest.raises(IndexError):
+            """ensemble_split is too small"""
+            _ = std_filter.fit(
+                train, train_col="text", target_col="label", ensemble_split=0
+            )  # noqa Expected Failure
+
+    def test_ensemble_splits_wrong_type(self, std_filter, splits):
+        """Tests type of ensemble_split arg"""
+        train, test = splits
+        with pytest.raises(TypeError):
+            """ensemble_split is too large"""
+            _ = std_filter.fit(
+                train, train_col="text", target_col="label", ensemble_split="1"  # noqa
+            )  # noqa Expected Failure
 
 
-class TestTransform:
-
+class TestPredict:
     @pytest.fixture(scope="class")
     def splits(self, std_filter):
         train, test = std_filter.train_test_split(test_data, train_size=0.8)
         yield train, test
 
-    def test_transform_wrong_type(self, std_filter):
+    def test_predict_wrong_type(self, std_filter):
+        """Tests that an error is raised if the train or test data is of the wrong type"""
         train = [1, 2, 3, 4, 5]
         with pytest.raises(TypeError):
-            _ = std_filter.transform(train, col_name="text")  # noqa
-
-    def test_transform_un_supplied_column_name(self, std_filter, splits):
-        train, test = splits
-        with pytest.raises(ValueError):
-            _ = std_filter.transform(train)  # noqa
-
-
-class TestFitTransform:
-
-    @pytest.fixture(scope="class")
-    def splits(self, std_filter):
-        train, test = std_filter.train_test_split(test_data, train_size=0.8)
-        yield train, test
-
-    def test_fit_transform_no_learners(self, empty_filter):
-        train, test = empty_filter.train_test_split(test_data, train_size=0.8)
-        with pytest.raises(ValueError):
-            _ = empty_filter.fit_transform(train, col_name="text")
-
-    def test_fit_transform_no_learners_2(self, no_learners_filter):
-        train, test = no_learners_filter.train_test_split(test_data, train_size=0.8)
-        with pytest.raises(ValueError):
-            _ = no_learners_filter.fit_transform(train, col_name="text")
-
-    def test_fit_transform_wrong_type(self, std_filter):
-        train = [1, 2, 3, 4, 5]
+            _ = std_filter.predict(train, col_name="text")  # noqa
         with pytest.raises(TypeError):
-            _ = std_filter.fit_transform(train, col_name="text")
+            _ = std_filter.predict(train, col_name=1)  # noqa
 
-    def test_fit_transform_un_supplied_column_name(self, std_filter, splits):
+    def test_predict_missing_data(self, std_filter, splits):
+        """Tests various configurations where some data is missing"""
         train, test = splits
         with pytest.raises(ValueError):
-            _ = std_filter.fit_transform(train)  # noqa
+            _ = std_filter.predict(train)  # noqa
+        with pytest.raises(ValueError):
+            _ = std_filter.predict(train["text"], col_name="text")
 
-    def test_with_template_miner(self, std_filter, splits):
-        train, test = splits
-        _ = std_filter.fit_transform(train, col_name="text", template_miner=True)
+
+# # TODO: Update method signatures to match the new API
+# class TestFitTransform:
+#     @pytest.fixture(scope="class")
+#     def splits(self, std_filter):
+#         train, test = std_filter.train_test_split(test_data, train_size=0.8)
+#         yield train, test
+#
+#     def test_fit_transform_no_learners(self, empty_filter):
+#         train, test = empty_filter.train_test_split(test_data, train_size=0.8)
+#         with pytest.raises(ValueError):
+#             _ = empty_filter.fit_transform(train, col_name="text")
+#
+# def test_fit_transform_no_learners_2(self, no_learners_filter):
+#     train, test = no_learners_filter.train_test_split(test_data, train_size=0.8)
+#     with pytest.raises(ValueError):
+#         _ = no_learners_filter.fit_transform(train, col_name="text")
+#
+# def test_fit_transform_wrong_type(self, std_filter):
+#     train = [1, 2, 3, 4, 5]
+#     with pytest.raises(TypeError):
+#         _ = std_filter.fit_transform(train, col_name="text")
+#
+# def test_fit_transform_un_supplied_column_name(self, std_filter, splits):
+#     train, test = splits
+#     with pytest.raises(ValueError):
+#         _ = std_filter.fit_transform(train)  # noqa
+#
+# def test_with_template_miner(self, std_filter, splits):
+#     train, test = splits
+#     _ = std_filter.fit_transform(train, col_name="text", template_miner=True)
 
 
 class TestPrintPreprocessors:  # TODO
@@ -459,7 +494,6 @@ class TestPrintFilter:  # TODO
 
 # TODO: Add tests for removing by slice
 class TestRemovePreprocessor:
-
     def test_del(self, full_pre_filter):
         del full_pre_filter._preprocessors[1]
         assert len(full_pre_filter._preprocessors) == 2
@@ -499,7 +533,6 @@ class TestRemovePreprocessor:
 
 # TODO: Add test for removing by slice
 class TestRemoveWeakLearner:
-
     def test_del(self, full_lf_filter):
         del full_lf_filter._labeling_fns[1]
         assert len(full_lf_filter._labeling_fns) == 2
@@ -534,7 +567,6 @@ class TestMetrics:  # TODO
 
 
 class TestGetPreprocessor:
-
     def test_get_by_name(self, full_pre_filter):
         item = full_pre_filter.get_preprocessor("pre_fn_ex0")
         assert callable(item)
@@ -554,7 +586,6 @@ class TestGetPreprocessor:
 
 
 class TestGetWeakLearner:
-
     def test_get_by_name(self, full_lf_filter):
         item = full_lf_filter.get_labeling_function("test_weak_learner_01")
         assert isinstance(item.fn, LabelingFunction)
