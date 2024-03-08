@@ -1,7 +1,7 @@
 This is makeindex, version 2.17 [TeX Live 2023] (kpathsea + Thai support).
 Scanning style file ./python.ist.......done (7 attributes redefined, 0 ignored).
-Scanning input file athenaaimlnlptools.idx....done (46 entries accepted, 0 rejected).
-Sorting entries....done (244 comparisons).
-Generating output file athenaaimlnlptools.ind....done (130 lines written, 0 warnings).
+Scanning input file athenaaimlnlptools.idx....done (57 entries accepted, 0 rejected).
+Sorting entries....done (327 comparisons).
+Generating output file athenaaimlnlptools.ind....done (160 lines written, 0 warnings).
 Output written in athenaaimlnlptools.ind.
 Transcript written in athenaaimlnlptools.ilg.

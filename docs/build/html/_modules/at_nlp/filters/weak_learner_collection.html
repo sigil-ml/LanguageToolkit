@@ -1,0 +1,774 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>at_nlp.filters.weak_learner_collection &#8212; Athena NLP Toolkit main documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/katex-math.css?v=91adb8b6" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../_static/documentation_options.js?v=a8da1a53"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/katex.min.js?v=48ec3933"></script>
+    <script src="../../../_static/auto-render.min.js?v=8b9f325c"></script>
+    <script src="../../../_static/katex_autorenderer.js?v=bebc588a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/at_nlp/filters/weak_learner_collection';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Athena NLP Toolkit main documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../filters.html">
+                        String Filter
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../preprocessor_stack.html">
+                        Preprocessor Stack
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../weak_learner_collection.html">
+                        Weak Learner Collection
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../retrieval_augmented_generation.html">
+                        Retrieval Augmented Generation (RAG)
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../filters.html">
+                        String Filter
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../preprocessor_stack.html">
+                        Preprocessor Stack
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../weak_learner_collection.html">
+                        Weak Learner Collection
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../retrieval_augmented_generation.html">
+                        Retrieval Augmented Generation (RAG)
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">at_nlp.filte...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for at_nlp.filters.weak_learner_collection</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">singledispatchmethod</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">abc</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">snorkel.labeling</span> <span class="kn">import</span> <span class="n">LabelingFunction</span><span class="p">,</span> <span class="n">labeling_function</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">LearnerItem</span><span class="p">:</span>
+    <span class="n">fn</span><span class="p">:</span> <span class="n">abc</span><span class="o">.</span><span class="n">Callable</span> <span class="o">|</span> <span class="n">LabelingFunction</span>
+    <span class="n">learnable</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">item_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="WeakLearners">
+<a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners">[docs]</a>
+<span class="k">class</span> <span class="nc">WeakLearners</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A collection of weak learners that will be used by Snorkel&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">LearnerItem</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_col_name</span> <span class="o">=</span> <span class="n">col_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_rsrcs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">col_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">m_col_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="WeakLearners.add">
+<a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners.add">[docs]</a>
+    <span class="nd">@singledispatchmethod</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">fn</span><span class="p">:</span> <span class="n">abc</span><span class="o">.</span><span class="n">Callable</span> <span class="o">|</span> <span class="n">LabelingFunction</span> <span class="o">|</span> <span class="n">BaseEstimator</span><span class="p">,</span>
+            <span class="n">learnable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">item_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Dispatches to one of the following methods:</span>
+<span class="sd">            1. :meth:`add_labeling_function`</span>
+<span class="sd">            2. :meth:`add_primative`</span>
+<span class="sd">            3. :meth:`add_sklearn`</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the provided fn is not the correct type</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Supplied function is not an accepted labeling function. Received&quot;</span>
+                        <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">, but expected either Callable[[pd.Series], int] or a Snorkel&quot;</span>
+                        <span class="s2">&quot;LabelingFunction&quot;</span> <span class="o">%</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+    <span class="c1"># noinspection GrazieInspection</span>
+<div class="viewcode-block" id="WeakLearners.add_labeling_function">
+<a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners.add_labeling_function">[docs]</a>
+    <span class="nd">@add</span><span class="o">.</span><span class="n">register</span>
+    <span class="k">def</span> <span class="nf">add_labeling_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">LabelingFunction</span><span class="p">,</span> <span class="n">learnable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                              <span class="n">item_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Appends a Snorkel labeling function to the collection. If this function has</span>
+<span class="sd">        trainable parameters, then ``learnable`` should be `True`. If ``learnable`` is set</span>
+<span class="sd">        to `True`, then ``item_type`` should be a string representing the class of learner</span>
+<span class="sd">        ``fn``. For instance, if ``fn`` is a Sci-kit learn model, then ``item_type``</span>
+<span class="sd">        should be set to ``sklearn``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fn (LabelingFunction): The function to append.</span>
+<span class="sd">            learnable (bool): If `True`, the function will be marked as</span>
+<span class="sd">                trainable and will be included in any training methods.</span>
+<span class="sd">            item_type (str, optional): Optional parameter indicating the type of the</span>
+<span class="sd">                supplied function.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; from at_nlp.filters.weak_learner_collection import WeakLearners</span>
+<span class="sd">            &gt;&gt;&gt; from snorkel.labeling import labeling_function</span>
+<span class="sd">            &gt;&gt;&gt; wl_col = WeakLearners()</span>
+<span class="sd">            &gt;&gt;&gt; rsrcs = {&quot;col_name&quot;: &quot;Messages&quot;}</span>
+<span class="sd">            &gt;&gt;&gt; @labeling_function(name=&quot;Example&quot;, resources=rsrcs)</span>
+<span class="sd">            &gt;&gt;&gt; def fn_ex0(series: pd.Series, col_name: str) -&gt; int:</span>
+<span class="sd">            &gt;&gt;&gt;     if len(series[col_name]) &gt; 6:</span>
+<span class="sd">            &gt;&gt;&gt;         return 1</span>
+<span class="sd">            &gt;&gt;&gt;     else:</span>
+<span class="sd">            &gt;&gt;&gt;         return 0</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(fn_ex0, False)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">LearnerItem</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">learnable</span><span class="o">=</span><span class="n">learnable</span><span class="p">,</span> <span class="n">item_type</span><span class="o">=</span><span class="n">item_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WeakLearners.add_primative">
+<a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners.add_primative">[docs]</a>
+    <span class="nd">@add</span><span class="o">.</span><span class="n">register</span>
+    <span class="k">def</span> <span class="nf">add_primative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">abc</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:meth:`add_primative` creates a labeling function from a simple python</span>
+<span class="sd">        function ``fn``. The function ``fn`` should accept a `str` and produce an `int`.</span>
+<span class="sd">        We will wrap this function so that it is a proper Snorkel labeling function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fn (abc.callable): A callable that has the following signature:</span>
+<span class="sd">                `fn(s: str) -&gt; int`</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; from at_nlp.filters.weak_learner_collection import WeakLearners</span>
+<span class="sd">            &gt;&gt;&gt; wl_col = WeakLearners()</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Ex1</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(lambda s: int(len(s) &gt; 6))</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Ex2</span>
+<span class="sd">            &gt;&gt;&gt; def primative_ex2(s: str) -&gt; int:</span>
+<span class="sd">            &gt;&gt;&gt;     if s.find(&quot;some substring to find&quot;) == -1:</span>
+<span class="sd">            &gt;&gt;&gt;         return 0</span>
+<span class="sd">            &gt;&gt;&gt;     return 1</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(primative_ex2)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;&lt;lambda&gt;&quot;</span><span class="p">:</span>
+            <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;anon&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="nd">@labeling_function</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;PR_</span><span class="si">{</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">m_rsrcs</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">series</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="n">item</span> <span class="o">=</span> <span class="n">LearnerItem</span><span class="p">(</span><span class="n">wrapper</span><span class="p">,</span> <span class="n">learnable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">item_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
+
+
+    <span class="c1"># noinspection GrazieInspection</span>
+<div class="viewcode-block" id="WeakLearners.add_sklearn">
+<a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners.add_sklearn">[docs]</a>
+    <span class="nd">@add</span><span class="o">.</span><span class="n">register</span>
+    <span class="k">def</span> <span class="nf">add_sklearn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Adds an estimator from Sci-kit learn to the collection. Assumes the function</span>
+<span class="sd">        has trainable parameters. All inputs will be vectorized beforehand.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fn (BaseEstimator): A valid sklearn estimator</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; from at_nlp.filters.weak_learner_collection import WeakLearners</span>
+<span class="sd">            &gt;&gt;&gt; from sklearn.ensemble import RandomForestClassifier  # noqa</span>
+<span class="sd">            &gt;&gt;&gt; wl_col = WeakLearners()</span>
+<span class="sd">            &gt;&gt;&gt; rf = RandomForestClassifier(max_depth=2, random_state=0)</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(rf)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># noinspection PyUnresolvedReferences</span>
+        <span class="nd">@labeling_function</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;SK_</span><span class="si">{</span><span class="n">fn</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">m_rsrcs</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">series</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">fn</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="n">item</span> <span class="o">=</span> <span class="n">LearnerItem</span><span class="p">(</span><span class="n">wrapper</span><span class="p">,</span> <span class="n">learnable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">item_type</span><span class="o">=</span><span class="s2">&quot;sklearn&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WeakLearners.extend">
+<a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners.extend">[docs]</a>
+    <span class="k">def</span> <span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+               <span class="n">fns</span><span class="p">:</span> <span class="n">abc</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">LabelingFunction</span> <span class="o">|</span> <span class="n">abc</span><span class="o">.</span><span class="n">Callable</span> <span class="o">|</span> <span class="n">BaseEstimator</span><span class="p">]</span>
+               <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extends internal collection with a list of fns. Assumes each function is</span>
+<span class="sd">        non-trainable unless it subclasses BaseEstimator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">fns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WeakLearners.remove">
+<a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners.remove">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Remove a weak learner from the collection.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fn_name (str): Snorkel LabelingFunction name</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the given fn_name is not in the collection</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from at_nlp.filters.weak_learner_collection import WeakLearners</span>
+<span class="sd">            &gt;&gt;&gt; from sklearn.ensemble import RandomForestClassifier</span>
+<span class="sd">            &gt;&gt;&gt; from snorkel.labeling import labeling_function</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; wl_col = WeakLearners()</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; rf = RandomForestClassifier()</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(rf)</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(lambda s: int(len(s) &gt; 6))</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; rscrs = dict(col_name = &quot;Messages&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; @labeling_function(name=&quot;test_fn&quot;, resources=rscrs)</span>
+<span class="sd">            &gt;&gt;&gt; def test_fn_01(series: pd.Series, col_name: str) -&gt; int:</span>
+<span class="sd">            &gt;&gt;&gt;     s: str = series[col_name]</span>
+<span class="sd">            &gt;&gt;&gt;     if s == s.lower()</span>
+<span class="sd">            &gt;&gt;&gt;         return 1</span>
+<span class="sd">            &gt;&gt;&gt;     return 0</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(test_fn_01)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; assert len(wl_col) == 3</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.remove(&quot;test_fn&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; assert len(wl_col) == 2</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.remove(&quot;SK_RandomForestClassifier&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; assert len(wl_col) == 1</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.remove(&quot;PR_anon1&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; assert len(wl_col) == 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name_located</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">fn_name</span> <span class="o">==</span> <span class="n">item</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">name_located</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name_located</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Function with name </span><span class="si">{</span><span class="n">fn_name</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WeakLearners.get_labeling_fn">
+<a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners.get_labeling_fn">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_labeling_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LearnerItem</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns the first LearnerItem that matches the supplied name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fn_name (str): The learner to retrieve</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LearnerItem: The first LearnerItem that matches the supplied name. Learner</span>
+<span class="sd">                items have the following structure:</span>
+<span class="sd">                1. fn = The labeling function</span>
+<span class="sd">                2. learnable = Whether the function contains trainable parameters</span>
+<span class="sd">                3. item_type = The underlying type of the fn</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the function is not in the collection</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; from at_nlp.filters.weak_learner_collection import WeakLearners</span>
+<span class="sd">            &gt;&gt;&gt; from sklearn.ensemble import RandomForestClassifier</span>
+<span class="sd">            &gt;&gt;&gt; from snorkel.labeling import labeling_function</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; wl_col = WeakLearners()</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # ex1</span>
+<span class="sd">            &gt;&gt;&gt; rf = RandomForestClassifier()</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(rf)</span>
+<span class="sd">            &gt;&gt;&gt; sk_item = wl_col.get_labeling_fn(&quot;SK_RandomForestClassifier&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; assert isinstance(sk_item.fn, LabelingFunction)         # True</span>
+<span class="sd">            &gt;&gt;&gt; assert sk_item.fn.name == &quot;SK_RandomForestClassifier&quot;   # True</span>
+<span class="sd">            &gt;&gt;&gt; assert sk_item.learnable                                # True</span>
+<span class="sd">            &gt;&gt;&gt; assert sk_item.item_type == &quot;sklearn&quot;                   # True</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # ex2</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(lambda s: int(len(s) &gt; 6))</span>
+<span class="sd">            &gt;&gt;&gt; pr_item = wl_col.get_labeling_fn(&#39;PR_anon2&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; assert isinstance(pr_item.fn, LabelingFunction) # True</span>
+<span class="sd">            &gt;&gt;&gt; assert pr_item.fn.name == &#39;PR_anon2&#39;            # True</span>
+<span class="sd">            &gt;&gt;&gt; assert not pr_item.learnable                    # True</span>
+<span class="sd">            &gt;&gt;&gt; assert pr_item.item_type is None                # True</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # ex3</span>
+<span class="sd">            &gt;&gt;&gt; rscrs = dict(col_name = &quot;Messages&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; @labeling_function(name=&quot;test_fn&quot;, resources=rscrs)</span>
+<span class="sd">            &gt;&gt;&gt; def test_fn_01(series: pd.Series, col_name: str) -&gt; int:</span>
+<span class="sd">            &gt;&gt;&gt;     s: str = series[col_name]</span>
+<span class="sd">            &gt;&gt;&gt;     if s == s.lower()</span>
+<span class="sd">            &gt;&gt;&gt;         return 1</span>
+<span class="sd">            &gt;&gt;&gt;     return 0</span>
+<span class="sd">            &gt;&gt;&gt; wl_col.add(test_fn_01)</span>
+<span class="sd">            &gt;&gt;&gt; lf_item = wl_col.get_labeling_fn(&quot;test_fn&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; assert isinstance(lf_item.fn, LabelingFunction) # True</span>
+<span class="sd">            &gt;&gt;&gt; assert lf_item.fn.name = &quot;test_fn&quot;              # True</span>
+<span class="sd">            &gt;&gt;&gt; assert not lf_item.learnable                    # True</span>
+<span class="sd">            &gt;&gt;&gt; assert lf_item.item_type is None                # True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fn_name</span> <span class="o">==</span> <span class="n">item</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">item</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Function with name </span><span class="si">{</span><span class="n">fn_name</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># def __call__(</span>
+    <span class="c1">#         self,</span>
+    <span class="c1">#         df: pd.DataFrame,</span>
+    <span class="c1">#         col_idx: int = 0,</span>
+    <span class="c1">#         parallel: bool = False,</span>
+    <span class="c1">#         num_partitions: int = 2,</span>
+    <span class="c1"># ) -&gt; pd.DataFrame:</span>
+    <span class="c1">#     r&quot;&quot;&quot;Sequentially execute functions in the preprocessor stack&quot;&quot;&quot;</span>
+    <span class="c1">#     if parallel:</span>
+    <span class="c1">#         df = dd.from_pandas(df, npartitions=num_partitions)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     for preprocessor in self._stack:</span>
+    <span class="c1">#         partial_fn = partial(preprocessor, col_idx=col_idx)</span>
+    <span class="c1">#         if parallel:</span>
+    <span class="c1">#             df.apply(partial_fn, axis=1, meta=df)</span>
+    <span class="c1">#         else:</span>
+    <span class="c1">#             df = df.apply(partial_fn, axis=1)</span>
+    <span class="c1">#     return df</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LearnerItem</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Collection indices must be integers&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">learner_item</span><span class="p">:</span> <span class="n">LearnerItem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Collection indices must be integers&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">learner_item</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LearnerItem</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">m_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">m_idx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m_learners</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Athena AIML Contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,5 +1,0 @@
-pydantic
-scikit-learn
-pandas
-numpy
-tqdm
