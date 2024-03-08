@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pathlib
 from functools import partial
 from pathlib import Path
 from typing import Callable, Iterable, TypeAlias, SupportsIndex
@@ -15,7 +16,7 @@ from rich.table import Table  # noqa
 
 console = Console()
 
-Preprocessor: TypeAlias = Callable[[pd.Series, int], pd.Series]
+Preprocessor: TypeAlias = Callable[[pd.Series, int], pd.Series] | pathlib.Path
 
 
 class PreprocessorStack:
@@ -62,7 +63,7 @@ class PreprocessorStack:
         if not isinstance(position, SupportsIndex):
             raise IndexError(f"Position {position} is not valid for list indexing.")
 
-        if position > len(self._stack):
+        if position > len(self._stack) + 1:
             raise IndexError(
                 f"Index {position} larger than number of preprocessor functions."
             )
@@ -70,7 +71,7 @@ class PreprocessorStack:
         if position < -1:
             raise IndexError(f"Index {position} should be in range [0, len(stack)).")
 
-        if position == -1:
+        if position == -1 or position >= len(self._stack):
             self._stack.append(preprocessor)
         else:
             self._stack.insert(position, preprocessor)
@@ -79,7 +80,10 @@ class PreprocessorStack:
         r"""Convenience function that calls add(fn, -1)"""
         self.add(preprocessor, -1)
 
-    def add_multiple(self, preprocessors: Iterable[tuple[Preprocessor, int]]) -> None:
+    # TODO: needs to support adding without positions
+    def add_multiple(
+        self, preprocessors: Iterable[tuple[Preprocessor, int]] | Iterable[Preprocessor]
+    ) -> None:
         r"""Adds multiple preprocessors to the stack. Takes in an iterable of tuples of
         indices and preprocessors, using the indices for insertion position.
 
@@ -100,7 +104,16 @@ class PreprocessorStack:
 
         for preprocessor_tuple in preprocessors:
             try:
-                self.add(*preprocessor_tuple)
+                if isinstance(preprocessor_tuple[0], Path):
+                    if preprocessor_tuple[0].suffix == ".csv":
+                        if len(preprocessor_tuple) == 1:
+                            self.add_csv_preprocessor(preprocessor_tuple[0])
+                        else:
+                            self.add_csv_preprocessor(
+                                preprocessor_tuple[0], order=preprocessor_tuple[1]
+                            )
+                else:
+                    self.add(*preprocessor_tuple)
             except IndexError as e:
                 self._stack = stack_copy
                 raise e

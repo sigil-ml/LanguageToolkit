@@ -8,7 +8,7 @@ import requests
 
 from language_toolkit.logger import logger
 
-csv_path = Path("./data/test.csv").absolute()
+csv_path = Path("./src/language_toolkit/tests/data/test.csv").absolute()
 
 
 def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
@@ -31,6 +31,7 @@ def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
     # All test should be run from the root of the repository. Otherwise, pathing is off.
     cur_path = Path().absolute()
     if cur_path.stem != "LanguageToolkit":
+        logger.critical("Path stem does not equal LanguageToolkit")
         sys.exit(1)
 
     tmp_dir = Path("./src/language_toolkit/tests/tmp")

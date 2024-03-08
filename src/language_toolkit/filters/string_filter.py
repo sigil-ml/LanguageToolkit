@@ -9,6 +9,7 @@ import sys
 import time
 import traceback
 from collections import abc
+from functools import singledispatchmethod
 
 # import csv
 import uuid
@@ -96,13 +97,38 @@ class StringFilter:
         self._labeling_fns = WeakLearners(col_name)
         self._count_vectorizer = None
 
+    @singledispatchmethod
     def add_preprocessor(
-        self, fn: Preprocessor, position: Optional[int] = None
+        self,
+        fn: Preprocessor | Iterable[Preprocessor],
+        position: Optional[int] = None,
     ) -> None:
-        pass
+        raise NotImplementedError("Invalid type for preprocessor")
 
-    def add_labeling_function(self, fn: LabelingFunctionItem) -> None:
-        pass
+    @add_preprocessor.register
+    def _(self, fn: abc.Callable, position: Optional[int] = -1) -> None:
+        self._preprocessors.add(fn, position)
+
+    @add_preprocessor.register
+    def _(self, fn: pathlib.Path, position: Optional[int] = -1) -> None:
+        self._preprocessors.add_csv_preprocessor(fn, order=position)
+
+    @add_preprocessor.register(list)
+    @add_preprocessor.register(tuple)
+    @add_preprocessor.register(set)
+    def _(self, fn) -> None:
+        if isinstance(fn[0], abc.Callable) or isinstance(fn[0], pathlib.Path):
+            n_pre = len(self._preprocessors)
+            _l = [(f, n_pre + i) for i, f in enumerate(fn)]
+            self._preprocessors.add_multiple(_l)
+        else:
+            self._preprocessors.add_multiple(fn)
+
+    @singledispatchmethod
+    def add_labeling_function(
+        self, fn: LabelingFunctionItem | Iterable[LabelingFunctionItem]
+    ) -> None:
+        raise NotImplementedError("Invalid type for labeling function")
 
     @staticmethod
     def train_test_split(
