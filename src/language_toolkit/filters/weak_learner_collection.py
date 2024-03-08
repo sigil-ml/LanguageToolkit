@@ -77,7 +77,7 @@ class WeakLearners:
             None
 
         Examples:
-            >>> from at_nlp.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
             >>> from snorkel.labeling import labeling_function
             >>> wl_col = WeakLearners()
             >>> resources = {"col_name": "Messages"}
@@ -109,7 +109,7 @@ class WeakLearners:
             None
 
         Examples:
-            >>> from at_nlp.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
             >>> wl_col = WeakLearners()
             >>>
             >>> # Ex1
@@ -150,7 +150,7 @@ class WeakLearners:
             None
 
         Examples:
-            >>> from at_nlp.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
             >>> from sklearn.ensemble import RandomForestClassifier  # noqa
             >>> wl_col = WeakLearners()
             >>> rf = RandomForestClassifier(max_depth=2, random_state=0)
@@ -189,7 +189,7 @@ class WeakLearners:
             ValueError: If the given fn_name is not in the collection
 
         Example:
-            >>> from at_nlp.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
             >>> from sklearn.ensemble import RandomForestClassifier
             >>> from snorkel.labeling import labeling_function
             >>>
@@ -242,7 +242,7 @@ class WeakLearners:
             ValueError: If the function is not in the collection
 
         Examples:
-            >>> from at_nlp.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
             >>> from sklearn.ensemble import RandomForestClassifier
             >>> from snorkel.labeling import labeling_function
             >>>

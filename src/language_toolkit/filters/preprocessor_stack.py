@@ -49,7 +49,7 @@ class PreprocessorStack:
             signature.
 
         Example:
-            >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
+            >>> from language_toolkit.filters.preprocessor_stack import PreprocessorStack
             >>> def make_lower_case(ds: pd.Series, col_idx: int):
             >>>     s: str = ds.iat[col_idx]
             >>>     ds.iat[col_idx] = s.lower()
@@ -90,7 +90,7 @@ class PreprocessorStack:
             None
 
         Example:
-            >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
+            >>> from language_toolkit.filters.preprocessor_stack import PreprocessorStack
             >>> stack = PreprocessorStack()
             >>> processor0 = ... # func with signature (pd.Series, int) -> pd.Series
             >>> processor1 = ... # func with signature (pd.Series, int) -> pd.Series
@@ -138,7 +138,7 @@ class PreprocessorStack:
                 integers.
 
         Example:
-            >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
+            >>> from language_toolkit.filters.preprocessor_stack import PreprocessorStack
             >>> stack = PreprocessorStack()
             >>> stack.add_csv_preprocessor(Path("replacement_text1.csv"), 0, 1)
             >>> stack.add_csv_preprocessor(Path("replacement_text2.csv"))
@@ -205,7 +205,7 @@ class PreprocessorStack:
             the stack.
 
         Example:
-            >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
+            >>> from language_toolkit.filters.preprocessor_stack import PreprocessorStack
             >>> stack = PreprocessorStack()
             >>> # Define a preprocessor
             >>> def example_preprocessor(ds: pd.Series, position: int) -> pd.Series:
@@ -239,7 +239,7 @@ class PreprocessorStack:
             ValueError: If the preprocessor is not in the stack.
 
         Example:
-            >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
+            >>> from language_toolkit.filters.preprocessor_stack import PreprocessorStack
             >>> stack = PreprocessorStack()
             >>> # Define a preprocessor
             >>> def example_preprocessor(ds: pd.Series, position: int) -> pd.Series:

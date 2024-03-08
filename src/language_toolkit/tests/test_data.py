@@ -6,7 +6,9 @@ from zipfile import ZipFile
 import pandas as pd
 import requests
 
-from at_nlp.logger import logger
+from language_toolkit.logger import logger
+
+csv_path = Path("./data/test.csv").absolute()
 
 
 def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
@@ -31,8 +33,8 @@ def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
     if cur_path.stem != "LanguageToolkit":
         sys.exit(1)
 
-    tmp_dir = Path("./tests/tmp")
-    data_dir = Path("./tests/data")
+    tmp_dir = Path("./src/language_toolkit/tests/tmp")
+    data_dir = Path("./src/language_toolkit/tests/data")
 
     if not data_dir.exists():
         data_dir.mkdir()
@@ -47,7 +49,7 @@ def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
         if response.status_code == 200:
             if not tmp_dir.exists():
                 tmp_dir.mkdir()
-            with open("./tests/tmp/test_data.zip", "wb") as file:
+            with open("./src/language_toolkit/tests/tmp/test_data.zip", "wb") as file:
                 file.write(response.content)
         else:
             logger.critical("Failed to download the ZIP file.")
@@ -55,7 +57,7 @@ def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
     # This is required because there is a readme file in the zip file, so we cannot
     # directly extract with Pandas
     logger.trace("Extracting test data...")
-    with ZipFile(Path("./tests/tmp/test_data.zip"), "r") as z:
+    with ZipFile(Path("./src/language_toolkit/tests/tmp/test_data.zip"), "r") as z:
         z.extract("SMSSpamCollection", data_dir)
     if not retain_data:
         logger.info(f"Removing {tmp_dir.absolute()}...")
@@ -63,7 +65,7 @@ def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
 
     logger.trace("Loading test data into Pandas DataFrame...")
     test_data = pd.read_csv(
-        Path("./tests/data/SMSSpamCollection").absolute(),
+        Path("./src/language_toolkit/tests/data/SMSSpamCollection").absolute(),
         delimiter="\t",
         names=["label", "text"],
     )

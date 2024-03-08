@@ -255,7 +255,7 @@ class TestTrainStringFilter:
 # # acronyms_path = Path("../../../nitmre/data/acronyms.csv")
 # # assert acronyms_path.exists(), "Cannot find acronyms data"
 # # drain3_conf = Path(
-# #     "/Users/dalton/dev/SIGIL/natural_language_processing/at_nlp/at_nlp/filters/drain3.ini"
+# #     "/Users/dalton/dev/SIGIL/natural_language_processing/language_toolkit/language_toolkit/filters/drain3.ini"
 # # )
 # # assert drain3_conf.exists(), "Cannot find drain3.ini"
 #
@@ -263,7 +263,7 @@ class TestTrainStringFilter:
 # # sf = StringFilter()
 # # sf.load_models(
 # #     Path(
-# #         "/Users/dalton/dev/SIGIL/natural_language_processing/at_nlp/at_nlp/filters/test_model9345"
+# #         "/Users/dalton/dev/SIGIL/natural_language_processing/language_toolkit/language_toolkit/filters/test_model9345"
 # #     )
 # # )
 #

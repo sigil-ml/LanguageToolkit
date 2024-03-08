@@ -40,8 +40,8 @@ from snorkel.labeling.model import LabelModel
 # import rich
 from tqdm import tqdm
 
-from at_nlp.filters.preprocessor_stack import PreprocessorStack
-from at_nlp.filters.weak_learner_collection import WeakLearners, LearnerItem
+from language_toolkit.filters.preprocessor_stack import PreprocessorStack
+from language_toolkit.filters.weak_learner_collection import WeakLearners, LearnerItem
 
 # from loguru import logger as log
 
@@ -109,7 +109,7 @@ class StringFilter:
         data: pd.DataFrame | pd.Series,
         train_size: Optional[float] = 0.8,
         shuffle: Optional[bool] = False,
-        seed: Optional[int] = 0
+        seed: Optional[int] = 0,
     ) -> tuple:
         r"""Split the data into training and testing sets. This is a convenience function,
         so you do not need to import the train_test_split function from sklearn.
@@ -124,17 +124,13 @@ class StringFilter:
             tuple: A tuple containing the training and testing sets
 
         Example:
-            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> from language_toolkit.filters.string_filter import StringFilter
             >>> sf = StringFilter()
             >>> train, test = sf.train_test_split(data, train_size=0.8, shuffle=True)
         """
         return train_test_split(
-            data,
-            train_size=train_size,
-            shuffle=shuffle,
-            random_state=seed
+            data, train_size=train_size, shuffle=shuffle, random_state=seed
         )
-
 
     def _fit_template_miner(self):
         pass
@@ -168,7 +164,7 @@ class StringFilter:
                 correct and incorrect predictions
 
         Example:
-            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> from language_toolkit.filters.string_filter import StringFilter
             >>> sf = StringFilter()
             >>> data = ...  # Pandas DataFrame
             >>> test, train = sf.train_test_split(data, train_size=0.8, shuffle=True)
@@ -246,7 +242,7 @@ class StringFilter:
         Raises:
             ValueError: If the supplied function is not a Snorkel labeling function
         Example:
-            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> from language_toolkit.filters.string_filter import StringFilter
             >>> from snorkel.labeling import LabelingFunction
             >>> sf = StringFilter()
             >>> @labeling_function()
@@ -301,7 +297,7 @@ class StringFilter:
             ValueError: If the labeling function is not in the filter
 
         Example:
-            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> from language_toolkit.filters.string_filter import StringFilter
             >>> from snorkel.labeling import LabelingFunction
             >>> sf = StringFilter()
             >>> # Define a labeling function
@@ -339,7 +335,7 @@ class StringFilter:
             ValueError: If the labeling function is not in the filter
 
         Example:
-            >>> from at_nlp.filters.string_filter import StringFilter
+            >>> from language_toolkit.filters.string_filter import StringFilter
         """
         self.remove_labeling_fn(labeling_fn)
         self.add_labeling_fn(labeling_fn)

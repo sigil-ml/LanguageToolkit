@@ -1,74 +1,13 @@
-from pathlib import Path
-
-import sys
 import math
-import pandas as pd
 import pytest
-from at_nlp.filters.string_filter import StringFilter
-from at_nlp.logger import logger
-from snorkel.labeling import labeling_function, LabelingFunction
-from enum import Enum, unique
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC
+from language_toolkit.filters.string_filter import StringFilter
+from snorkel.labeling import LabelingFunction
 from sklearn.utils._param_validation import InvalidParameterError  # noqa
 
-sys.path.insert(0, Path(__file__).parents[1].resolve().as_posix())
-from example_functions import pre_fn_ex0, pre_fn_ex1, pre_fn_ex2  # noqa
-from test_data import data_factory  # noqa
+from language_toolkit.tests.example_functions import *
+from language_toolkit.tests.test_data import *
 
 test_data = data_factory(pull_data=True)
-
-csv_path = Path("../data/test.csv").absolute()
-
-
-@unique
-class FilterResult(Enum):
-    """Enumeration of categories for each message"""
-
-    ABSTAIN = -1
-    ACTION = 0
-    REVIEW = 1
-    RECYCLE = 2
-
-
-# Create some labeling functions
-resources = dict(col_name="col_name")
-
-
-@labeling_function(name="test_weak_learner_01", resources=resources)
-def lf_fn_ex_01(series: pd.Series, col_name: str) -> int:
-    s = series[col_name]
-    if len(s) > 6:
-        return FilterResult.ABSTAIN.value
-    return FilterResult.RECYCLE.value
-
-
-@labeling_function(name="test_weak_learner_02", resources=resources)
-def lf_fn_ex_02(series: pd.Series, col_name: str) -> int:
-    s: str = series[col_name]
-    if s.find("3") != -1:
-        return FilterResult.ABSTAIN.value
-    return FilterResult.RECYCLE.value
-
-
-# Create some primitive fns
-def pr_fn_ex_01(s: str) -> int:
-    if s.lower() == s:
-        return FilterResult.ABSTAIN.value
-    return FilterResult.RECYCLE.value
-
-
-def pr_fn_ex_02(s: str) -> int:
-    if s.upper() == s:
-        return FilterResult.RECYCLE.value
-    return FilterResult.ABSTAIN.value
-
-
-# Create some sklearn estimators
-rf = RandomForestClassifier()
-sv = SVC()
-mlp = MLPClassifier()
 
 
 @pytest.fixture(scope="module")

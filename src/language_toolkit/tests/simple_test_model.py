@@ -1,6 +1,6 @@
-from at_nlp.filters.string_filter import StringFilter
+from language_toolkit.filters.string_filter import StringFilter
 
-from at_nlp.logger import logger
+from language_toolkit.logger import logger
 import pandas as pd
 from pathlib import Path
 from test_data import data_factory
@@ -16,4 +16,3 @@ if __name__ == "__main__":
 
     logger.info(f"X_split shape: {X_split.shape}")
     logger.info(f"y_split shape: {y_split.shape}")
-

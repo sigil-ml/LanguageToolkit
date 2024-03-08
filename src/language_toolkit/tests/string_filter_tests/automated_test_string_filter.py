@@ -165,7 +165,7 @@ r"""
     import pandas as pd
     from snorkel.labeling import labeling_function
     from sklearn.ensemble import RandomForestClassifier
-    from at_nlp.filters.string_filter import StringFilter
+    from language_toolkit.filters.string_filter import StringFilter
     from pathlib import Path
     from drain3.template_miner import TemplateMiner
     
