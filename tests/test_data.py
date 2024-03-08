@@ -1,12 +1,14 @@
+import shutil
 from pathlib import Path
-from at_nlp.logger import logger
-
 from zipfile import ZipFile
+
 import pandas as pd
 import requests
 
+from at_nlp.logger import logger
 
-def data_factory(pull_data: bool) -> pd.DataFrame:
+
+def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
     r"""Processes and returns the test data as a Pandas DataFrame. This data will be used
     for functional and exhaustive testing of the StringFilter class. It is based on the
     spam dataset from Kaggle:
@@ -23,6 +25,12 @@ def data_factory(pull_data: bool) -> pd.DataFrame:
     message. The columns are named "label" and "text" respectively.
     """
 
+    tmp_dir = Path("./tmp")
+    data_dir = Path("./data")
+
+    if not data_dir.exists():
+        data_dir.mkdir()
+
     # We are not using the Kaggle version of this link because it requires you to pass
     # in your Kaggle credentials to download the file. Instead, we are using the UCI
     # version from their website.
@@ -31,26 +39,27 @@ def data_factory(pull_data: bool) -> pd.DataFrame:
         response = requests.get(url)
         logger.info("Downloading test data...")
         if response.status_code == 200:
-            with open("./test_data.zip", "wb") as file:
+            if not tmp_dir.exists():
+                tmp_dir.mkdir()
+            with open("./tmp/test_data.zip", "wb") as file:
                 file.write(response.content)
         else:
             logger.warning("Failed to download the ZIP file.")
 
-    logger.trace("Checking for test data zip file...")
-    compressed_test_data_path = Path("./test_data.zip")
-    assert compressed_test_data_path.exists(), "Cannot find test data!"
-
-    logger.trace("Extracting test data...")
-    test_data_path = Path("./SMSSpamCollection")
     # This is required because there is a readme file in the zip file, so we cannot
     # directly extract with Pandas
-    if not test_data_path.exists():
-        with ZipFile(compressed_test_data_path, "r") as z:
-            z.extract("SMSSpamCollection", Path("."))
+    logger.trace("Extracting test data...")
+    with ZipFile(Path("./tmp/test_data.zip"), "r") as z:
+        z.extract("SMSSpamCollection", data_dir)
+    if not retain_data:
+        logger.info(f"Removing {tmp_dir.absolute()}...")
+        shutil.rmtree(tmp_dir)
 
     logger.trace("Loading test data into Pandas DataFrame...")
     test_data = pd.read_csv(
-        test_data_path.absolute(), delimiter="\t", names=["label", "text"]
+        Path("./data/SMSSpamCollection").absolute(),
+        delimiter="\t",
+        names=["label", "text"],
     )
 
     def preprocess(s: str) -> int:

@@ -171,10 +171,10 @@ from at_nlp.filters.string_filter import StringFilter
 compressed_test_data_path = Path("./tests/test_data.zip")
 assert compressed_test_data_path.exists(), "Cannot find test data!"
 
-test_data_path = Path("./tests/spam.csv")
+test_data_path = Path("../tests/spam.csv")
 if not test_data_path.exists():
-    with zipfile.ZipFile(compressed_test_data_path, 'r') as z:
-        z.extractall(Path('./tests/'))
+    with zipfile.ZipFile(compressed_test_data_path, "r") as z:
+        z.extractall(Path("../tests/"))
 
 test_data = pd.read_csv(test_data_path.absolute(), encoding="ISO-8859-1")
 test_data.rename(columns={"v1": "label", "v2": "text"}, inplace=True)
@@ -194,7 +194,7 @@ def preprocess(s: str) -> int:
 test_data["label"] = test_data["label"].apply(preprocess)
 
 # Clear old log files
-log_path = Path('./tests/tests.log')
+log_path = Path("./tests/tests.log")
 logger.info("Cleaning previous test's log files...")
 try:
     log_path.unlink()
@@ -208,22 +208,17 @@ except Exception as e:
 
 
 class TestTrainStringFilter:
-
     @pytest.fixture
     def new_filter_wo_template_miner(self):
         str_filter = StringFilter(
-            training_col_name="text",
-            label_col_name="label",
-            use_template_miner=False
+            training_col_name="text", label_col_name="label", use_template_miner=False
         )
         yield str_filter
 
     @pytest.fixture
     def new_filter_template_miner(self):
         str_filter = StringFilter(
-            training_col_name="text",
-            label_col_name="label",
-            use_template_miner=True
+            training_col_name="text", label_col_name="label", use_template_miner=True
         )
         yield str_filter
 
@@ -249,9 +244,9 @@ class TestTrainStringFilter:
         test_results = new_filter_template_miner.eval(test)
         assert test_results.acc > 0.9, f"Training accuracy: {test_results.acc}"
 
-
     # def test_train_string_filter(self, new_filter):
     #     new_filter.fit()
+
 
 #
 #

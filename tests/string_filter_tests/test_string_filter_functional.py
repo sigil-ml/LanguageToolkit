@@ -15,10 +15,10 @@ from example_functions import pre_fn_ex0, pre_fn_ex1, pre_fn_ex2
 compressed_test_data_path = Path("./tests/test_data.zip")
 assert compressed_test_data_path.exists(), "Cannot find test data!"
 
-test_data_path = Path("./tests/spam.csv")
+test_data_path = Path("../tests/spam.csv")
 if not test_data_path.exists():
     with ZipFile(compressed_test_data_path, "r") as z:
-        z.extractall(Path("./tests/"))
+        z.extractall(Path("../tests/"))
 
 test_data = pd.read_csv(test_data_path.absolute(), encoding="ISO-8859-1")
 test_data.rename(columns={"v1": "label", "v2": "text"}, inplace=True)
@@ -50,7 +50,7 @@ def preprocess(s: str) -> int:
 
 test_data["label"] = test_data["label"].apply(preprocess)
 
-csv_path = Path("test.csv").absolute()
+csv_path = Path("../data/test.csv").absolute()
 
 
 @unique

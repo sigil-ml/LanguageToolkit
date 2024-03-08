@@ -3,7 +3,7 @@ from pathlib import Path
 
 from loguru import logger
 
-test_config_path = Path("test_config.csv").absolute()
+test_config_path = Path("../data/test_config.csv").absolute()
 assert test_config_path.exists(), "Could not find test_config.csv"
 
 test_df = pd.read_csv(test_config_path, encoding="utf-8")
