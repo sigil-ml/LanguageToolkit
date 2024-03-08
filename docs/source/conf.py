@@ -17,7 +17,7 @@ sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
 
 # -- Project information -----------------------------------------------------
 
-project = "Athena NLP Toolkit"
+project = "Athena Language Toolkit"
 copyright = "2024, Athena AIML Contributors"
 author = "Athena-AIML"
 

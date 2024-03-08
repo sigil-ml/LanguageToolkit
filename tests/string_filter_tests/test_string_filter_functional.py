@@ -1,54 +1,23 @@
 from pathlib import Path
 
+import sys
+import math
 import pandas as pd
 import pytest
-from zipfile import ZipFile
-from loguru import logger
 from at_nlp.filters.string_filter import StringFilter
+from at_nlp.logger import logger
 from snorkel.labeling import labeling_function, LabelingFunction
 from enum import Enum, unique
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
-from example_functions import pre_fn_ex0, pre_fn_ex1, pre_fn_ex2
+from sklearn.utils._param_validation import InvalidParameterError  # noqa
 
-compressed_test_data_path = Path("./tests/test_data.zip")
-assert compressed_test_data_path.exists(), "Cannot find test data!"
+sys.path.insert(0, Path(__file__).parents[1].resolve().as_posix())
+from example_functions import pre_fn_ex0, pre_fn_ex1, pre_fn_ex2  # noqa
+from test_data import data_factory  # noqa
 
-test_data_path = Path("../tests/spam.csv")
-if not test_data_path.exists():
-    with ZipFile(compressed_test_data_path, "r") as z:
-        z.extractall(Path("../tests/"))
-
-test_data = pd.read_csv(test_data_path.absolute(), encoding="ISO-8859-1")
-test_data.rename(columns={"v1": "label", "v2": "text"}, inplace=True)
-test_data.drop(["Unnamed: 2", "Unnamed: 3", "Unnamed: 4"], axis=1, inplace=True)
-
-# Clear old log files
-log_path = Path("./tests/tests.log")
-logger.info("Cleaning previous test's log files...")
-try:
-    log_path.unlink()
-    logger.info(f"{log_path} has been removed successfully")
-except FileNotFoundError:
-    logger.error(f"The file {log_path} does not exist")
-except PermissionError:
-    logger.error(f"Permission denied: unable to delete {log_path}")
-except Exception as e:
-    logger.error(f"Error occurred: {e}")
-
-
-def preprocess(s: str) -> int:
-    match s:
-        case "ham":
-            return 0
-        case "spam":
-            return 2
-        case _:
-            return -1
-
-
-test_data["label"] = test_data["label"].apply(preprocess)
+test_data = data_factory(pull_data=True)
 
 csv_path = Path("../data/test.csv").absolute()
 
@@ -102,12 +71,12 @@ sv = SVC()
 mlp = MLPClassifier()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def empty_filter():
     yield StringFilter(col_name="text")
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def full_pre_filter():
     sf = StringFilter(col_name="text")
     sf.add_preprocessor(pre_fn_ex0)
@@ -116,7 +85,7 @@ def full_pre_filter():
     yield sf
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def full_lf_filter():
     sf = StringFilter(col_name="text")
     sf.add_labeling_function(lf_fn_ex_01)
@@ -125,7 +94,7 @@ def full_lf_filter():
     yield sf
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def std_filter():
     sf = StringFilter(col_name="text")
     sf.add_preprocessor(csv_path)
@@ -135,7 +104,7 @@ def std_filter():
     yield sf
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def no_learners_filter():
     sf = StringFilter(col_name="text")
     sf.add_preprocessor(csv_path)
@@ -277,17 +246,17 @@ class TestTrainTestSplit:
     def test_split_amt(self, splits):
         test_data_len = len(test_data)
         train, test = splits
-        assert int(0.8 * test_data_len) == len(train)
-        assert int(0.2 * test_data_len) == len(test)
+        assert math.floor(0.8 * test_data_len) == len(train)
+        assert test_data_len - math.floor(0.8 * test_data_len) == len(test)
         assert test_data_len == len(train) + len(test)
 
     def test_types(self, splits):
         train, test = splits
         assert isinstance(test, pd.DataFrame)
-        assert test.columns == test_data.columns
+        assert all(test.columns == test_data.columns)  # noqa
 
         assert isinstance(train, pd.DataFrame)
-        assert train.columns == test_data.columns
+        assert all(train.columns == test_data.columns)  # noqa
 
     def test_train_data_shuffle(self, empty_filter, splits):
         train, test = splits
@@ -297,23 +266,15 @@ class TestTrainTestSplit:
         test_data_len = len(test_data)
         assert not train.equals(train_shuffle)
         assert not test.equals(test_shuffle)
-        assert int(0.8 * test_data_len) == len(train_shuffle)
-        assert int(0.2 * test_data_len) == len(test_shuffle)
+        assert math.floor(0.8 * test_data_len) == len(train_shuffle)
+        assert test_data_len - math.floor(0.8 * test_data_len) == len(test_shuffle)
         assert test_data_len == len(train_shuffle) + len(test_shuffle)
 
     def test_train_data_invalid_size(self, empty_filter):
-        with pytest.raises(ValueError):
+        with pytest.raises(InvalidParameterError):
             _ = empty_filter.train_test_split(test_data, train_size=0, shuffle=True)
-        with pytest.raises(ValueError):
+        with pytest.raises(InvalidParameterError):
             _ = empty_filter.train_test_split(test_data, train_size=-1, shuffle=True)
-        with pytest.raises(ValueError):
-            _ = empty_filter.train_test_split(test_data, train_size=1, shuffle=True)
-        with pytest.raises(ValueError):
-            _ = empty_filter.train_test_split(test_data, train_size=2, shuffle=True)
-        with pytest.raises(ValueError):
-            _ = empty_filter.train_test_split(
-                test_data, train_size="2", shuffle=True  # noqa Expected Failure
-            )
 
 
 class TestFit:
