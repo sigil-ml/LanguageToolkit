@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pandas as pd
-import numpy as np
 import pytest
 from zipfile import ZipFile
 from loguru import logger
@@ -11,6 +10,7 @@ from enum import Enum, unique
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
+from example_functions import pre_fn_ex0, pre_fn_ex1, pre_fn_ex2
 
 compressed_test_data_path = Path("./tests/test_data.zip")
 assert compressed_test_data_path.exists(), "Cannot find test data!"
@@ -53,27 +53,6 @@ test_data["label"] = test_data["label"].apply(preprocess)
 csv_path = Path("test.csv").absolute()
 
 
-def pre_fn_ex0(ds: pd.Series, position: int) -> pd.Series:
-    r"""Test function for testing CRUD operations"""
-    s: str = ds.iat[position]
-    ds.iat[position] = s.lower()
-    return ds
-
-
-def pre_fn_ex1(ds: pd.Series, position: int) -> pd.Series:
-    r"""Test function for testing CRUD operations"""
-    s: str = ds.iat[position]
-    ds.iat[position] = s.upper()
-    return ds
-
-
-def pre_fn_ex2(ds: pd.Series, position: int) -> pd.Series:
-    r"""Test function for testing CRUD operations"""
-    s: str = ds.iat[position]
-    ds.iat[position] = s.capitalize()
-    return ds
-
-
 @unique
 class FilterResult(Enum):
     """Enumeration of categories for each message"""
@@ -85,10 +64,10 @@ class FilterResult(Enum):
 
 
 # Create some labeling functions
-rsrcs = dict(col_name="col_name")
+resources = dict(col_name="col_name")
 
 
-@labeling_function(name="test_weak_learner_01", resources=rsrcs)
+@labeling_function(name="test_weak_learner_01", resources=resources)
 def lf_fn_ex_01(series: pd.Series, col_name: str) -> int:
     s = series[col_name]
     if len(s) > 6:
@@ -96,7 +75,7 @@ def lf_fn_ex_01(series: pd.Series, col_name: str) -> int:
     return FilterResult.RECYCLE.value
 
 
-@labeling_function(name="test_weak_learner_02", resources=rsrcs)
+@labeling_function(name="test_weak_learner_02", resources=resources)
 def lf_fn_ex_02(series: pd.Series, col_name: str) -> int:
     s: str = series[col_name]
     if s.find("3") != -1:
@@ -569,6 +548,7 @@ class TestMetrics:  # TODO
 class TestGetPreprocessor:
     def test_get_by_name(self, full_pre_filter):
         item = full_pre_filter.get_preprocessor("pre_fn_ex0")
+        assert item.name == "pre_fn_ex0"
         assert callable(item)
 
     def test_get_by_position(self, full_pre_filter):

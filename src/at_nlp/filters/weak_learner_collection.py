@@ -29,10 +29,10 @@ class WeakLearners:
 
     @singledispatchmethod
     def add(
-            self,
-            fn: abc.Callable | LabelingFunction | BaseEstimator,
-            learnable: bool = False,
-            item_type: str | None = None
+        self,
+        fn: abc.Callable | LabelingFunction | BaseEstimator,
+        learnable: bool = False,
+        item_type: str | None = None,
     ) -> None:
         r"""Dispatches to one of the following methods:
             1. :meth:`add_labeling_function`
@@ -43,14 +43,20 @@ class WeakLearners:
             TypeError: If the provided fn is not the correct type
 
         """
-        raise TypeError("Supplied function is not an accepted labeling function. Received"
-                        "{}, but expected either Callable[[pd.Series], int] or a Snorkel"
-                        "LabelingFunction" % fn.__class__.__name__)
+        raise TypeError(
+            "Supplied function is not an accepted labeling function. Received"
+            "{}, but expected either Callable[[pd.Series], int] or a Snorkel"
+            "LabelingFunction" % fn.__class__.__name__
+        )
 
     # noinspection GrazieInspection
     @add.register
-    def add_labeling_function(self, fn: LabelingFunction, learnable: bool = False,
-                              item_type: str | None = None) -> None:
+    def add_labeling_function(
+        self,
+        fn: LabelingFunction,
+        learnable: bool = False,
+        item_type: str | None = None,
+    ) -> None:
         r"""Appends a Snorkel labeling function to the collection. If this function has
         trainable parameters, then ``learnable`` should be `True`. If ``learnable`` is set
         to `True`, then ``item_type`` should be a string representing the class of learner
@@ -74,8 +80,8 @@ class WeakLearners:
             >>> from at_nlp.filters.weak_learner_collection import WeakLearners
             >>> from snorkel.labeling import labeling_function
             >>> wl_col = WeakLearners()
-            >>> rsrcs = {"col_name": "Messages"}
-            >>> @labeling_function(name="Example", resources=rsrcs)
+            >>> resources = {"col_name": "Messages"}
+            >>> @labeling_function(name="Example", resources=resources)
             >>> def fn_ex0(series: pd.Series, col_name: str) -> int:
             >>>     if len(series[col_name]) > 6:
             >>>         return 1
@@ -161,9 +167,9 @@ class WeakLearners:
         item = LearnerItem(wrapper, learnable=True, item_type="sklearn")
         self.m_learners.append(item)
 
-    def extend(self,
-               fns: abc.Iterable[LabelingFunction | abc.Callable | BaseEstimator]
-               ) -> None:
+    def extend(
+        self, fns: abc.Iterable[LabelingFunction | abc.Callable | BaseEstimator]
+    ) -> None:
         """Extends internal collection with a list of fns. Assumes each function is
         non-trainable unless it subclasses BaseEstimator.
         """

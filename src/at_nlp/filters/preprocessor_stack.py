@@ -7,7 +7,7 @@ from typing import Callable, Iterable, TypeAlias, SupportsIndex
 import dask
 from loguru import logger
 
-dask.config.set({'dataframe.query-planning': True})
+dask.config.set({"dataframe.query-planning": True})
 import dask.dataframe as dd  # noqa
 import pandas as pd  # noqa
 from rich.console import Console  # noqa
@@ -19,8 +19,9 @@ Preprocessor: TypeAlias = Callable[[pd.Series, int], pd.Series]
 
 
 class PreprocessorStack:
-    r"""The PreprocessorStack is an iterable of preprocessors designed to operate on a dataframe. Each preprocessor
-    takes a single Pandas Series and a column index and returns a Pandas Series.
+    r"""The PreprocessorStack is an iterable of preprocessors designed to operate on a
+    dataframe. Each preprocessor takes a single Pandas Series and a column index and
+    returns a Pandas Series.
     """
 
     def __init__(self):
@@ -28,13 +29,13 @@ class PreprocessorStack:
         self._stack: list[Preprocessor] = []
 
     def add(
-            self,
-            preprocessor: Preprocessor,
-            position: int = -1,
+        self,
+        preprocessor: Preprocessor,
+        position: int = -1,
     ) -> None:
-        r"""Adds a preprocessor to the stack of preprocessors. Pre-processors must have the following
-        function signature: (pd.Series, int) -> pd.Series. The second argument of the
-        function is the column index in the series to operate on.
+        r"""Adds a preprocessor to the stack of preprocessors. Pre-processors must have
+        the following function signature: (pd.Series, int) -> pd.Series. The second
+        argument of the function is the column index in the series to operate on.
 
         Args:
             preprocessor: A preprocessor function that operates on Pandas Series.
@@ -44,7 +45,8 @@ class PreprocessorStack:
             None
 
         Raises:
-            IndexError: If the preprocessor function is not callable or has the wrong signature.
+            IndexError: If the preprocessor function is not callable or has the wrong
+            signature.
 
         Example:
             >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
@@ -54,14 +56,16 @@ class PreprocessorStack:
             >>>     return ds
             >>> stack = PreprocessorStack()
             >>> stack.add(make_lower_case)
-            >>> # stack.add(make_lower_case, 0) # a position can be given in the range [0, len(stack))
+            >>> # stack.add(make_lower_case, 0)
 
         """
         if not isinstance(position, SupportsIndex):
             raise IndexError(f"Position {position} is not valid for list indexing.")
 
         if position > len(self._stack):
-            raise IndexError(f"Index {position} larger than number of preprocessor functions.")
+            raise IndexError(
+                f"Index {position} larger than number of preprocessor functions."
+            )
 
         if position < -1:
             raise IndexError(f"Index {position} should be in range [0, len(stack)).")
@@ -76,8 +80,8 @@ class PreprocessorStack:
         self.add(preprocessor, -1)
 
     def add_multiple(self, preprocessors: Iterable[tuple[Preprocessor, int]]) -> None:
-        r"""Adds multiple preprocessors to the stack. Takes in an iterable of tuples of indices and preprocessors, 
-        using the indices for insertion position.
+        r"""Adds multiple preprocessors to the stack. Takes in an iterable of tuples of
+        indices and preprocessors, using the indices for insertion position.
 
         Args:
             preprocessors (Iterable[tuple[Callable[[pd.Series, int], pd.Series], int]]
@@ -94,7 +98,6 @@ class PreprocessorStack:
         """
         stack_copy = self._stack.copy()
 
-
         for preprocessor_tuple in preprocessors:
             try:
                 self.add(*preprocessor_tuple)
@@ -103,14 +106,14 @@ class PreprocessorStack:
                 raise e
 
     def add_csv_preprocessor(
-            self,
-            csv_path: Path,
-            search_idx: int = 0,
-            replace_idx: int = 1,
-            order: int | None = None,
+        self,
+        csv_path: Path,
+        search_idx: int = 0,
+        replace_idx: int = 1,
+        order: int | None = None,
     ) -> None:
-        r"""Registers a CSV file to be used for substring replacement preprocessing. 
-                
+        r"""Registers a CSV file to be used for substring replacement preprocessing.
+
         Note:
             The CSV file will not be serialized when saving the StringFilter object.
             Internally we will store the search and replacement strings in a dictionary
@@ -119,16 +122,20 @@ class PreprocessorStack:
 
         Args:
             csv_path (Path): Path to the CSV file.
-            search_idx (int): Index of the column containing the string to be replaced (Defaults to 0).
-            replace_idx (int): Index of the column containing the replacement string (Defaults to 1).
-            order (int| None): The position in the call stack to place the preprocessor function.
-                The default is None which places the caller at the end of the stack.
+            search_idx (int): Index of the column containing the string to be replaced
+                (Defaults to 0).
+            replace_idx (int): Index of the column containing the replacement string
+                (Defaults to 1).
+            order (int| None): The position in the call stack to place the preprocessor
+                function. The default is None which places the caller at the end of the
+                stack.
 
         Returns:
             None
 
         Raises:
-            AssertionError: raised if the CSV file does not exist, or the indices are not integers.
+            AssertionError: raised if the CSV file does not exist, or the indices are not
+                integers.
 
         Example:
             >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
@@ -187,13 +194,15 @@ class PreprocessorStack:
         r"""Remove a preprocessor from the stack.
 
         Args:
-            preprocessor (Callable[[pd.Series, int | str], pd.Series]): Preprocessor reference to be removed
+            preprocessor (Callable[[pd.Series, int | str], pd.Series]): Preprocessor
+            reference to be removed
 
         Returns:
             None
 
         Raises:
-            ValueError: If the preprocessor is not callable or the preprocessor is not in the stack.
+            ValueError: If the preprocessor is not callable or the preprocessor is not in
+            the stack.
 
         Example:
             >>> from at_nlp.filters.preprocessor_stack import PreprocessorStack
@@ -215,9 +224,7 @@ class PreprocessorStack:
         try:
             self._stack.remove(preprocessor)
         except ValueError:
-            logger.warning(
-                f"Preprocessing function: {preprocessor} not in the stack."
-            )
+            logger.warning(f"Preprocessing function: {preprocessor} not in the stack.")
 
     def update(self, preprocessor: Preprocessor):
         r"""Update an existing preprocessor in the stack
@@ -253,11 +260,11 @@ class PreprocessorStack:
                 self.add(preprocessor, idx - 1)
 
     def __call__(
-            self,
-            df: pd.DataFrame,
-            col_idx: int = 0,
-            parallel: bool = False,
-            num_partitions: int = 2,
+        self,
+        df: pd.DataFrame,
+        col_idx: int = 0,
+        parallel: bool = False,
+        num_partitions: int = 2,
     ) -> pd.DataFrame:
         r"""Sequentially execute functions in the preprocessor stack"""
         if parallel:

@@ -1,4 +1,3 @@
-from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
@@ -24,10 +23,10 @@ class FilterResult(Enum):
 
 
 # Create some labeling functions
-rsrcs = dict(col_name="col_name")
+resources = dict(col_name="col_name")
 
 
-@labeling_function(name="test_weak_learner_01", resources=rsrcs)
+@labeling_function(name="test_weak_learner_01", resources=resources)
 def lf_fn_ex_01(series: pd.Series, col_name: str) -> int:
     s = series[col_name]
     if len(s) > 6:
@@ -35,7 +34,7 @@ def lf_fn_ex_01(series: pd.Series, col_name: str) -> int:
     return FilterResult.RECYCLE.value
 
 
-@labeling_function(name="test_weak_learner_02", resources=rsrcs)
+@labeling_function(name="test_weak_learner_02", resources=resources)
 def lf_fn_ex_02(series: pd.Series, col_name: str) -> int:
     s: str = series[col_name]
     if s.find("3") != -1:
@@ -251,7 +250,7 @@ class TestWeakLearnerCollectionUtilities:
     def test_remove_non_existent_fn(self, empty_learner_collection):
         with pytest.raises(ValueError):
             empty_learner_collection.remove("test_weak_learner_01")
-    
+
     def test_get_non_existent_fn(self, empty_learner_collection):
         with pytest.raises(ValueError):
             empty_learner_collection.get_labeling_fn("test_weak_learner_01")

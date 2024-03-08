@@ -2,6 +2,7 @@ import pandas as pd
 from pathlib import Path
 
 from loguru import logger
+
 test_config_path = Path("test_config.csv").absolute()
 assert test_config_path.exists(), "Could not find test_config.csv"
 
@@ -17,10 +18,12 @@ from at_nlp.filters.string_filter import StringFilter
 
 
 rsrcs = dict(col_name="text")
+
+
 @labeling_function(name="profanity_learner", resources=rsrcs)
 def check_profanity(text):
     url = "https://www.purgomalum.com/service/containsprofanity"
-    params = {'text': text}
+    params = {"text": text}
     response = requests.get(url, params=params)
 
     if response.text == "true":
@@ -28,14 +31,17 @@ def check_profanity(text):
     else:
         return 0
 
+
 def t_preprocessor_fn0(ds: pd.Series, position: int) -> pd.Series:
     r"""Test function for testing CRUD operations"""
     s: str = ds.iat[position]
     ds.iat[position] = s.lower()
     return ds
 
+
 def remove_links(text):
-    re.findall('(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+', text)
+    re.findall("(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+", text)
+
 
 # def test(self):
 #     sf = StringFilter()
@@ -79,12 +85,16 @@ def test_factory(inclusion_tuple: tuple) -> str:
     logger.info(f"Creating test: {test_name}")
     if bool(inclusion_tuple[1]):  # D
         test_string = f"def {test_name}(template_miner: TemplateMiner):\n"
-        test_string += f"\t\"\"\"Test id: {inclusion_tuple[0]} | {inclusion_tuple[1:]}\"\"\"\n"
+        test_string += (
+            f'\t"""Test id: {inclusion_tuple[0]} | {inclusion_tuple[1:]}"""\n'
+        )
         test_string += f"\tsf = StringFilter()\n"
         test_string += f"\tsf.add_template_miner(template_miner)\n"
     else:
         test_string = f"def {test_name}():\n"
-        test_string += f"\t\"\"\"Test id: {inclusion_tuple[0]} | {inclusion_tuple[1:]}\"\"\"\n"
+        test_string += (
+            f'\t"""Test id: {inclusion_tuple[0]} | {inclusion_tuple[1:]}"""\n'
+        )
         test_string += f"\tsf = StringFilter()\n"
 
     if bool(inclusion_tuple[2]):  # P1
@@ -295,8 +305,8 @@ if __name__ == "__main__":
     """
 
     module += r"""
-    rsrcs = dict(col_name="text")
-    @labeling_function(name="profanity_learner", resources=rsrcs)
+    resources = dict(col_name="text")
+    @labeling_function(name="profanity_learner", resources=resources)
     def check_profanity(text):
         url = "https://www.purgomalum.com/service/containsprofanity"
         params = {'text': text}
