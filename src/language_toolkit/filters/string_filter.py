@@ -196,8 +196,17 @@ class StringFilter:
         """Handles the multi-addition case"""
         self._labeling_fns.extend(fn)
 
-    def get_labeling_function(self, item: str) -> LearnerItem:
-        pass
+    @singledispatchmethod
+    def get_labeling_function(self, item) -> LearnerItem:
+        raise IndexError("Expected strings or an object which supports indexing!")
+
+    @get_labeling_function.register
+    def _(self, item: str) -> LearnerItem:
+        return self._labeling_fns.get_labeling_fn(item)
+
+    @get_labeling_function.register
+    def _(self, item: SupportsIndex) -> LearnerItem:
+        return self._labeling_fns[item]
 
     def remove_labeling_function(self, item: str) -> None:
         self._labeling_fns.remove(item)

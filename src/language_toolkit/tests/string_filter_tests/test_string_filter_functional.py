@@ -465,25 +465,27 @@ class TestGetPreprocessor:
             empty_filter.get_preprocessor("pre_fn_ex100")
 
 
-# class TestGetWeakLearner:
-#     def test_get_by_name(self, full_lf_filter):
-#         item = full_lf_filter.get_labeling_function("test_weak_learner_01")
-#         assert isinstance(item.fn, LabelingFunction)
-#         assert item.fn.name == "test_weak_learner_01"
-#         assert not item.learnable
-#         assert item.item_type is None
-#
-#     def test_get_sklearn_estimator(self, full_lf_filter):
-#         item = full_lf_filter.get_labeling_function("SK_RandomForestClassifier")
-#         assert isinstance(item.fn, RandomForestClassifier)
-#         assert item.fn.name == "SK_RandomForestClassifier"
-#         assert item.learnable
-#         assert item.item_type == "sklearn"
-#
-#     def test_get_wrong_type(self, full_lf_filter):
-#         with pytest.raises(IndexError):
-#             full_lf_filter.get_labeling_function(0)  # noqa Expected Failure
-#
-#     def test_non_existent_name(self, empty_filter):
-#         with pytest.raises(ValueError):
-#             empty_filter.get_labeling_function("test_weak_learner_100")
+class TestGetWeakLearner:
+    def test_get_by_name(self, full_lf_filter):
+        item = full_lf_filter.get_labeling_function("test_weak_learner_01")
+        assert isinstance(item.fn, LabelingFunction)
+        assert item.fn.name == "test_weak_learner_01"
+        assert not item.learnable
+        assert item.item_type is None
+
+    def test_get_sklearn_estimator(self, full_lf_filter):
+        item = full_lf_filter.get_labeling_function("SK_RandomForestClassifier")
+        assert item.fn.name == "SK_RandomForestClassifier"
+        assert item.learnable
+        assert item.item_type == "sklearn"
+
+    def test_get_wrong_type(self, full_lf_filter):
+        item = full_lf_filter.get_labeling_function(0)  # noqa Expected Failure
+        assert isinstance(item.fn, LabelingFunction)
+        assert item.fn.name == "test_weak_learner_01"
+        assert not item.learnable
+        assert item.item_type is None
+
+    def test_non_existent_name(self, empty_filter):
+        with pytest.raises(ValueError):
+            empty_filter.get_labeling_function("test_weak_learner_100")
