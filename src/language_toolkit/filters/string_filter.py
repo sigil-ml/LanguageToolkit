@@ -114,9 +114,9 @@ class StringFilter:
         pass
 
     """
-    +-----------------------------------------------------------------------------------+
-    | Preprocessors CRUD                                                                |
-    +-----------------------------------------------------------------------------------+
+    +--------------------------------------------------------------------------------+
+    | Preprocessors CR_D                                                             |
+    +--------------------------------------------------------------------------------+
     """
 
     @singledispatchmethod
@@ -135,10 +135,8 @@ class StringFilter:
     def _(self, fn: pathlib.Path, position: Optional[int] = -1) -> None:
         self._preprocessors.add_csv_preprocessor(fn, order=position)
 
-    @add_preprocessor.register(list)
-    @add_preprocessor.register(tuple)
-    @add_preprocessor.register(set)
-    def _(self, fn) -> None:
+    @add_preprocessor.register
+    def _(self, fn: abc.Iterable) -> None:
         if isinstance(fn[0], abc.Callable) or isinstance(fn[0], pathlib.Path):
             n_pre = len(self._preprocessors)
             _l = [(f, n_pre + i) for i, f in enumerate(fn)]
@@ -147,24 +145,36 @@ class StringFilter:
             self._preprocessors.add_multiple(fn)
 
     @singledispatchmethod
-    def remove_preprocessor(self, item: Preprocessor | str | SupportsIndex) -> None:
+    def remove_preprocessor(self, item) -> None:
         raise NotImplementedError(
             f"Cannot remove based on type {item.__class__.__name__}"
         )
+
+    @singledispatchmethod
+    def get_preprocessor(self, item) -> Preprocessor:
+        raise IndexError("Getters only support strings and indexers")
+
+    @get_preprocessor.register
+    def _(self, item: str) -> Preprocessor:
+        return self._preprocessors.get(item)
+
+    @get_preprocessor.register
+    def _(self, item: SupportsIndex) -> Preprocessor:
+        return self._preprocessors[item]
 
     @remove_preprocessor.register(str)
     @remove_preprocessor.register(abc.Callable)
     def _(self, item) -> None:
         self._preprocessors.remove(item)
 
-    @remove_preprocessor.register(int)
-    def _(self, item: int | SupportsIndex) -> None:
+    @remove_preprocessor.register
+    def _(self, item: SupportsIndex) -> None:
         del self._preprocessors[item]
 
     """
-    +-----------------------------------------------------------------------------------+
-    | Labeling Function CRUD                                                            |
-    +-----------------------------------------------------------------------------------+
+    +--------------------------------------------------------------------------------+
+    | Labeling Function CR_D                                                         |
+    +--------------------------------------------------------------------------------+
     """
 
     @singledispatchmethod
@@ -181,18 +191,21 @@ class StringFilter:
         """Handles the single addition case"""
         self._labeling_fns.add(fn)
 
-    @add_labeling_function.register(abc.Iterable)
-    def _(self, fn) -> None:
+    @add_labeling_function.register
+    def _(self, fn: abc.Iterable) -> None:
         """Handles the multi-addition case"""
         self._labeling_fns.extend(fn)
+
+    def get_labeling_function(self, item: str) -> LearnerItem:
+        pass
 
     def remove_labeling_function(self, item: str) -> None:
         self._labeling_fns.remove(item)
 
     """
-    +-----------------------------------------------------------------------------------+
-    | Training                                                                          |
-    +-----------------------------------------------------------------------------------+
+    +--------------------------------------------------------------------------------+
+    | Training                                                                       |
+    +--------------------------------------------------------------------------------+
     """
 
     @staticmethod
@@ -267,9 +280,9 @@ class StringFilter:
         """
 
     """
-    +-----------------------------------------------------------------------------------+
-    | Evaluation                                                                        |
-    +-----------------------------------------------------------------------------------+
+    +--------------------------------------------------------------------------------+
+    | Evaluation                                                                     |
+    +--------------------------------------------------------------------------------+
     """
 
     def eval(self):
@@ -289,9 +302,9 @@ class StringFilter:
     #     pass
 
     """
-    +-----------------------------------------------------------------------------------+
-    | Information                                                                       |
-    +-----------------------------------------------------------------------------------+
+    +--------------------------------------------------------------------------------+
+    | Information                                                                    |
+    +--------------------------------------------------------------------------------+
     """
 
     def print_preprocessors(self):
@@ -304,21 +317,15 @@ class StringFilter:
         pass
 
     """
-    +-----------------------------------------------------------------------------------+
-    | Serialization/De-serialization                                                    |
-    +-----------------------------------------------------------------------------------+
+    +--------------------------------------------------------------------------------+
+    | Serialization/De-serialization                                                 |
+    +--------------------------------------------------------------------------------+
     """
 
     def save(self):
         pass
 
     def load(self):
-        pass
-
-    def get_preprocessor(self, item: str | SupportsIndex) -> Preprocessor:
-        pass
-
-    def get_labeling_function(self, item: str) -> LearnerItem:
         pass
 
     def add_labeling_fn(self, labeling_fn: LabelingFunction) -> None:

@@ -30,6 +30,16 @@ class PreprocessorStack:
         self._idx = 0
         self._stack: list[Preprocessor] = []
 
+    def get(self, item: str) -> Preprocessor:
+        if len(self._stack) == 0:
+            raise ValueError(f"The stack is empty!")
+
+        for pr in self._stack:
+            if pr.__name__ == item:
+                return pr
+
+        raise KeyError(f"Cannot find {item} in PreprocessorStack!")
+
     def add(
         self,
         preprocessor: Preprocessor,

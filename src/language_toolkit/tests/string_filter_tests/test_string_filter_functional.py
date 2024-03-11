@@ -445,26 +445,26 @@ class TestRemoveWeakLearner:
 #     pass
 #
 #
-# class TestGetPreprocessor:
-#     def test_get_by_name(self, full_pre_filter):
-#         item = full_pre_filter.get_preprocessor("pre_fn_ex0")
-#         assert item.name == "pre_fn_ex0"
-#         assert callable(item)
-#
-#     def test_get_by_position(self, full_pre_filter):
-#         item = full_pre_filter.get_preprocessor(0)
-#         assert item.name == "pre_fn_ex0"
-#         assert callable(item)
-#
-#     def test_wrong_type(self, full_pre_filter):
-#         with pytest.raises(IndexError):
-#             full_pre_filter.get_preprocessor(0.1)  # noqa Expected Failure
-#
-#     def test_non_existent_name(self, empty_filter):
-#         with pytest.raises(ValueError):
-#             empty_filter.get_preprocessor("pre_fn_ex100")
-#
-#
+class TestGetPreprocessor:
+    def test_get_by_name(self, full_pre_filter):
+        item = full_pre_filter.get_preprocessor("pre_fn_ex0")
+        assert item.__name__ == "pre_fn_ex0"
+        assert callable(item)
+
+    def test_get_by_position(self, full_pre_filter):
+        item = full_pre_filter.get_preprocessor(0)
+        assert item.__name__ == "pre_fn_ex0"
+        assert callable(item)
+
+    def test_wrong_type(self, full_pre_filter):
+        with pytest.raises(IndexError):
+            full_pre_filter.get_preprocessor(0.1)  # noqa Expected Failure
+
+    def test_non_existent_name(self, empty_filter):
+        with pytest.raises(ValueError):
+            empty_filter.get_preprocessor("pre_fn_ex100")
+
+
 # class TestGetWeakLearner:
 #     def test_get_by_name(self, full_lf_filter):
 #         item = full_lf_filter.get_labeling_function("test_weak_learner_01")
