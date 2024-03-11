@@ -227,7 +227,7 @@ class WeakLearners:
         if not name_located:
             raise ValueError(f"Function with name {fn_name} not found")
 
-    def get_labeling_fn(self, fn_name: str) -> LearnerItem:
+    def get(self, fn_name: str) -> LearnerItem:
         r"""Returns the first LearnerItem that matches the supplied name.
 
         Args:
@@ -253,7 +253,7 @@ class WeakLearners:
             >>> # ex1
             >>> rf = RandomForestClassifier()
             >>> wl_col.add(rf)
-            >>> sk_item = wl_col.get_labeling_fn("SK_RandomForestClassifier")
+            >>> sk_item = wl_col.get("SK_RandomForestClassifier")
             >>> assert isinstance(sk_item.fn, LabelingFunction)         # True
             >>> assert sk_item.fn.name == "SK_RandomForestClassifier"   # True
             >>> assert sk_item.learnable                                # True
@@ -261,7 +261,7 @@ class WeakLearners:
             >>>
             >>> # ex2
             >>> wl_col.add(lambda s: int(len(s) > 6))
-            >>> pr_item = wl_col.get_labeling_fn('PR_anon2')
+            >>> pr_item = wl_col.get('PR_anon2')
             >>> assert isinstance(pr_item.fn, LabelingFunction) # True
             >>> assert pr_item.fn.name == 'PR_anon2'            # True
             >>> assert not pr_item.learnable                    # True
@@ -276,7 +276,7 @@ class WeakLearners:
             >>>         return 1
             >>>     return 0
             >>> wl_col.add(test_fn_01)
-            >>> lf_item = wl_col.get_labeling_fn("test_fn")
+            >>> lf_item = wl_col.get("test_fn")
             >>> assert isinstance(lf_item.fn, LabelingFunction) # True
             >>> assert lf_item.fn.name = "test_fn"              # True
             >>> assert not lf_item.learnable                    # True

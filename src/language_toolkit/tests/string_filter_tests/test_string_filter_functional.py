@@ -174,46 +174,46 @@ class TestAddLabelingFunctions:
         assert all([callable(wl.fn) for wl in full_lf_filter._labeling_fns])
 
 
-# class TestTrainTestSplit:
-#     @pytest.fixture(scope="class")
-#     def splits(self, empty_filter):
-#         train, test = empty_filter.train_test_split(test_data, train_size=0.8)
-#         yield train, test
-#
-#     def test_split_amt(self, splits):
-#         test_data_len = len(test_data)
-#         train, test = splits
-#         assert math.floor(0.8 * test_data_len) == len(train)
-#         assert test_data_len - math.floor(0.8 * test_data_len) == len(test)
-#         assert test_data_len == len(train) + len(test)
-#
-#     def test_types(self, splits):
-#         train, test = splits
-#         assert isinstance(test, pd.DataFrame)
-#         assert all(test.columns == test_data.columns)  # noqa
-#
-#         assert isinstance(train, pd.DataFrame)
-#         assert all(train.columns == test_data.columns)  # noqa
-#
-#     def test_train_data_shuffle(self, empty_filter, splits):
-#         train, test = splits
-#         train_shuffle, test_shuffle = empty_filter.train_test_split(
-#             test_data, train_size=0.8, shuffle=True
-#         )
-#         test_data_len = len(test_data)
-#         assert not train.equals(train_shuffle)
-#         assert not test.equals(test_shuffle)
-#         assert math.floor(0.8 * test_data_len) == len(train_shuffle)
-#         assert test_data_len - math.floor(0.8 * test_data_len) == len(test_shuffle)
-#         assert test_data_len == len(train_shuffle) + len(test_shuffle)
-#
-#     def test_train_data_invalid_size(self, empty_filter):
-#         with pytest.raises(InvalidParameterError):
-#             _ = empty_filter.train_test_split(test_data, train_size=0, shuffle=True)
-#         with pytest.raises(InvalidParameterError):
-#             _ = empty_filter.train_test_split(test_data, train_size=-1, shuffle=True)
-#
-#
+class TestTrainTestSplit:
+    @pytest.fixture
+    def splits(self, empty_filter):
+        train, test = empty_filter.train_test_split(test_data, train_size=0.8)
+        yield train, test
+
+    def test_split_amt(self, splits):
+        test_data_len = len(test_data)
+        train, test = splits
+        assert math.floor(0.8 * test_data_len) == len(train)
+        assert test_data_len - math.floor(0.8 * test_data_len) == len(test)
+        assert test_data_len == len(train) + len(test)
+
+    def test_types(self, splits):
+        train, test = splits
+        assert isinstance(test, pd.DataFrame)
+        assert all(test.columns == test_data.columns)  # noqa
+
+        assert isinstance(train, pd.DataFrame)
+        assert all(train.columns == test_data.columns)  # noqa
+
+    def test_train_data_shuffle(self, empty_filter, splits):
+        train, test = splits
+        train_shuffle, test_shuffle = empty_filter.train_test_split(
+            test_data, train_size=0.8, shuffle=True
+        )
+        test_data_len = len(test_data)
+        assert not train.equals(train_shuffle)
+        assert not test.equals(test_shuffle)
+        assert math.floor(0.8 * test_data_len) == len(train_shuffle)
+        assert test_data_len - math.floor(0.8 * test_data_len) == len(test_shuffle)
+        assert test_data_len == len(train_shuffle) + len(test_shuffle)
+
+    def test_train_data_invalid_size(self, empty_filter):
+        with pytest.raises(InvalidParameterError):
+            _ = empty_filter.train_test_split(test_data, train_size=0, shuffle=True)
+        with pytest.raises(InvalidParameterError):
+            _ = empty_filter.train_test_split(test_data, train_size=-1, shuffle=True)
+
+
 # class TestFit:
 #     @pytest.fixture(scope="class")
 #     def splits(self, std_filter):

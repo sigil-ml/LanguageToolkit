@@ -132,7 +132,7 @@ class TestCRUDPrimitiveFunctions:
 
     def test_add_anon(self, empty_learner_collection):
         empty_learner_collection.add(lambda s: int(len(s) > 6))
-        item = empty_learner_collection.get_labeling_fn("PR_anon1")
+        item = empty_learner_collection.get("PR_anon1")
         assert isinstance(item.fn, LabelingFunction)
         assert item.fn.name == "PR_anon1"
         assert not item.learnable
@@ -225,19 +225,19 @@ class TestWeakLearnerCollectionUtilities:
         yield wl_col
 
     def test_get_by_name(self, full_learner_collection):
-        item = full_learner_collection.get_labeling_fn("test_weak_learner_01")
+        item = full_learner_collection.get("test_weak_learner_01")
         assert isinstance(item.fn, LabelingFunction)
         assert item.fn.name == "test_weak_learner_01"
         assert not item.learnable
         assert item.item_type is None
 
-        item2 = full_learner_collection.get_labeling_fn("PR_pr_fn_ex_01")
+        item2 = full_learner_collection.get("PR_pr_fn_ex_01")
         assert isinstance(item2.fn, LabelingFunction)
         assert item2.fn.name == "PR_pr_fn_ex_01"
         assert not item2.learnable
         assert item2.item_type is None
 
-        item3 = full_learner_collection.get_labeling_fn("SK_RandomForestClassifier")
+        item3 = full_learner_collection.get("SK_RandomForestClassifier")
         assert isinstance(item2.fn, LabelingFunction)
         assert item3.fn.name == "SK_RandomForestClassifier"
         assert item3.learnable
@@ -253,4 +253,4 @@ class TestWeakLearnerCollectionUtilities:
 
     def test_get_non_existent_fn(self, empty_learner_collection):
         with pytest.raises(ValueError):
-            empty_learner_collection.get_labeling_fn("test_weak_learner_01")
+            empty_learner_collection.get("test_weak_learner_01")

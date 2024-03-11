@@ -589,7 +589,7 @@ document.write(`
 
 <div class="viewcode-block" id="WeakLearners.get_labeling_fn">
 <a class="viewcode-back" href="../../../weak_learner_collection.html#at_nlp.filters.weak_learner_collection.WeakLearners.get_labeling_fn">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_labeling_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LearnerItem</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LearnerItem</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns the first LearnerItem that matches the supplied name.</span>
 
 <span class="sd">        Args:</span>
@@ -615,7 +615,7 @@ document.write(`
 <span class="sd">            &gt;&gt;&gt; # ex1</span>
 <span class="sd">            &gt;&gt;&gt; rf = RandomForestClassifier()</span>
 <span class="sd">            &gt;&gt;&gt; wl_col.add(rf)</span>
-<span class="sd">            &gt;&gt;&gt; sk_item = wl_col.get_labeling_fn(&quot;SK_RandomForestClassifier&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sk_item = wl_col.get(&quot;SK_RandomForestClassifier&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; assert isinstance(sk_item.fn, LabelingFunction)         # True</span>
 <span class="sd">            &gt;&gt;&gt; assert sk_item.fn.name == &quot;SK_RandomForestClassifier&quot;   # True</span>
 <span class="sd">            &gt;&gt;&gt; assert sk_item.learnable                                # True</span>
@@ -623,7 +623,7 @@ document.write(`
 <span class="sd">            &gt;&gt;&gt;</span>
 <span class="sd">            &gt;&gt;&gt; # ex2</span>
 <span class="sd">            &gt;&gt;&gt; wl_col.add(lambda s: int(len(s) &gt; 6))</span>
-<span class="sd">            &gt;&gt;&gt; pr_item = wl_col.get_labeling_fn(&#39;PR_anon2&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; pr_item = wl_col.get(&#39;PR_anon2&#39;)</span>
 <span class="sd">            &gt;&gt;&gt; assert isinstance(pr_item.fn, LabelingFunction) # True</span>
 <span class="sd">            &gt;&gt;&gt; assert pr_item.fn.name == &#39;PR_anon2&#39;            # True</span>
 <span class="sd">            &gt;&gt;&gt; assert not pr_item.learnable                    # True</span>
@@ -638,7 +638,7 @@ document.write(`
 <span class="sd">            &gt;&gt;&gt;         return 1</span>
 <span class="sd">            &gt;&gt;&gt;     return 0</span>
 <span class="sd">            &gt;&gt;&gt; wl_col.add(test_fn_01)</span>
-<span class="sd">            &gt;&gt;&gt; lf_item = wl_col.get_labeling_fn(&quot;test_fn&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; lf_item = wl_col.get(&quot;test_fn&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; assert isinstance(lf_item.fn, LabelingFunction) # True</span>
 <span class="sd">            &gt;&gt;&gt; assert lf_item.fn.name = &quot;test_fn&quot;              # True</span>
 <span class="sd">            &gt;&gt;&gt; assert not lf_item.learnable                    # True</span>

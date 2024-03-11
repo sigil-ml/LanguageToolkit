@@ -202,7 +202,7 @@ class StringFilter:
 
     @get_labeling_function.register
     def _(self, item: str) -> LearnerItem:
-        return self._labeling_fns.get_labeling_fn(item)
+        return self._labeling_fns.get(item)
 
     @get_labeling_function.register
     def _(self, item: SupportsIndex) -> LearnerItem:
