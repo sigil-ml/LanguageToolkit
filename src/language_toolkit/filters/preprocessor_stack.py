@@ -156,7 +156,7 @@ class PreprocessorStack:
             >>> stack.add_csv_preprocessor(Path("replacement_text1.csv"), 0, 1)
             >>> stack.add_csv_preprocessor(Path("replacement_text2.csv"))
         """
-        logger.warning(f"Registering CSV for preprocessing: {csv_path.stem}")
+        logger.info(f"Registering CSV for preprocessing: {csv_path.stem}")
 
         if not isinstance(csv_path, Path):
             raise ValueError("CSV path must be a pathlib.Path object.")

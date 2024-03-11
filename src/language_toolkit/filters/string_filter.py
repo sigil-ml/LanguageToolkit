@@ -1,4 +1,5 @@
 """Defines the StringFilter class which is used to filter Mattermost messages"""
+
 from __future__ import annotations
 
 import json
@@ -97,6 +98,25 @@ class StringFilter:
         self._labeling_fns = WeakLearners(col_name)
         self._count_vectorizer = None
 
+    def predict(
+        self,
+        data: pd.DataFrame | pd.Series,
+        col_name: Optional[str],
+        use_template_miner: Optional[bool] = False,
+        memoize: Optional[bool] = False,
+        lru_cache_size: Optional[int] = 128,
+        return_dataframe: Optional[bool] = False,
+        dask_client: Optional[bool] = None,
+        dask_scheduling_strategy: Optional[str] = "threads",
+    ) -> pd.DataFrame | pd.Series:
+        pass
+
+    """
+    +-----------------------------------------------------------------------------------+
+    | Preprocessors CRUD                                                                |
+    +-----------------------------------------------------------------------------------+
+    """
+
     @singledispatchmethod
     def add_preprocessor(
         self,
@@ -124,11 +144,29 @@ class StringFilter:
         else:
             self._preprocessors.add_multiple(fn)
 
+    def remove_preprocessor(self, item: Preprocessor | str | SupportsIndex) -> None:
+        pass
+
+    """
+    +-----------------------------------------------------------------------------------+
+    | Labeling Function CRUD                                                            |
+    +-----------------------------------------------------------------------------------+
+    """
+
     @singledispatchmethod
     def add_labeling_function(
         self, fn: LabelingFunctionItem | Iterable[LabelingFunctionItem]
     ) -> None:
         raise NotImplementedError("Invalid type for labeling function")
+
+    def remove_labeling_function(self, item: str) -> None:
+        pass
+
+    """
+    +-----------------------------------------------------------------------------------+
+    | Training                                                                          |
+    +-----------------------------------------------------------------------------------+
+    """
 
     @staticmethod
     def train_test_split(
@@ -201,19 +239,16 @@ class StringFilter:
             >>>)
         """
 
-    #  TODO: Add warning if use_template_miner is false
-    def predict(
-        self,
-        data: pd.DataFrame | pd.Series,
-        col_name: Optional[str],
-        use_template_miner: Optional[bool] = False,
-        memoize: Optional[bool] = False,
-        lru_cache_size: Optional[int] = 128,
-        return_dataframe: Optional[bool] = False,
-        dask_client: Optional[bool] = None,
-        dask_scheduling_strategy: Optional[str] = "threads",
-    ) -> pd.DataFrame | pd.Series:
+    """
+    +-----------------------------------------------------------------------------------+
+    | Evaluation                                                                        |
+    +-----------------------------------------------------------------------------------+
+    """
+
+    def eval(self):
         pass
+
+    #  TODO: Add warning if use_template_miner is false
 
     # def fit_transform(
     #     self,
@@ -226,6 +261,12 @@ class StringFilter:
     # ) -> tuple[pd.DataFrame | pd.Series, TrainingResult]:
     #     pass
 
+    """
+    +-----------------------------------------------------------------------------------+
+    | Information                                                                       |
+    +-----------------------------------------------------------------------------------+
+    """
+
     def print_preprocessors(self):
         pass
 
@@ -235,19 +276,16 @@ class StringFilter:
     def __repr__(self):
         pass
 
-    def remove_preprocessor(self, item: Preprocessor | str | SupportsIndex) -> None:
-        pass
-
-    def remove_labeling_function(self, item: str) -> None:
-        pass
+    """
+    +-----------------------------------------------------------------------------------+
+    | Serialization/De-serialization                                                    |
+    +-----------------------------------------------------------------------------------+
+    """
 
     def save(self):
         pass
 
     def load(self):
-        pass
-
-    def eval(self):
         pass
 
     def get_preprocessor(self, item: str | SupportsIndex) -> Preprocessor:
@@ -600,7 +638,9 @@ class StringFilter:
         console.log("================================================================")
         self.cv = joblib.load(model_dir_path + "/vectorizer.pkl")
         assert isinstance(self.cv, CountVectorizer), msg_factory("Vectorizer")
-        console.log(f"Loading vectorizer from {model_dir_rel + '/vectorizer.pkl'}... ✅")
+        console.log(
+            f"Loading vectorizer from {model_dir_rel + '/vectorizer.pkl'}... ✅"
+        )
         self.template_miner = joblib.load(model_dir_path + "/template_miner.pkl")
         assert isinstance(self.template_miner, TemplateMiner), msg_factory(
             "Template miner"

@@ -122,60 +122,60 @@ class TestAddPreprocessor:
         assert all([callable(fn) for fn in full_pre_filter._preprocessors])
 
 
-# class TestAddLabelingFunctions:
-#     def test_add_empty_labeling_fn(self, empty_filter):
-#         empty_filter.add_labeling_function(lf_fn_ex_01)
-#         assert len(empty_filter._labeling_fns) == 1
-#         assert empty_filter._labeling_fns[0].fn.name == "test_weak_learner_01"
-#         assert callable(empty_filter._labeling_fns[0].fn)
-#
-#     def test_add_empty_primitive_fn(self, empty_filter):
-#         empty_filter.add_labeling_function(pr_fn_ex_01)
-#         assert len(empty_filter._labeling_fns) == 1
-#         assert empty_filter._labeling_fns[0].fn.__name__ == "pr_fn_ex_01"
-#         assert callable(empty_filter._labeling_fns[0].fn)
-#
-#     def test_add_empty_sklearn_estimator(self, empty_filter):
-#         empty_filter.add_labeling_function(rf)
-#         assert len(empty_filter._labeling_fns) == 1
-#         assert empty_filter._labeling_fns[0].fn.__class__ == RandomForestClassifier
-#         assert callable(empty_filter._labeling_fns[0].fn)
-#
-#     def test_add_full_labeling_fn(self, full_lf_filter):
-#         full_lf_filter.add_labeling_function(lf_fn_ex_01)
-#         assert len(full_lf_filter._labeling_fns) == 4
-#         assert full_lf_filter._labeling_fns[-1].fn.name == "test_weak_learner_01"
-#         assert callable(full_lf_filter._labeling_fns[-1].fn)
-#
-#     def test_add_full_primitive_fn(self, full_lf_filter):
-#         full_lf_filter.add_labeling_function(pr_fn_ex_01)
-#         assert len(full_lf_filter._labeling_fns) == 4
-#         assert full_lf_filter._labeling_fns[-1].fn.__name__ == "PR_pr_fn_ex_01"
-#         assert callable(full_lf_filter._labeling_fns[-1].fn)
-#
-#     def test_add_full_sklearn_estimator(self, full_lf_filter):
-#         full_lf_filter.add_labeling_function(rf)
-#         assert len(full_lf_filter._labeling_fns) == 4
-#         assert full_lf_filter._labeling_fns[-1].fn.__class__ == RandomForestClassifier
-#         assert callable(full_lf_filter._labeling_fns[-1].fn)
-#
-#     def test_add_empty_multiple(self, empty_filter):
-#         empty_filter.add_labeling_function([lf_fn_ex_01, pr_fn_ex_01, rf])
-#         assert len(empty_filter._labeling_fns) == 3
-#         assert empty_filter._labeling_fns[0].fn.name == "test_weak_learner_01"
-#         assert empty_filter._labeling_fns[1].fn.name == "PR_pr_fn_ex_01"
-#         assert empty_filter._labeling_fns[2].fn.name == "SK_RandomForestClassifier"
-#         assert all([callable(wl.fn) for wl in empty_filter._labeling_fns])
-#
-#     def test_add_full_multiple(self, full_lf_filter):
-#         full_lf_filter.add_labeling_function([lf_fn_ex_01, pr_fn_ex_01, rf])
-#         assert len(full_lf_filter._labeling_fns) == 6
-#         assert full_lf_filter._labeling_fns[3].fn.name == "test_weak_learner_01"
-#         assert full_lf_filter._labeling_fns[4].fn.name == "PR_pr_fn_ex_01"
-#         assert full_lf_filter._labeling_fns[5].fn.name == "SK_RandomForestClassifier"
-#         assert all([callable(wl.fn) for wl in full_lf_filter._labeling_fns])
-#
-#
+class TestAddLabelingFunctions:
+    def test_add_empty_labeling_fn(self, empty_filter):
+        empty_filter.add_labeling_function(lf_fn_ex_01)
+        assert len(empty_filter._labeling_fns) == 1
+        assert empty_filter._labeling_fns[0].fn.name == "test_weak_learner_01"
+        assert callable(empty_filter._labeling_fns[0].fn)
+
+    def test_add_empty_primitive_fn(self, empty_filter):
+        empty_filter.add_labeling_function(pr_fn_ex_01)
+        assert len(empty_filter._labeling_fns) == 1
+        assert empty_filter._labeling_fns[0].fn.__name__ == "pr_fn_ex_01"
+        assert callable(empty_filter._labeling_fns[0].fn)
+
+    def test_add_empty_sklearn_estimator(self, empty_filter):
+        empty_filter.add_labeling_function(rf)
+        assert len(empty_filter._labeling_fns) == 1
+        assert empty_filter._labeling_fns[0].fn.__class__ == RandomForestClassifier
+        assert callable(empty_filter._labeling_fns[0].fn)
+
+    def test_add_full_labeling_fn(self, full_lf_filter):
+        full_lf_filter.add_labeling_function(lf_fn_ex_01)
+        assert len(full_lf_filter._labeling_fns) == 4
+        assert full_lf_filter._labeling_fns[-1].fn.name == "test_weak_learner_01"
+        assert callable(full_lf_filter._labeling_fns[-1].fn)
+
+    def test_add_full_primitive_fn(self, full_lf_filter):
+        full_lf_filter.add_labeling_function(pr_fn_ex_01)
+        assert len(full_lf_filter._labeling_fns) == 4
+        assert full_lf_filter._labeling_fns[-1].fn.__name__ == "PR_pr_fn_ex_01"
+        assert callable(full_lf_filter._labeling_fns[-1].fn)
+
+    def test_add_full_sklearn_estimator(self, full_lf_filter):
+        full_lf_filter.add_labeling_function(rf)
+        assert len(full_lf_filter._labeling_fns) == 4
+        assert full_lf_filter._labeling_fns[-1].fn.__class__ == RandomForestClassifier
+        assert callable(full_lf_filter._labeling_fns[-1].fn)
+
+    def test_add_empty_multiple(self, empty_filter):
+        empty_filter.add_labeling_function([lf_fn_ex_01, pr_fn_ex_01, rf])
+        assert len(empty_filter._labeling_fns) == 3
+        assert empty_filter._labeling_fns[0].fn.name == "test_weak_learner_01"
+        assert empty_filter._labeling_fns[1].fn.name == "PR_pr_fn_ex_01"
+        assert empty_filter._labeling_fns[2].fn.name == "SK_RandomForestClassifier"
+        assert all([callable(wl.fn) for wl in empty_filter._labeling_fns])
+
+    def test_add_full_multiple(self, full_lf_filter):
+        full_lf_filter.add_labeling_function([lf_fn_ex_01, pr_fn_ex_01, rf])
+        assert len(full_lf_filter._labeling_fns) == 6
+        assert full_lf_filter._labeling_fns[3].fn.name == "test_weak_learner_01"
+        assert full_lf_filter._labeling_fns[4].fn.name == "PR_pr_fn_ex_01"
+        assert full_lf_filter._labeling_fns[5].fn.name == "SK_RandomForestClassifier"
+        assert all([callable(wl.fn) for wl in full_lf_filter._labeling_fns])
+
+
 # class TestTrainTestSplit:
 #     @pytest.fixture(scope="class")
 #     def splits(self, empty_filter):
