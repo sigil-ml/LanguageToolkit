@@ -7,6 +7,7 @@ import logging
 import os
 import pathlib
 import sys
+import shutil
 import time
 import traceback
 from collections import abc
@@ -245,8 +246,44 @@ class StringFilter:
             data, train_size=train_size, shuffle=shuffle, random_state=seed
         )
 
-    def _fit_template_miner(self):
-        pass
+    def _fit_template_miner(self, data: pd.DataFrame):
+        """Train the drain3 template miner first on all available data"""
+        if not hasattr(self, "template_miner"):
+            self.template_miner = TemplateMiner()
+
+        if not Path("./drain3.ini").exists():
+            logger.warning("Cannot find a drain3.ini in the current working directory!")
+            logger.info("Creating a default drain3.ini file")
+            file_gen = Path().glob("**/*.ini")
+            found_drain_config = False
+            for file in file_gen:
+                if file.stem == "drain3":
+                    found_drain_config = True
+                    logger.info(f"Loading default drain3 config!")
+                    default_drain3_config_path = file.absolute()
+                    new_drain3_config_path = Path("./drain3.ini")
+                    shutil.copy(default_drain3_config_path, new_drain3_config_path)
+                    break
+            if not found_drain_config:
+                raise ValueError(
+                    "Cannot find example drain3.ini! Suggest redownloading the toolkit."
+                )
+
+        for log_line in tqdm(data.itertuples()):
+            _ = self.template_miner.add_log_message(log_line[2])
+        logger.info("Template miner training complete!")
+
+    def get_template_miner(self) -> TemplateMiner | None:
+        if self.template_miner:
+            return self.template_miner
+        else:
+            return None
+
+    def get_template_miner_clusters(self) -> List[str] | None:
+        if self.template_miner:
+            return self.template_miner.drain.clusters
+        else:
+            return None
 
     def fit(
         self,
@@ -287,6 +324,52 @@ class StringFilter:
             >>>    template_miner=True,
             >>>)
         """
+
+        def pass_by_df() -> str:
+            nonlocal training_data
+            nonlocal train_col
+            nonlocal target_col
+            nonlocal target_values
+
+            if isinstance(training_data, pd.DataFrame) and train_col and target_col:
+                return "frame"
+            elif isinstance(training_data, pd.Series) and isinstance(
+                target_values, pd.Series
+            ):
+                return "series"
+            elif isinstance(training_data, pd.DataFrame) and not (
+                train_col or target_col
+            ):
+                raise ValueError(
+                    "DataFrame provided, but missing train_col or target_col"
+                )
+            elif isinstance(training_data, pd.DataFrame) and isinstance(
+                target_values, pd.Series
+            ):
+                raise ValueError(
+                    "Received DataFrame for training and target_values! "
+                    "Please use column names if working with DataFrames!"
+                )
+            elif (
+                isinstance(training_data, pd.Series)
+                and isinstance(target_values, pd.Series)
+                and target_col
+                and train_col
+            ):
+                logger.warning(
+                    "Provided two series but also column names. "
+                    "When working with series column names are not needed."
+                )
+                return "series"
+
+        match pass_by_df():
+            case "frame":
+                X = training_data[train_col]
+                y = training_data[target_col]
+                if template_miner:
+                    self._fit_template_miner(training_data)
+            case "series":
+                pass
 
     """
     +--------------------------------------------------------------------------------+
@@ -455,12 +538,6 @@ class StringFilter:
         ds = [msg]
         ds_arr = self.cv.transform(ds)
         return ds_arr
-
-    def train_template_miner(self, in_data: pd.DataFrame) -> None:
-        """Train the drain3 template miner first on all available data"""
-        for log_line in tqdm(in_data["Message"]):
-            _ = self.template_miner.add_log_message(log_line)
-        console.log("Template miner training complete!")
 
     @staticmethod
     def template_miner_transform(in_row: pd.Series, tm: TemplateMiner) -> str:

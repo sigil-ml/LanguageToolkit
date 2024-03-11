@@ -214,8 +214,23 @@ class TestTrainTestSplit:
             _ = empty_filter.train_test_split(test_data, train_size=-1, shuffle=True)
 
 
+class TestTemplateMiner:
+    @pytest.fixture
+    def splits(self, std_filter):
+        train, test = std_filter.train_test_split(test_data, train_size=0.8)
+        yield train, test
+
+    def test_template_miner_fit(self, std_filter, splits):
+        train, test = splits
+        _ = std_filter.fit(
+            train, train_col="text", target_col="label", template_miner=True
+        )
+        clusters = std_filter.get_template_miner_clusters()
+        logger.info(clusters)
+
+
 # class TestFit:
-#     @pytest.fixture(scope="class")
+#     @pytest.fixture
 #     def splits(self, std_filter):
 #         train, test = std_filter.train_test_split(test_data, train_size=0.8)
 #         yield train, test
@@ -300,8 +315,8 @@ class TestTrainTestSplit:
 #             _ = std_filter.fit(
 #                 train, train_col="text", target_col="label", ensemble_split="1"  # noqa
 #             )  # noqa Expected Failure
-#
-#
+
+
 # class TestPredict:
 #     @pytest.fixture(scope="class")
 #     def splits(self, std_filter):
