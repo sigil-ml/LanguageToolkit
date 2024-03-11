@@ -146,9 +146,20 @@ class StringFilter:
         else:
             self._preprocessors.add_multiple(fn)
 
-    # TODO: Finish the method
+    @singledispatchmethod
     def remove_preprocessor(self, item: Preprocessor | str | SupportsIndex) -> None:
-        pass
+        raise NotImplementedError(
+            f"Cannot remove based on type {item.__class__.__name__}"
+        )
+
+    @remove_preprocessor.register(str)
+    @remove_preprocessor.register(abc.Callable)
+    def _(self, item) -> None:
+        self._preprocessors.remove(item)
+
+    @remove_preprocessor.register(int)
+    def _(self, item: int | SupportsIndex) -> None:
+        del self._preprocessors[item]
 
     """
     +-----------------------------------------------------------------------------------+
@@ -176,7 +187,7 @@ class StringFilter:
         self._labeling_fns.extend(fn)
 
     def remove_labeling_function(self, item: str) -> None:
-        pass
+        self._labeling_fns.remove(item)
 
     """
     +-----------------------------------------------------------------------------------+

@@ -369,62 +369,64 @@ class TestAddLabelingFunctions:
 #     pass
 #
 #
-# # TODO: Add tests for removing by slice
-# class TestRemovePreprocessor:
-#     def test_del(self, full_pre_filter):
-#         del full_pre_filter._preprocessors[1]
-#         assert len(full_pre_filter._preprocessors) == 2
-#         assert full_pre_filter._preprocessors[0].__name__ == "pre_fn_ex0"
-#         assert full_pre_filter._preprocessors[1].__name__ == "pre_fn_ex2"
-#         assert all([callable(fn) for fn in full_pre_filter._preprocessors])
-#
-#     def test_remove_via_method(self, full_pre_filter):
-#         full_pre_filter.remove_preprocessor("pre_fn_ex0")
-#         assert len(full_pre_filter._preprocessors) == 2
-#         assert full_pre_filter._preprocessors[0].__name__ == "pre_fn_ex1"
-#         assert full_pre_filter._preprocessors[1].__name__ == "pre_fn_ex2"
-#         assert all([callable(fn) for fn in full_pre_filter._preprocessors])
-#
-#     def test_remove_via_method_ref(self, full_pre_filter):
-#         full_pre_filter.remove_preprocessor(pre_fn_ex0)
-#         assert len(full_pre_filter._preprocessors) == 2
-#         assert full_pre_filter._preprocessors[0].__name__ == "pre_fn_ex1"
-#         assert full_pre_filter._preprocessors[1].__name__ == "pre_fn_ex2"
-#         assert all([callable(fn) for fn in full_pre_filter._preprocessors])
-#
-#     def test_remove_via_method_pos(self, full_pre_filter):
-#         full_pre_filter.remove_preprocessor(0)
-#         assert len(full_pre_filter._preprocessors) == 2
-#         assert full_pre_filter._preprocessors[0].__name__ == "pre_fn_ex1"
-#         assert full_pre_filter._preprocessors[1].__name__ == "pre_fn_ex2"
-#         assert all([callable(fn) for fn in full_pre_filter._preprocessors])
-#
-#     def test_remove_non_existent(self, empty_filter):
-#         with pytest.raises(ValueError):
-#             empty_filter.remove_preprocessor("pre_fn_ex0")
-#         with pytest.raises(ValueError):
-#             empty_filter.remove_preprocessor(pre_fn_ex0)
-#         with pytest.raises(ValueError):
-#             empty_filter.remove_preprocessor(0)
-#
-#
-# # TODO: Add test for removing by slice
-# class TestRemoveWeakLearner:
-#     def test_del(self, full_lf_filter):
-#         del full_lf_filter._labeling_fns[1]
-#         assert len(full_lf_filter._labeling_fns) == 2
-#         for fn in full_lf_filter._labeling_fns:
-#             assert isinstance(fn, LabelingFunction)
-#
-#     def test_remove_via_method(self, full_lf_filter):
-#         full_lf_filter.remove_labeling_function("rf")
-#         assert len(full_lf_filter._labeling_fns) == 2
-#         for fn in full_lf_filter._labeling_fns:
-#             assert isinstance(fn, LabelingFunction)
-#
-#     def test_remove_non_existent(self, empty_filter):
-#         with pytest.raises(ValueError):
-#             empty_filter.remove_labeling_function("rf")
+# TODO: Add tests for removing by slice
+class TestRemovePreprocessor:
+    def test_del(self, full_pre_filter):
+        del full_pre_filter._preprocessors[1]
+        assert len(full_pre_filter._preprocessors) == 2
+        assert full_pre_filter._preprocessors[0].__name__ == "pre_fn_ex0"
+        assert full_pre_filter._preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter._preprocessors])
+
+    def test_remove_via_method(self, full_pre_filter):
+        full_pre_filter.remove_preprocessor("pre_fn_ex0")
+        assert len(full_pre_filter._preprocessors) == 2
+        assert full_pre_filter._preprocessors[0].__name__ == "pre_fn_ex1"
+        assert full_pre_filter._preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter._preprocessors])
+
+    def test_remove_via_method_ref(self, full_pre_filter):
+        full_pre_filter.remove_preprocessor(pre_fn_ex0)
+        assert len(full_pre_filter._preprocessors) == 2
+        assert full_pre_filter._preprocessors[0].__name__ == "pre_fn_ex1"
+        assert full_pre_filter._preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter._preprocessors])
+
+    def test_remove_via_method_pos(self, full_pre_filter):
+        full_pre_filter.remove_preprocessor(0)
+        assert len(full_pre_filter._preprocessors) == 2
+        assert full_pre_filter._preprocessors[0].__name__ == "pre_fn_ex1"
+        assert full_pre_filter._preprocessors[1].__name__ == "pre_fn_ex2"
+        assert all([callable(fn) for fn in full_pre_filter._preprocessors])
+
+    def test_remove_non_existent(self, empty_filter):
+        with pytest.raises(ValueError):
+            empty_filter.remove_preprocessor("pre_fn_ex0")
+        with pytest.raises(ValueError):
+            empty_filter.remove_preprocessor(pre_fn_ex0)
+        with pytest.raises(ValueError):
+            empty_filter.remove_preprocessor(0)
+
+
+# TODO: Add test for removing by slice
+class TestRemoveWeakLearner:
+    def test_del(self, full_lf_filter):
+        del full_lf_filter._labeling_fns[1]
+        assert len(full_lf_filter._labeling_fns) == 2
+        for item in full_lf_filter._labeling_fns:
+            assert isinstance(item.fn, LabelingFunction)
+
+    def test_remove_via_method(self, full_lf_filter):
+        full_lf_filter.remove_labeling_function("SK_RandomForestClassifier")
+        assert len(full_lf_filter._labeling_fns) == 2
+        for item in full_lf_filter._labeling_fns:
+            assert isinstance(item.fn, LabelingFunction)
+
+    def test_remove_non_existent(self, empty_filter):
+        with pytest.raises(ValueError):
+            empty_filter.remove_labeling_function("rf")
+
+
 #
 #
 # class TestLoad:  # TODO

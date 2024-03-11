@@ -3,6 +3,7 @@ from __future__ import annotations
 from functools import singledispatchmethod
 from dataclasses import dataclass
 from collections import abc
+from typing import SupportsIndex
 
 import pandas as pd
 from snorkel.labeling import LabelingFunction, labeling_function
@@ -134,6 +135,7 @@ class WeakLearners:
         item = LearnerItem(wrapper, learnable=False, item_type=None)
         self.m_learners.append(item)
 
+    # TODO: This should include a uuid to avoid name collisions
     # noinspection GrazieInspection
     @add.register
     def add_sklearn(self, fn: BaseEstimator):
@@ -295,15 +297,20 @@ class WeakLearners:
     def __len__(self):
         return len(self.m_learners)
 
-    def __getitem__(self, item: int) -> LearnerItem:
-        if not isinstance(item, int):
+    def __getitem__(self, item: SupportsIndex) -> LearnerItem:
+        if not isinstance(item, SupportsIndex):
             raise TypeError("Collection indices must be integers")
         return self.m_learners[item]
 
-    def __setitem__(self, item: int, learner_item: LearnerItem) -> None:
-        if not isinstance(item, int):
+    def __setitem__(self, item: SupportsIndex, learner_item: LearnerItem) -> None:
+        if not isinstance(item, SupportsIndex):
             raise TypeError("Collection indices must be integers")
         self.m_learners[item] = learner_item
+
+    def __delitem__(self, item: SupportsIndex) -> None:
+        if not isinstance(item, SupportsIndex):
+            raise TypeError("Collection indices do not support indexing!")
+        del self.m_learners[item]
 
     def __next__(self) -> LearnerItem:
         self.m_idx += 1

@@ -14,6 +14,7 @@ import pandas as pd  # noqa
 from rich.console import Console  # noqa
 from rich.table import Table  # noqa
 
+
 console = Console()
 
 Preprocessor: TypeAlias = Callable[[pd.Series, int], pd.Series] | pathlib.Path
@@ -203,7 +204,8 @@ class PreprocessorStack:
             f"CSV registered successfully at callstack position: {processor_stack_size}!"
         )
 
-    def remove(self, preprocessor: Preprocessor):
+    # TODO: Update example and check positions after removal
+    def remove(self, preprocessor: Preprocessor | str):
         r"""Remove a preprocessor from the stack.
 
         Args:
@@ -231,11 +233,21 @@ class PreprocessorStack:
             >>> # Remove the previously added preprocessor
             >>> stack.remove(example_preprocessor)
         """
-        if not callable(preprocessor):
-            raise ValueError("Must provide preprocessor reference")
+        if len(self._stack) == 0:
+            raise ValueError("Stack is empty!")
+
+        if not callable(preprocessor) and not isinstance(preprocessor, str):
+            raise ValueError(
+                "Must pass a reference to a preprocessor or the function name"
+            )
 
         try:
-            self._stack.remove(preprocessor)
+            if isinstance(preprocessor, str):
+                for fn in self._stack:
+                    if preprocessor == fn.__name__:
+                        self._stack.remove(fn)
+            else:
+                self._stack.remove(preprocessor)
         except ValueError:
             logger.warning(f"Preprocessing function: {preprocessor} not in the stack.")
 
@@ -297,15 +309,22 @@ class PreprocessorStack:
     def __len__(self):
         return len(self._stack)
 
-    def __getitem__(self, item: int) -> Preprocessor:
-        if not isinstance(item, int):
+    def __getitem__(self, item: SupportsIndex) -> Preprocessor:
+        if not isinstance(item, SupportsIndex):
             raise TypeError("Preprocessor stack indices must be integers")
         return self._stack[item]
 
-    def __setitem__(self, item: int, preprocessor: Preprocessor) -> None:
-        if not isinstance(item, int):
+    def __setitem__(self, item: SupportsIndex, preprocessor: Preprocessor) -> None:
+        if not isinstance(item, SupportsIndex):
             raise TypeError("Preprocessor stack indices must be integers")
         self._stack[item] = preprocessor
+
+    def __delitem__(self, item: SupportsIndex) -> None:
+        if len(self._stack) == 0:
+            raise ValueError("Stack is empty!")
+        if not isinstance(item, SupportsIndex):
+            raise TypeError("Preprocessor stack indices must be integers")
+        del self._stack[item]
 
     def __next__(self) -> Preprocessor:
         self._idx += 1
