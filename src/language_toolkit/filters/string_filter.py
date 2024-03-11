@@ -246,7 +246,7 @@ class StringFilter:
             data, train_size=train_size, shuffle=shuffle, random_state=seed
         )
 
-    def _fit_template_miner(self, data: pd.DataFrame):
+    def _fit_template_miner(self, data: pd.DataFrame | pd.Series):
         """Train the drain3 template miner first on all available data"""
         if not hasattr(self, "template_miner"):
             self.template_miner = TemplateMiner()
@@ -269,20 +269,30 @@ class StringFilter:
                     "Cannot find example drain3.ini! Suggest redownloading the toolkit."
                 )
 
-        for log_line in tqdm(data.itertuples()):
-            _ = self.template_miner.add_log_message(log_line[2])
+        match data.__class__.__name__:
+            case "DataFrame":
+                for log_line in tqdm(data.itertuples()):
+                    _ = self.template_miner.add_log_message(log_line[2])
+            case "Series":
+                for log_line in tqdm(data.items()):
+                    _ = self.template_miner.add_log_message(log_line[1])
+            case _:
+                raise ValueError(f"Cannot train on dtype: {data.__class__.__name__}")
+
         logger.info("Template miner training complete!")
 
     def get_template_miner(self) -> TemplateMiner | None:
-        if self.template_miner:
+        if hasattr(self, "template_miner"):
             return self.template_miner
         else:
+            logger.warning("No template miner!")
             return None
 
     def get_template_miner_clusters(self) -> List[str] | None:
-        if self.template_miner:
+        if hasattr(self, "template_miner"):
             return self.template_miner.drain.clusters
         else:
+            logger.warning("No template miner!")
             return None
 
     def fit(
@@ -367,9 +377,10 @@ class StringFilter:
                 X = training_data[train_col]
                 y = training_data[target_col]
                 if template_miner:
-                    self._fit_template_miner(training_data)
+                    self._fit_template_miner(X)
             case "series":
-                pass
+                if template_miner:
+                    self._fit_template_miner(training_data)
 
     """
     +--------------------------------------------------------------------------------+

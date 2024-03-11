@@ -220,13 +220,19 @@ class TestTemplateMiner:
         train, test = std_filter.train_test_split(test_data, train_size=0.8)
         yield train, test
 
-    def test_template_miner_fit(self, std_filter, splits):
+    def test_template_miner_fit_df(self, std_filter, splits):
         train, test = splits
         _ = std_filter.fit(
             train, train_col="text", target_col="label", template_miner=True
         )
         clusters = std_filter.get_template_miner_clusters()
-        logger.info(clusters)
+        assert len(clusters) >= 1_000  # small margin of error
+
+    def test_template_miner_fit_series(self, std_filter, splits):
+        train, test = splits
+        _ = std_filter.fit(train["text"], train["label"], template_miner=True)
+        clusters = std_filter.get_template_miner_clusters()
+        assert len(clusters) >= 1_000  # small margin of error
 
 
 # class TestFit:
