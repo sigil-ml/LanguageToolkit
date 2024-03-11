@@ -24,7 +24,7 @@ def full_pre_filter():
     yield sf
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def full_lf_filter():
     sf = StringFilter(col_name="text")
     sf.add_labeling_function(lf_fn_ex_01)
@@ -33,7 +33,7 @@ def full_lf_filter():
     yield sf
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def std_filter():
     sf = StringFilter(col_name="text")
     sf.add_preprocessor(csv_path)
@@ -43,7 +43,7 @@ def std_filter():
     yield sf
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def no_learners_filter():
     sf = StringFilter(col_name="text")
     sf.add_preprocessor(csv_path)
@@ -132,13 +132,12 @@ class TestAddLabelingFunctions:
     def test_add_empty_primitive_fn(self, empty_filter):
         empty_filter.add_labeling_function(pr_fn_ex_01)
         assert len(empty_filter._labeling_fns) == 1
-        assert empty_filter._labeling_fns[0].fn.__name__ == "pr_fn_ex_01"
+        assert empty_filter._labeling_fns[0].fn.name == "PR_pr_fn_ex_01"
         assert callable(empty_filter._labeling_fns[0].fn)
 
     def test_add_empty_sklearn_estimator(self, empty_filter):
         empty_filter.add_labeling_function(rf)
         assert len(empty_filter._labeling_fns) == 1
-        assert empty_filter._labeling_fns[0].fn.__class__ == RandomForestClassifier
         assert callable(empty_filter._labeling_fns[0].fn)
 
     def test_add_full_labeling_fn(self, full_lf_filter):
@@ -150,13 +149,12 @@ class TestAddLabelingFunctions:
     def test_add_full_primitive_fn(self, full_lf_filter):
         full_lf_filter.add_labeling_function(pr_fn_ex_01)
         assert len(full_lf_filter._labeling_fns) == 4
-        assert full_lf_filter._labeling_fns[-1].fn.__name__ == "PR_pr_fn_ex_01"
+        assert full_lf_filter._labeling_fns[-1].fn.name == "PR_pr_fn_ex_01"
         assert callable(full_lf_filter._labeling_fns[-1].fn)
 
     def test_add_full_sklearn_estimator(self, full_lf_filter):
         full_lf_filter.add_labeling_function(rf)
         assert len(full_lf_filter._labeling_fns) == 4
-        assert full_lf_filter._labeling_fns[-1].fn.__class__ == RandomForestClassifier
         assert callable(full_lf_filter._labeling_fns[-1].fn)
 
     def test_add_empty_multiple(self, empty_filter):

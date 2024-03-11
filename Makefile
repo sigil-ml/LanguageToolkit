@@ -3,3 +3,5 @@ simple-test:
 
 functional-test:
 	pytest src/language_toolkit/tests/string_filter_tests/test_string_filter_functional.py
+
+

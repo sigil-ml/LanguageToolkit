@@ -33,6 +33,7 @@ from rich.table import Table
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import BaseEnsemble
 from sklearn.svm import SVC
 from snorkel.labeling import LFAnalysis
 from snorkel.labeling import PandasLFApplier
@@ -44,6 +45,7 @@ from tqdm import tqdm
 
 from language_toolkit.filters.preprocessor_stack import PreprocessorStack
 from language_toolkit.filters.weak_learner_collection import WeakLearners, LearnerItem
+from language_toolkit.logger import logger
 
 # from loguru import logger as log
 
@@ -144,6 +146,7 @@ class StringFilter:
         else:
             self._preprocessors.add_multiple(fn)
 
+    # TODO: Finish the method
     def remove_preprocessor(self, item: Preprocessor | str | SupportsIndex) -> None:
         pass
 
@@ -155,9 +158,22 @@ class StringFilter:
 
     @singledispatchmethod
     def add_labeling_function(
-        self, fn: LabelingFunctionItem | Iterable[LabelingFunctionItem]
+        self,
     ) -> None:
         raise NotImplementedError("Invalid type for labeling function")
+
+    @add_labeling_function.register(abc.Callable)
+    @add_labeling_function.register(LabelingFunction)
+    @add_labeling_function.register(BaseEstimator)
+    @add_labeling_function.register(BaseEnsemble)
+    def _(self, fn) -> None:
+        """Handles the single addition case"""
+        self._labeling_fns.add(fn)
+
+    @add_labeling_function.register(abc.Iterable)
+    def _(self, fn) -> None:
+        """Handles the multi-addition case"""
+        self._labeling_fns.extend(fn)
 
     def remove_labeling_function(self, item: str) -> None:
         pass
