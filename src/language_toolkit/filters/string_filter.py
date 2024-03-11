@@ -7,6 +7,7 @@ import logging
 import os
 import pathlib
 import sys
+import warnings
 import shutil
 import time
 import traceback
@@ -343,12 +344,14 @@ class StringFilter:
 
             if isinstance(training_data, pd.DataFrame) and train_col and target_col:
                 return "frame"
-            elif isinstance(training_data, pd.Series) and isinstance(
-                target_values, pd.Series
+            elif (
+                isinstance(training_data, pd.Series)
+                and isinstance(target_values, pd.Series)
+                and not (train_col and target_col)
             ):
                 return "series"
             elif isinstance(training_data, pd.DataFrame) and not (
-                train_col or target_col
+                train_col and target_col
             ):
                 raise ValueError(
                     "DataFrame provided, but missing train_col or target_col"
@@ -366,9 +369,15 @@ class StringFilter:
                 and target_col
                 and train_col
             ):
-                logger.warning(
+                # TODO: Do we need both of these?
+                # logger.warning(
+                #     "Provided two series but also column names. "
+                #     "When working with series column names are not needed."
+                # )
+                warnings.warn(
                     "Provided two series but also column names. "
-                    "When working with series column names are not needed."
+                    "When working with series column names are not needed.",
+                    RuntimeWarning,
                 )
                 return "series"
 

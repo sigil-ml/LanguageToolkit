@@ -234,6 +234,28 @@ class TestTemplateMiner:
         clusters = std_filter.get_template_miner_clusters()
         assert len(clusters) >= 1_000  # small margin of error
 
+    def test_template_miner_fit_errors(self, std_filter, splits):
+        train, test = splits
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(train, target_col="label", template_miner=True)
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(train, train_col="label", template_miner=True)
+        with pytest.raises(ValueError):
+            _ = std_filter.fit(train, train["label"], template_miner=True)
+
+    def test_template_miner_fit_warnings(self, std_filter, splits):
+        train, test = splits
+        with pytest.warns(RuntimeWarning):
+            _ = std_filter.fit(
+                train["text"],
+                train["label"],
+                train_col="text",
+                target_col="label",
+                template_miner=True,
+            )
+            clusters = std_filter.get_template_miner_clusters()
+            assert len(clusters) >= 1_000  # small margin of error
+
 
 # class TestFit:
 #     @pytest.fixture
