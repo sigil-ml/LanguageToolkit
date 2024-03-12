@@ -36,6 +36,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.neural_network import MLPClassifier
 from sklearn.ensemble import BaseEnsemble
+from sklearn.model_selection import learning_curve
 from sklearn.metrics import (
     accuracy_score,
     auc,
@@ -130,6 +131,17 @@ class StringFilter:
         dask_scheduling_strategy: Optional[str] = "threads",
     ) -> pd.DataFrame | pd.Series:
         pass
+
+    @staticmethod
+    def invoke_sklearn(fn: BaseEstimator | BaseEnsemble, X: np.ndarray) -> np.ndarray:
+        """Attempts to call predict or transform on the provided sklearn estimator"""
+        if hasattr(fn, "predict"):
+            y_pred = fn.predict(X)
+        elif hasattr(fn, "transform"):
+            y_pred = fn.transform(X)
+        else:
+            raise ValueError(f"Function: {fn} does not have the correct methods!")
+        return y_pred
 
     @partialmethod
     def _transform_template(self, text: str) -> str:
@@ -448,28 +460,21 @@ class StringFilter:
 
     def _train_weak_learners(self, X: np.ndarray, y: pd.Series) -> dict:
         training_results = {}
-        for item in self._labeling_fns:
-            if item.learnable:
-                match item.item_type:
-                    case "sklearn":
-                        logger.info(f"Training weak learner: {item.fn.name}")
-                        _f = self._labeling_fns.m_learners[item.fn.name]
-                        _f.fit(X, y)
-                        if hasattr(_f, "predict"):
-                            y_pred = _f.predict(X)
-                        elif hasattr(_f, "transform"):
-                            y_pred = _f.transform(X)
-                        else:
-                            raise ValueError(
-                                f"Function: {_f} does not have the correct methods!"
-                            )
-                        training_results[item.fn.name] = self._get_metrics(
-                            y.to_numpy(), y_pred
-                        )
-                    case _:
-                        raise NotImplementedError(
-                            f"Type: {item.item_type} not supported"
-                        )
+
+        def learn(item):
+            logger.info(f"Training weak learner: {item.fn.name}")
+            if item.item_type == "sklearn":
+                _f = self._labeling_fns.m_learners[item.fn.name]
+                _f.fit(X, y)
+                y_pred = self.invoke_sklearn(_f, X)
+                training_results[item.fn.name] = self._get_metrics(y.to_numpy(), y_pred)
+            else:
+                raise NotImplementedError(f"Type: {item.item_type} not supported")
+
+        for labeling_item in self._labeling_fns:
+            if labeling_item.learnable:
+                learn(labeling_item)
+
         return training_results
 
     """
