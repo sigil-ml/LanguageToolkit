@@ -12,7 +12,7 @@ import shutil
 import time
 import traceback
 from collections import abc
-from functools import singledispatchmethod
+from functools import singledispatchmethod, partialmethod
 
 # import csv
 import uuid
@@ -53,15 +53,15 @@ from language_toolkit.logger import logger
 
 console = Console()
 
-
-def custom_except_hook():
-    _, exc_value, _ = sys.exc_info()
-    """Custom exception hook to print errors to the console"""
-    message = traceback.format_exception(exc_value)
-    console.log("".join(message), style="bold red")
+showwarning_ = warnings.showwarning
 
 
-sys.excepthook = custom_except_hook
+def showwarning(message, *args, **kwargs):
+    logger.opt(depth=2).warning(message)
+    showwarning_(message, *args, **kwargs)
+
+
+warnings.showwarning = showwarning
 
 
 class FilterResult(Enum):
@@ -90,6 +90,7 @@ LabelingFunctionItem: TypeAlias = (
 
 @dataclass
 class TrainingResult:
+    results: pd.DataFrame | pd.Series
     accuracy: float
     precision: float
     n_correct: int
@@ -114,6 +115,17 @@ class StringFilter:
         dask_scheduling_strategy: Optional[str] = "threads",
     ) -> pd.DataFrame | pd.Series:
         pass
+
+    @partialmethod
+    def _transform_template(self, text: str) -> str:
+        """Transform a string into a matching template"""
+        if not hasattr(self, "template_miner"):
+            raise ValueError("Template transformation called without template_miner")
+        cluster = self.template_miner.match(text)
+        if cluster:
+            return cluster.get_template()
+        else:
+            return text
 
     """
     +--------------------------------------------------------------------------------+
@@ -336,6 +348,9 @@ class StringFilter:
             >>>)
         """
 
+        if not self._count_vectorizer:
+            self._count_vectorizer = CountVectorizer()
+
         def pass_by_df() -> str:
             nonlocal training_data
             nonlocal train_col
@@ -369,11 +384,6 @@ class StringFilter:
                 and target_col
                 and train_col
             ):
-                # TODO: Do we need both of these?
-                # logger.warning(
-                #     "Provided two series but also column names. "
-                #     "When working with series column names are not needed."
-                # )
                 warnings.warn(
                     "Provided two series but also column names. "
                     "When working with series column names are not needed.",
@@ -381,15 +391,33 @@ class StringFilter:
                 )
                 return "series"
 
-        match pass_by_df():
-            case "frame":
-                X = training_data[train_col]
-                y = training_data[target_col]
-                if template_miner:
-                    self._fit_template_miner(X)
-            case "series":
-                if template_miner:
-                    self._fit_template_miner(training_data)
+        X: pd.Series = (
+            training_data[train_col] if pass_by_df() == "frame" else training_data
+        )
+        y: pd.Series = (
+            training_data[target_col] if pass_by_df() == "frame" else target_values
+        )
+
+        self._count_vectorizer.fit(X)
+        if template_miner:
+            self._fit_template_miner(X)
+            X = X.apply(self._transform_template)
+
+        res = TrainingResult(
+            results=X, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
+        )
+        return res
+
+    # TODO: Resolve these issues:
+
+    # Problem 1
+    #
+    # SKLearn does not stream training metrics during the fit() call.
+    # The only way to capture these metrics is via reading the std_out during fit().
+    # We can capture standard out by using a context manager with IO.ReadStream
+    # https://stackoverflow.com/questions/44443479/python-sklearn-show-loss-values-during-training
+
+    # def _train_weak_learners(self, X: pd.Series, y: pd.Series):
 
     """
     +--------------------------------------------------------------------------------+

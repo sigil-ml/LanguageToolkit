@@ -12,7 +12,8 @@ if __name__ == "__main__":
 
     # Define the filter
     sf = StringFilter(col_name="text")
-    X_split, y_split = sf.train_test_split(test_data["text"], train_size=0.8)
-
-    logger.info(f"X_split shape: {X_split.shape}")
-    logger.info(f"y_split shape: {y_split.shape}")
+    train_df, test_df = sf.train_test_split(test_data["text"], train_size=0.8)
+    res = sf.fit(train_df, train_col="text", target_col="label", template_miner=True)
+    for i, row in enumerate(res.results.items()):
+        if row[1] == "Sorry, I'll call later <:*:> <:*:>":
+            print(i)
