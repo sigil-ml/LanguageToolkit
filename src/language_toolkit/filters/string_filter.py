@@ -36,6 +36,21 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.neural_network import MLPClassifier
 from sklearn.ensemble import BaseEnsemble
+from sklearn.metrics import (
+    accuracy_score,
+    auc,
+    average_precision_score,
+    balanced_accuracy_score,
+    brier_score_loss,
+    class_likelihood_ratios,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    log_loss,
+    precision_recall_curve,
+    recall_score,
+    top_k_accuracy_score,
+)
 from sklearn.svm import SVC
 from snorkel.labeling import LFAnalysis
 from snorkel.labeling import PandasLFApplier
@@ -126,6 +141,12 @@ class StringFilter:
             return cluster.get_template()
         else:
             return text
+
+    def _vectorize(self, text: pd.Series) -> np.ndarray:
+        """Transform a string into a vector of one hot encodings"""
+        if not self._count_vectorizer:
+            raise ValueError("Count vectorizer cannot be found!")
+        return self._count_vectorizer.transform(text)
 
     """
     +--------------------------------------------------------------------------------+
@@ -403,10 +424,18 @@ class StringFilter:
             self._fit_template_miner(X)
             X = X.apply(self._transform_template)
 
-        res = TrainingResult(
+        X_vec = self._vectorize(X)
+
+        # context manager goes here
+        training_metrics = self._train_weak_learners(X_vec, y)
+
+        import pprint
+
+        pprint.pprint(training_metrics)
+
+        return TrainingResult(
             results=X, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
         )
-        return res
 
     # TODO: Resolve these issues:
 
@@ -417,7 +446,31 @@ class StringFilter:
     # We can capture standard out by using a context manager with IO.ReadStream
     # https://stackoverflow.com/questions/44443479/python-sklearn-show-loss-values-during-training
 
-    # def _train_weak_learners(self, X: pd.Series, y: pd.Series):
+    def _train_weak_learners(self, X: np.ndarray, y: pd.Series) -> dict:
+        training_results = {}
+        for item in self._labeling_fns:
+            if item.learnable:
+                match item.item_type:
+                    case "sklearn":
+                        logger.info(f"Training weak learner: {item.fn.name}")
+                        _f = self._labeling_fns.m_learners[item.fn.name]
+                        _f.fit(X, y)
+                        if hasattr(_f, "predict"):
+                            y_pred = _f.predict(X)
+                        elif hasattr(_f, "transform"):
+                            y_pred = _f.transform(X)
+                        else:
+                            raise ValueError(
+                                f"Function: {_f} does not have the correct methods!"
+                            )
+                        training_results[item.fn.name] = self._get_metrics(
+                            y.to_numpy(), y_pred
+                        )
+                    case _:
+                        raise NotImplementedError(
+                            f"Type: {item.item_type} not supported"
+                        )
+        return training_results
 
     """
     +--------------------------------------------------------------------------------+
@@ -425,8 +478,15 @@ class StringFilter:
     +--------------------------------------------------------------------------------+
     """
 
-    def eval(self):
-        pass
+    @staticmethod
+    def _get_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
+        return {
+            "accuracy": accuracy_score(y_true, y_pred),
+            "balanced_accuracy": balanced_accuracy_score(y_true, y_pred),
+            "class_likelihood_ratio": class_likelihood_ratios(y_true, y_pred),
+            "confusion_matrix": confusion_matrix(y_true, y_pred),
+            "log_loss": log_loss(y_true, y_pred),
+        }
 
     #  TODO: Add warning if use_template_miner is false
 

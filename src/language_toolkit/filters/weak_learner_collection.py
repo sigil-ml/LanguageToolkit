@@ -22,7 +22,8 @@ class WeakLearners:
     """A collection of weak learners that will be used by Snorkel"""
 
     def __init__(self, col_name: str):
-        self.m_learners: list[LearnerItem] = []
+        self.m_labeling_fns: list[LearnerItem] = []
+        self.m_learners = {}
         self.m_col_name = col_name
         self.m_vectorizer = CountVectorizer()
         self.m_rsrcs = dict(col_name=self.m_col_name)
@@ -91,7 +92,9 @@ class WeakLearners:
             >>> wl_col.add(fn_ex0, False)
         """
         item = LearnerItem(fn, learnable=learnable, item_type=item_type)
-        self.m_learners.append(item)
+        self.m_labeling_fns.append(item)
+        if learnable:
+            self.m_learners[fn.name] = fn
 
     @add.register
     def add_primitive(self, fn: abc.Callable) -> None:
@@ -167,7 +170,8 @@ class WeakLearners:
             return fn.transform(s)
 
         item = LearnerItem(wrapper, learnable=True, item_type="sklearn")
-        self.m_learners.append(item)
+        self.m_labeling_fns.append(item)
+        self.m_learners[f"SK_{fn.__class__.__name__}"] = fn
 
     def extend(
         self, fns: abc.Iterable[LabelingFunction | abc.Callable | BaseEstimator]
@@ -219,9 +223,9 @@ class WeakLearners:
             >>> assert len(wl_col) == 0
         """
         name_located = False
-        for idx, item in enumerate(self.m_learners):
+        for idx, item in enumerate(self.m_labeling_fns):
             if fn_name == item.fn.name:
-                del self.m_learners[idx]
+                del self.m_labeling_fns[idx]
                 name_located = True
 
         if not name_located:
@@ -283,7 +287,7 @@ class WeakLearners:
             >>> assert lf_item.item_type is None                # True
 
         """
-        for item in self.m_learners:
+        for item in self.m_labeling_fns:
             if fn_name == item.fn.name:
                 return item
         raise ValueError(f"Function with name {fn_name} not found")
@@ -295,30 +299,30 @@ class WeakLearners:
         return self
 
     def __len__(self):
-        return len(self.m_learners)
+        return len(self.m_labeling_fns)
 
     def __getitem__(self, item: SupportsIndex) -> LearnerItem:
         if not isinstance(item, SupportsIndex):
             raise TypeError("Collection indices must be integers")
-        return self.m_learners[item]
+        return self.m_labeling_fns[item]
 
     def __setitem__(self, item: SupportsIndex, learner_item: LearnerItem) -> None:
         if not isinstance(item, SupportsIndex):
             raise TypeError("Collection indices must be integers")
-        self.m_learners[item] = learner_item
+        self.m_labeling_fns[item] = learner_item
 
     def __delitem__(self, item: SupportsIndex) -> None:
         if not isinstance(item, SupportsIndex):
             raise TypeError("Collection indices do not support indexing!")
-        del self.m_learners[item]
+        del self.m_labeling_fns[item]
 
     def __next__(self) -> LearnerItem:
         self.m_idx += 1
         try:
-            return self.m_learners[self.m_idx - 1]
+            return self.m_labeling_fns[self.m_idx - 1]
         except IndexError:
             self.m_idx = 0
             raise StopIteration
 
     def __repr__(self):
-        print(self.m_learners)
+        print(self.m_labeling_fns)
