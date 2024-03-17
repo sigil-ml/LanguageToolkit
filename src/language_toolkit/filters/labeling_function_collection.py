@@ -4,30 +4,57 @@ from functools import singledispatchmethod
 from dataclasses import dataclass
 from collections import abc
 from typing import SupportsIndex
+from collections import UserDict
 
 import pandas as pd
 from snorkel.labeling import LabelingFunction, labeling_function
 from sklearn.base import BaseEstimator
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.ensemble import BaseEnsemble
+
+from language_toolkit.utils import get_class_name
+from language_toolkit.logger import logger
 
 
 @dataclass
-class LearnerItem:
-    fn: abc.Callable | LabelingFunction
+class LabelFunctionItem:
+    labeling_function: LabelingFunction
+    estimator: BaseEstimator | BaseEnsemble | None
     learnable: bool
-    item_type: str | None
+    type: str
 
 
-class WeakLearners:
-    """A collection of weak learners that will be used by Snorkel"""
+class LabelingFunctionCollection:
+    """A collection of labeling functions that will be used by Snorkel"""
 
-    def __init__(self, col_name: str):
-        self.m_labeling_fns: list[LearnerItem] = []
-        self.m_learners = {}
+    def __init__(self):
+        self.m_register = {}
+        self.m_col_name = None
+        self.m_vectorizer = None
+        self.m_resources = None
+        # self.m_idx = 0
+
+    def set_col_name(self, col_name: str) -> None:
         self.m_col_name = col_name
-        self.m_vectorizer = CountVectorizer()
-        self.m_rsrcs = dict(col_name=self.m_col_name)
-        self.m_idx = 0
+        self.m_resources = dict(col_name=self.m_col_name)
+
+    def register(
+        self,
+        labeling_fn: LabelingFunction,
+        estimator: BaseEstimator | BaseEnsemble | None = None,
+        learnable: bool = False,
+        item_type: str | None = None,
+    ) -> None:
+        logger.trace(f"Registering {labeling_fn.name}")
+        self.m_register[labeling_fn.name] = LabelFunctionItem(
+            labeling_function=labeling_fn,
+            estimator=estimator,
+            learnable=learnable,
+            type=item_type,
+        )
+
+    def create_id(self) -> str:
+        """Creates a unique id for the labeling function to stop name collisions"""
+        return f"{len(self.m_register) + 1}"
 
     @singledispatchmethod
     def add(
@@ -38,7 +65,7 @@ class WeakLearners:
     ) -> None:
         r"""Dispatches to one of the following methods:
             1. :meth:`add_labeling_function`
-            2. :meth:`add_primative`
+            2. :meth:`add_primitive`
             3. :meth:`add_sklearn`
 
         Raises:
@@ -48,17 +75,12 @@ class WeakLearners:
         raise TypeError(
             "Supplied function is not an accepted labeling function. Received"
             "{}, but expected either Callable[[pd.Series], int] or a Snorkel"
-            "LabelingFunction" % fn.__class__.__name__
+            "LabelingFunction".format(get_class_name(fn))
         )
 
     # noinspection GrazieInspection
     @add.register
-    def add_labeling_function(
-        self,
-        fn: LabelingFunction,
-        learnable: bool = False,
-        item_type: str | None = None,
-    ) -> None:
+    def add_labeling_function(self, fn: LabelingFunction) -> None:
         r"""Appends a Snorkel labeling function to the collection. If this function has
         trainable parameters, then ``learnable`` should be `True`. If ``learnable`` is set
         to `True`, then ``item_type`` should be a string representing the class of learner
@@ -67,10 +89,6 @@ class WeakLearners:
 
         Args:
             fn (LabelingFunction): The function to append.
-            learnable (bool): If `True`, the function will be marked as
-                trainable and will be included in any training methods.
-            item_type (str, optional): Optional parameter indicating the type of the
-                supplied function.
 
         Raises:
             None
@@ -79,9 +97,9 @@ class WeakLearners:
             None
 
         Examples:
-            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.labeling_function_collection import LabelingFunctionCollection
             >>> from snorkel.labeling import labeling_function
-            >>> wl_col = WeakLearners()
+            >>> wl_col = LabelingFunctionCollection()
             >>> resources = {"col_name": "Messages"}
             >>> @labeling_function(name="Example", resources=resources)
             >>> def fn_ex0(series: pd.Series, col_name: str) -> int:
@@ -91,10 +109,7 @@ class WeakLearners:
             >>>         return 0
             >>> wl_col.add(fn_ex0, False)
         """
-        item = LearnerItem(fn, learnable=learnable, item_type=item_type)
-        self.m_labeling_fns.append(item)
-        if learnable:
-            self.m_learners[fn.name] = fn
+        self.register(fn, None, False, "labeling_function")
 
     @add.register
     def add_primitive(self, fn: abc.Callable) -> None:
@@ -113,8 +128,8 @@ class WeakLearners:
             None
 
         Examples:
-            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
-            >>> wl_col = WeakLearners()
+            >>> from language_toolkit.filters.labeling_function_collection import LabelingFunctionCollection
+            >>> wl_col = LabelingFunctionCollection()
             >>>
             >>> # Ex1
             >>> wl_col.add(lambda s: int(len(s) > 6))
@@ -128,25 +143,24 @@ class WeakLearners:
 
         """
         if fn.__name__ == "<lambda>":
-            fn.__name__ = "anon" + str(len(self) + 1)
+            fn.__name__ = "anon" + self.create_id()
 
-        @labeling_function(name=f"PR_{fn.__name__}", resources=self.m_rsrcs)
+        @labeling_function(name=f"PR_{fn.__name__}", resources=self.m_resources)
         def wrapper(series: pd.Series, col_name: str) -> int:
             s = series[col_name]
             return fn(s)
 
-        item = LearnerItem(wrapper, learnable=False, item_type=None)
-        self.m_learners.append(item)
+        self.register(wrapper, None, False, "primitive")
 
-    # TODO: This should include a uuid to avoid name collisions
     # noinspection GrazieInspection
-    @add.register
-    def add_sklearn(self, fn: BaseEstimator):
+    @add.register(BaseEstimator)
+    @add.register(BaseEnsemble)
+    def add_sklearn(self, estimator):
         r"""Adds an estimator from Sci-kit learn to the collection. Assumes the function
         has trainable parameters. All inputs will be vectorized beforehand.
 
         Args:
-            fn (BaseEstimator): A valid sklearn estimator
+            estimator (BaseEstimator | BaseEnsemble): A valid sklearn estimator
 
         Raises:
             None
@@ -155,23 +169,27 @@ class WeakLearners:
             None
 
         Examples:
-            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.labeling_function_collection import LabelingFunctionCollection
             >>> from sklearn.ensemble import RandomForestClassifier  # noqa
-            >>> wl_col = WeakLearners()
+            >>> wl_col = LabelingFunctionCollection()
             >>> rf = RandomForestClassifier(max_depth=2, random_state=0)
             >>> wl_col.add(rf)
         """
 
+        name = f"SK_{get_class_name(estimator)}" + self.create_id()
+        common = {
+            "name": name,
+            "resources": self.m_resources,
+        }
+
         # noinspection PyUnresolvedReferences
-        @labeling_function(name=f"SK_{fn.__class__.__name__}", resources=self.m_rsrcs)
+        @labeling_function(**common)
         def wrapper(series: pd.Series, col_name: str) -> int:
             s = series[col_name]
             s = self.m_vectorizer.transform(s)
             return fn.transform(s)
 
-        item = LearnerItem(wrapper, learnable=True, item_type="sklearn")
-        self.m_labeling_fns.append(item)
-        self.m_learners[f"SK_{fn.__class__.__name__}"] = fn
+        self.register(wrapper, estimator, True, "sklearn")
 
     def extend(
         self, fns: abc.Iterable[LabelingFunction | abc.Callable | BaseEstimator]
@@ -195,18 +213,23 @@ class WeakLearners:
             ValueError: If the given fn_name is not in the collection
 
         Example:
-            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.labeling_function_collection import LabelingFunctionCollection
             >>> from sklearn.ensemble import RandomForestClassifier
             >>> from snorkel.labeling import labeling_function
             >>>
-            >>> wl_col = WeakLearners()
+            >>> wl_col = LabelingFunctionCollection()
             >>>
             >>> rf = RandomForestClassifier()
             >>> wl_col.add(rf)
             >>> wl_col.add(lambda s: int(len(s) > 6))
             >>>
-            >>> rscrs = dict(col_name = "Messages")
-            >>> @labeling_function(name="test_fn", resources=rscrs)
+            >>> common = {
+            >>>     "name": "test_fn",
+            >>>     "resources": {
+            >>>         "col_name": "Messages"
+            >>>     }
+            >>> }
+            >>> @labeling_function(**common)
             >>> def test_fn_01(series: pd.Series, col_name: str) -> int:
             >>>     s: str = series[col_name]
             >>>     if s == s.lower()
@@ -223,15 +246,15 @@ class WeakLearners:
             >>> assert len(wl_col) == 0
         """
         name_located = False
-        for idx, item in enumerate(self.m_labeling_fns):
-            if fn_name == item.fn.name:
-                del self.m_labeling_fns[idx]
+        for k, v in self.m_register.items():
+            if fn_name == k:
+                del self.m_register[k]
                 name_located = True
 
         if not name_located:
             raise ValueError(f"Function with name {fn_name} not found")
 
-    def get(self, fn_name: str) -> LearnerItem:
+    def get(self, fn_name: str) -> LabelFunctionItem:
         r"""Returns the first LearnerItem that matches the supplied name.
 
         Args:
@@ -248,32 +271,32 @@ class WeakLearners:
             ValueError: If the function is not in the collection
 
         Examples:
-            >>> from language_toolkit.filters.weak_learner_collection import WeakLearners
+            >>> from language_toolkit.filters.labeling_function_collection import LabelingFunctionCollection
             >>> from sklearn.ensemble import RandomForestClassifier
             >>> from snorkel.labeling import labeling_function
             >>>
-            >>> wl_col = WeakLearners()
+            >>> wl_col = LabelingFunctionCollection()
             >>>
             >>> # ex1
             >>> rf = RandomForestClassifier()
             >>> wl_col.add(rf)
             >>> sk_item = wl_col.get("SK_RandomForestClassifier")
-            >>> assert isinstance(sk_item.fn, LabelingFunction)         # True
-            >>> assert sk_item.fn.name == "SK_RandomForestClassifier"   # True
-            >>> assert sk_item.learnable                                # True
-            >>> assert sk_item.item_type == "sklearn"                   # True
+            >>> assert isinstance(sk_item.labeling_function, LabelingFunction)
+            >>> assert sk_item.labeling_function.name == "SK_RandomForestClassifier"
+            >>> assert sk_item.learnable
+            >>> assert sk_item.type == "sklearn"
             >>>
             >>> # ex2
             >>> wl_col.add(lambda s: int(len(s) > 6))
             >>> pr_item = wl_col.get('PR_anon2')
-            >>> assert isinstance(pr_item.fn, LabelingFunction) # True
-            >>> assert pr_item.fn.name == 'PR_anon2'            # True
-            >>> assert not pr_item.learnable                    # True
-            >>> assert pr_item.item_type is None                # True
+            >>> assert isinstance(pr_item.labeling_function, LabelingFunction)
+            >>> assert pr_item.labeling_function.name == 'PR_anon2'
+            >>> assert not pr_item.learnable
+            >>> assert pr_item.type is None
             >>>
             >>> # ex3
-            >>> rscrs = dict(col_name = "Messages")
-            >>> @labeling_function(name="test_fn", resources=rscrs)
+            >>> resources = dict(col_name = "Messages")
+            >>> @labeling_function(name="test_fn", resources=resources)
             >>> def test_fn_01(series: pd.Series, col_name: str) -> int:
             >>>     s: str = series[col_name]
             >>>     if s == s.lower()
@@ -281,48 +304,55 @@ class WeakLearners:
             >>>     return 0
             >>> wl_col.add(test_fn_01)
             >>> lf_item = wl_col.get("test_fn")
-            >>> assert isinstance(lf_item.fn, LabelingFunction) # True
-            >>> assert lf_item.fn.name = "test_fn"              # True
-            >>> assert not lf_item.learnable                    # True
-            >>> assert lf_item.item_type is None                # True
+            >>> assert isinstance(lf_item.labeling_function, LabelingFunction)
+            >>> assert lf_item.labeling_function.name = "test_fn"
+            >>> assert not lf_item.learnable
+            >>> assert lf_item.type is None
 
         """
-        for item in self.m_labeling_fns:
-            if fn_name == item.fn.name:
-                return item
+        for k, i in self.m_register.items():
+            if fn_name == k:
+                return i
         raise ValueError(f"Function with name {fn_name} not found")
 
-    # TODO: Implement __call__?, train_wl, train_ens, save?, load?, print,
-    # TODO: display_train_wl_to_term, display_train_ens_to_term
+    # TODO: Implement print
 
-    def __iter__(self):
-        return self
+    def items(self):
+        return self.m_register.items()
 
     def __len__(self):
-        return len(self.m_labeling_fns)
+        return len(self.m_register)
 
-    def __getitem__(self, item: SupportsIndex) -> LearnerItem:
-        if not isinstance(item, SupportsIndex):
-            raise TypeError("Collection indices must be integers")
-        return self.m_labeling_fns[item]
+    # def __getitem__(self, item: SupportsIndex) -> LabelFunctionItem:
+    #     if not isinstance(item, SupportsIndex):
+    #         raise TypeError("Collection indices must be integers")
+    #     return self.m_register[list(self.m_register.keys())[item]]
 
-    def __setitem__(self, item: SupportsIndex, learner_item: LearnerItem) -> None:
-        if not isinstance(item, SupportsIndex):
-            raise TypeError("Collection indices must be integers")
-        self.m_labeling_fns[item] = learner_item
+    # def __getitem__(self, item):
+    #     return self.m_register[item]
 
-    def __delitem__(self, item: SupportsIndex) -> None:
-        if not isinstance(item, SupportsIndex):
-            raise TypeError("Collection indices do not support indexing!")
-        del self.m_labeling_fns[item]
+    # def __
 
-    def __next__(self) -> LearnerItem:
-        self.m_idx += 1
-        try:
-            return self.m_labeling_fns[self.m_idx - 1]
-        except IndexError:
-            self.m_idx = 0
-            raise StopIteration
+    # def __setitem__(self, key, value):
+    #     self.m_register[key] = value
 
-    def __repr__(self):
-        print(self.m_labeling_fns)
+    # def __setitem__(self, item: SupportsIndex, learner_item: LearnerItem) -> None:
+    #     if not isinstance(item, SupportsIndex):
+    #         raise TypeError("Collection indices must be integers")
+    #     self.m_labeling_fns[item] = learner_item
+
+    # def __delitem__(self, item: SupportsIndex) -> None:
+    #     if not isinstance(item, SupportsIndex):
+    #         raise TypeError("Collection indices do not support indexing!")
+    #     del self.m_labeling_fns[item]
+
+    # def __next__(self) -> LearnerItem:
+    #     self.m_idx += 1
+    #     try:
+    #         return self.m_labeling_fns[self.m_idx - 1]
+    #     except IndexError:
+    #         self.m_idx = 0
+    #         raise StopIteration
+    #
+    # def __repr__(self):
+    #     print(self.m_labeling_fns)

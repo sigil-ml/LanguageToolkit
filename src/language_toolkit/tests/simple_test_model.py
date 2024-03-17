@@ -11,10 +11,10 @@ if __name__ == "__main__":
     nb = MultinomialNB()
 
     # Define Data
-    test_data = data_factory(pull_data=True, retain_data=True)
+    test_data = data_factory(pull_data=False, retain_data=True)
 
     # Define the filter
-    sf = StringFilter(col_name="text")
+    sf = StringFilter()
     sf.add_labeling_function(rf)
     sf.add_labeling_function(nb)
     train_df, test_df = sf.train_test_split(test_data, train_size=0.8)

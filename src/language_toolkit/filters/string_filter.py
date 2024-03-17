@@ -62,7 +62,10 @@ from snorkel.labeling.model import LabelModel
 from tqdm import tqdm
 
 from language_toolkit.filters.preprocessor_stack import PreprocessorStack
-from language_toolkit.filters.weak_learner_collection import WeakLearners, LearnerItem
+from language_toolkit.filters.labeling_function_collection import (
+    LabelingFunctionCollection,
+    LabelFunctionItem,
+)
 from language_toolkit.logger import logger
 
 # from loguru import logger as log
@@ -114,9 +117,9 @@ class TrainingResult:
 
 
 class StringFilter:
-    def __init__(self, col_name: str):
+    def __init__(self):
         self._preprocessors = PreprocessorStack()
-        self._labeling_fns = WeakLearners(col_name)
+        self._labeling_fns = LabelingFunctionCollection()
         self._count_vectorizer = None
 
     def predict(
@@ -244,15 +247,15 @@ class StringFilter:
         self._labeling_fns.extend(fn)
 
     @singledispatchmethod
-    def get_labeling_function(self, item) -> LearnerItem:
+    def get_labeling_function(self, item) -> LabelFunctionItem:
         raise IndexError("Expected strings or an object which supports indexing!")
 
     @get_labeling_function.register
-    def _(self, item: str) -> LearnerItem:
+    def _(self, item: str) -> LabelFunctionItem:
         return self._labeling_fns.get(item)
 
     @get_labeling_function.register
-    def _(self, item: SupportsIndex) -> LearnerItem:
+    def _(self, item: SupportsIndex) -> LabelFunctionItem:
         return self._labeling_fns[item]
 
     def remove_labeling_function(self, item: str) -> None:
@@ -312,9 +315,10 @@ class StringFilter:
                     break
             if not found_drain_config:
                 raise ValueError(
-                    "Cannot find example drain3.ini! Suggest redownloading the toolkit."
+                    "Cannot find example drain3.ini! Suggest re-downloading the toolkit."
                 )
 
+        # TODO: Fix indexing for the log_line, don't assume 2 is the training data
         match data.__class__.__name__:
             case "DataFrame":
                 for log_line in tqdm(data.itertuples()):
@@ -384,20 +388,15 @@ class StringFilter:
         if not self._count_vectorizer:
             self._count_vectorizer = CountVectorizer()
 
-        def pass_by_df() -> str:
-            nonlocal training_data
-            nonlocal train_col
-            nonlocal target_col
-            nonlocal target_values
-
+        def pass_by_df() -> bool:
             if isinstance(training_data, pd.DataFrame) and train_col and target_col:
-                return "frame"
+                return True
             elif (
                 isinstance(training_data, pd.Series)
                 and isinstance(target_values, pd.Series)
                 and not (train_col and target_col)
             ):
-                return "series"
+                return False
             elif isinstance(training_data, pd.DataFrame) and not (
                 train_col and target_col
             ):
@@ -422,15 +421,11 @@ class StringFilter:
                     "When working with series column names are not needed.",
                     RuntimeWarning,
                 )
-                return "series"
+                return False
 
-        X: pd.Series = (
-            training_data[train_col] if pass_by_df() == "frame" else training_data
-        )
-        y: pd.Series = (
-            training_data[target_col] if pass_by_df() == "frame" else target_values
-        )
-
+        X: pd.Series = training_data[train_col] if pass_by_df() else training_data
+        y: pd.Series = training_data[target_col] if pass_by_df() else target_values
+        self._labeling_fns.set_col_name(train_col)
         self._count_vectorizer.fit(X)
         if template_miner:
             self._fit_template_miner(X)
@@ -461,19 +456,22 @@ class StringFilter:
     def _train_weak_learners(self, X: np.ndarray, y: pd.Series) -> dict:
         training_results = {}
 
-        def learn(item):
-            logger.info(f"Training weak learner: {item.fn.name}")
-            if item.item_type == "sklearn":
-                _f = self._labeling_fns.m_learners[item.fn.name]
-                _f.fit(X, y)
-                y_pred = self.invoke_sklearn(_f, X)
-                training_results[item.fn.name] = self._get_metrics(y.to_numpy(), y_pred)
+        def learn(item: LabelFunctionItem):
+            logger.info(f"Training weak learner: {item.labeling_function.name}")
+            if item.type == "sklearn":
+                trained_estimator = item.estimator.fit(X, y)
+                y_pred = self.invoke_sklearn(trained_estimator, X)
+                training_results[item.labeling_function.name] = self._get_metrics(
+                    y.to_numpy(), y_pred
+                )
             else:
-                raise NotImplementedError(f"Type: {item.item_type} not supported")
+                raise NotImplementedError(f"Type: {item.type} not supported")
 
-        for labeling_item in self._labeling_fns:
-            if labeling_item.learnable:
-                learn(labeling_item)
+        for key, item in self._labeling_fns.items():
+            print(f"key: {key}")
+            print(f"item: {item}", end="\n")
+            if item.learnable:
+                item.estimator = learn(item)
 
         return training_results
 
@@ -871,9 +869,7 @@ class StringFilter:
         console.log("================================================================")
         self.cv = joblib.load(model_dir_path + "/vectorizer.pkl")
         assert isinstance(self.cv, CountVectorizer), msg_factory("Vectorizer")
-        console.log(
-            f"Loading vectorizer from {model_dir_rel + '/vectorizer.pkl'}... ✅"
-        )
+        console.log(f"Loading vectorizer from {model_dir_rel + '/vectorizer.pkl'}... ✅")
         self.template_miner = joblib.load(model_dir_path + "/template_miner.pkl")
         assert isinstance(self.template_miner, TemplateMiner), msg_factory(
             "Template miner"
