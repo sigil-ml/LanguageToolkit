@@ -14,7 +14,7 @@ if __name__ == "__main__":
     test_data = data_factory(pull_data=False, retain_data=True)
 
     # Define the filter
-    sf = StringFilter()
+    sf = StringFilter("text")
     sf.add_labeling_function(rf)
     sf.add_labeling_function(nb)
     train_df, test_df = sf.train_test_split(test_data, train_size=0.8)

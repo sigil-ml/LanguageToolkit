@@ -120,11 +120,11 @@ class TrainingResult:
 
 
 class StringFilter:
-    def __init__(self):
-        self.train_col = None
+    def __init__(self, train_col: str):
+        self.train_col = train_col
         self.train_col_idx = None
         self._preprocessors = PreprocessorStack()
-        self._labeling_fns = LabelingFunctionCollection()
+        self._labeling_fns = LabelingFunctionCollection(train_col)
         self._count_vectorizer = None
 
     def predict(
@@ -390,7 +390,6 @@ class StringFilter:
         """
 
         self.train_col = train_col
-        self._labeling_fns.set_col_name(train_col)  # Do we really need this?
         self.train_col_idx = training_data.columns.get_loc(self.train_col)
 
         # No targets provided
@@ -417,7 +416,10 @@ class StringFilter:
             training_data.iloc[:split_amt],
             labels.iloc[:split_amt],
         )
-        x_ensemble, y_ensemble = training_data.iloc[split_amt:], labels.iloc[split_amt:]
+        train_ensemble, label_ensemble = (
+            training_data.iloc[split_amt:],
+            labels.iloc[split_amt:],
+        )
 
         train_labeling_fns_vec = self._vectorize(train_labeling_fns[self.train_col])
 
@@ -427,10 +429,12 @@ class StringFilter:
 
         pprint.pprint(labeling_fns_train_metrics)
 
-        # ensemble_train_metrics = self._train_ensemble(x_ensemble, y_ensemble)
+        ensemble_train_metrics = self._train_ensemble(train_ensemble, label_ensemble)
+
+        pprint.pprint(ensemble_train_metrics)
 
         return TrainingResult(
-            results=x_train, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
+            results=None, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
         )
 
     # TODO: Resolve these issues:
@@ -445,16 +449,16 @@ class StringFilter:
     def _train_weak_learners(self, train_data: np.ndarray, labels: pd.Series) -> dict:
         training_results = {}
 
-        def learn(item: LabelFunctionItem):
-            logger.info(f"Training weak learner: {item.labeling_function.name}")
-            if item.type == "sklearn":
-                trained_estimator = item.estimator.fit(train_data, labels)
+        def learn(lf_item: LabelFunctionItem):
+            logger.info(f"Training weak learner: {lf_item.labeling_function.name}")
+            if lf_item.type == "sklearn":
+                trained_estimator = lf_item.estimator.fit(train_data, labels)
                 y_pred = self.invoke_sklearn(trained_estimator, train_data)
-                training_results[item.labeling_function.name] = self._get_metrics(
+                training_results[lf_item.labeling_function.name] = self._get_metrics(
                     labels.to_numpy(), y_pred
                 )
             else:
-                raise NotImplementedError(f"Type: {item.type} not supported")
+                raise NotImplementedError(f"Type: {lf_item.type} not supported")
 
         for key, item in self._labeling_fns.items():
             if item.learnable:
@@ -462,7 +466,7 @@ class StringFilter:
 
         return training_results
 
-    def _train_ensemble(self, train_data: pd.Series, labels: pd.Series) -> dict:
+    def _train_ensemble(self, train_data: pd.DataFrame, labels: pd.Series) -> dict:
         if not hasattr(self, "applier"):
             self.applier = PandasLFApplier(lfs=self._labeling_fns.as_list())
 

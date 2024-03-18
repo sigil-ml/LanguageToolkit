@@ -26,16 +26,11 @@ class LabelFunctionItem:
 class LabelingFunctionCollection:
     """A collection of labeling functions that will be used by Snorkel"""
 
-    def __init__(self):
+    def __init__(self, train_col: str):
         self.m_register = {}
         self.m_col_name = None
         self.m_vectorizer = None
-        self.m_resources = None
-        # self.m_idx = 0
-
-    def set_col_name(self, col_name: str) -> None:
-        self.m_col_name = col_name
-        self.m_resources = dict(col_name=self.m_col_name)
+        self.m_resources = {"col_name": train_col}
 
     def register(
         self,
@@ -177,19 +172,17 @@ class LabelingFunctionCollection:
         """
 
         name = f"SK_{get_class_name(estimator)}" + self.create_id()
-        common = {
-            "name": name,
-            "resources": self.m_resources,
-        }
 
         # noinspection PyUnresolvedReferences
-        @labeling_function(**common)
-        def wrapper(series: pd.Series, col_name: str) -> int:
+        def wrapper(series: pd.Series, **kwargs) -> int:
+            col_name = kwargs["col_name"]
             s = series[col_name]
             s = self.m_vectorizer.transform(s)
             return fn.transform(s)
 
-        self.register(wrapper, estimator, True, "sklearn")
+        _lfn = LabelingFunction(name, wrapper, self.m_resources, [])
+
+        self.register(_lfn, estimator, True, "sklearn")
 
     def extend(
         self, fns: abc.Iterable[LabelingFunction | abc.Callable | BaseEstimator]
