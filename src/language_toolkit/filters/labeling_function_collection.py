@@ -177,12 +177,20 @@ class LabelingFunctionCollection:
         def wrapper(series: pd.Series, **kwargs) -> int:
             col_name = kwargs["col_name"]
             s = series[col_name]
-            s = self.m_vectorizer.transform(s)
-            return fn.transform(s)
+            s = self.m_vectorizer.transform([s])
+            return self.call_sklearn(estimator)(s)[0]
 
         _lfn = LabelingFunction(name, wrapper, self.m_resources, [])
 
         self.register(_lfn, estimator, True, "sklearn")
+
+    def call_sklearn(self, estimator: BaseEstimator | BaseEnsemble):
+        if hasattr(estimator, "predict"):
+            return estimator.predict
+        elif hasattr(estimator, "transform"):
+            return estimator.transform
+        else:
+            raise ValueError(f"Estimator {estimator} does not have a call method")
 
     def extend(
         self, fns: abc.Iterable[LabelingFunction | abc.Callable | BaseEstimator]

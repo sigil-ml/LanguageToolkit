@@ -126,6 +126,7 @@ class StringFilter:
         self._preprocessors = PreprocessorStack()
         self._labeling_fns = LabelingFunctionCollection(train_col)
         self._count_vectorizer = None
+        self.label_model = None
 
     def predict(
         self,
@@ -405,6 +406,7 @@ class StringFilter:
             self._count_vectorizer = CountVectorizer()
 
         self._count_vectorizer.fit(training_data[self.train_col])
+        self._labeling_fns.m_vectorizer = self._count_vectorizer
         if template_miner:
             self._fit_template_miner(training_data)
             x_train = training_data.apply(self._transform_template, axis=1)
@@ -423,15 +425,14 @@ class StringFilter:
 
         train_labeling_fns_vec = self._vectorize(train_labeling_fns[self.train_col])
 
-        labeling_fns_train_metrics = self._train_weak_learners(
+        training_metrics = self._train_weak_learners(
             train_labeling_fns_vec, label_labeling_fns
         )
 
-        pprint.pprint(labeling_fns_train_metrics)
-
         ensemble_train_metrics = self._train_ensemble(train_ensemble, label_ensemble)
+        training_metrics.update(ensemble_train_metrics)
 
-        pprint.pprint(ensemble_train_metrics)
+        pprint.pprint(training_metrics)
 
         return TrainingResult(
             results=None, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
@@ -470,7 +471,15 @@ class StringFilter:
         if not hasattr(self, "applier"):
             self.applier = PandasLFApplier(lfs=self._labeling_fns.as_list())
 
-        L_train = self.applier.apply(train_data)
+        label_array = self.applier.apply(train_data)
+        cardinality = len(self._labeling_fns)
+        self.label_model = LabelModel(cardinality=cardinality, verbose=True)
+        self.label_model.fit(L_train=label_array, n_epochs=500, log_freq=100, seed=123)
+        return {
+            "label_model": self._get_metrics(
+                labels.to_numpy(), self.label_model.predict(label_array)
+            )
+        }
 
     # </editor-fold>
     """
@@ -489,18 +498,10 @@ class StringFilter:
             "log_loss": log_loss(y_true, y_pred),
         }
 
-    #  TODO: Add warning if use_template_miner is false
-
-    # def fit_transform(
-    #     self,
-    #     training_data: pd.DataFrame | pd.Series,
-    #     target_values: Optional[pd.Series] = None,
-    #     train_col: Optional[str | int] = None,
-    #     target_col: Optional[str | int] = None,
-    #     template_miner: Optional[bool] = False,
-    #     visualize: Optional[bool] = False,
-    # ) -> tuple[pd.DataFrame | pd.Series, TrainingResult]:
-    #     pass
+    def eval(self, test_data: pd.DataFrame, data_col: str, label_col: str) -> dict:
+        test_data_arr = self.applier.apply(test_data)
+        predictions = self.label_model.predict(test_data_arr, self.train_col)
+        return self._get_metrics(test_data[label_col].to_numpy(), predictions[0])
 
     """
     +--------------------------------------------------------------------------------+
