@@ -315,7 +315,9 @@ class LabelingFunctionCollection:
                 return i
         raise ValueError(f"Function with name {fn_name} not found")
 
-    # TODO: Implement print
+    def as_list(self) -> list[LabelingFunction]:
+        """Returns the collection as a list of labeling functions"""
+        return [v.labeling_function for v in self.m_register.values()]
 
     def items(self):
         return self.m_register.items()

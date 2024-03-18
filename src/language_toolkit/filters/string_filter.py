@@ -1,5 +1,4 @@
 """Defines the StringFilter class which is used to filter Mattermost messages"""
-
 from __future__ import annotations
 
 import json
@@ -60,6 +59,7 @@ from snorkel.labeling.model import LabelModel
 
 # import rich
 from tqdm import tqdm
+import pprint
 
 from language_toolkit.filters.preprocessor_stack import PreprocessorStack
 from language_toolkit.filters.labeling_function_collection import (
@@ -67,11 +67,12 @@ from language_toolkit.filters.labeling_function_collection import (
     LabelFunctionItem,
 )
 from language_toolkit.logger import logger
+from language_toolkit.utils import get_class_name
 
 # from loguru import logger as log
 
-console = Console()
 
+console = Console()
 showwarning_ = warnings.showwarning
 
 
@@ -92,6 +93,7 @@ class FilterResult(Enum):
     RECYCLE = 2
 
 
+# <editor-fold desc="Custom Types">
 Preprocessor: TypeAlias = (
     abc.Callable
     | pathlib.Path
@@ -105,6 +107,7 @@ LabelingFunctionItem: TypeAlias = (
     | BaseEstimator
     | Iterable[abc.Callable | LabelingFunction | BaseEstimator]
 )
+# </editor-fold>
 
 
 @dataclass
@@ -118,6 +121,8 @@ class TrainingResult:
 
 class StringFilter:
     def __init__(self):
+        self.train_col = None
+        self.train_col_idx = None
         self._preprocessors = PreprocessorStack()
         self._labeling_fns = LabelingFunctionCollection()
         self._count_vectorizer = None
@@ -147,15 +152,16 @@ class StringFilter:
         return y_pred
 
     @partialmethod
-    def _transform_template(self, text: str) -> str:
+    def _transform_template(self, ds: pd.Series) -> str:
         """Transform a string into a matching template"""
         if not hasattr(self, "template_miner"):
             raise ValueError("Template transformation called without template_miner")
-        cluster = self.template_miner.match(text)
+        query_str = ds[self.train_col]
+        cluster = self.template_miner.match(query_str)
         if cluster:
             return cluster.get_template()
         else:
-            return text
+            return query_str
 
     def _vectorize(self, text: pd.Series) -> np.ndarray:
         """Transform a string into a vector of one hot encodings"""
@@ -168,6 +174,7 @@ class StringFilter:
     | Preprocessors CR_D                                                             |
     +--------------------------------------------------------------------------------+
     """
+    # <editor-fold desc="Preprocessor CR_D Methods">
 
     @singledispatchmethod
     def add_preprocessor(
@@ -221,11 +228,13 @@ class StringFilter:
     def _(self, item: SupportsIndex) -> None:
         del self._preprocessors[item]
 
+    # </editor-fold>
     """
     +--------------------------------------------------------------------------------+
     | Labeling Function CR_D                                                         |
     +--------------------------------------------------------------------------------+
     """
+    # <editor-fold desc="Labeling Functions CR_D Methods">
 
     @singledispatchmethod
     def add_labeling_function(
@@ -261,11 +270,13 @@ class StringFilter:
     def remove_labeling_function(self, item: str) -> None:
         self._labeling_fns.remove(item)
 
+    # </editor-fold>
     """
     +--------------------------------------------------------------------------------+
     | Training                                                                       |
     +--------------------------------------------------------------------------------+
     """
+    # <editor-fold desc="Training Methods">
 
     @staticmethod
     def train_test_split(
@@ -295,7 +306,7 @@ class StringFilter:
             data, train_size=train_size, shuffle=shuffle, random_state=seed
         )
 
-    def _fit_template_miner(self, data: pd.DataFrame | pd.Series):
+    def _fit_template_miner(self, data: pd.DataFrame):
         """Train the drain3 template miner first on all available data"""
         if not hasattr(self, "template_miner"):
             self.template_miner = TemplateMiner()
@@ -318,16 +329,9 @@ class StringFilter:
                     "Cannot find example drain3.ini! Suggest re-downloading the toolkit."
                 )
 
-        # TODO: Fix indexing for the log_line, don't assume 2 is the training data
-        match data.__class__.__name__:
-            case "DataFrame":
-                for log_line in tqdm(data.itertuples()):
-                    _ = self.template_miner.add_log_message(log_line[2])
-            case "Series":
-                for log_line in tqdm(data.items()):
-                    _ = self.template_miner.add_log_message(log_line[1])
-            case _:
-                raise ValueError(f"Cannot train on dtype: {data.__class__.__name__}")
+        # Increment by 1 since itertuples has the index as the first item in the tuple
+        for log_line in tqdm(data.itertuples()):
+            _ = self.template_miner.add_log_message(log_line[self.train_col_idx + 1])
 
         logger.info("Template miner training complete!")
 
@@ -347,7 +351,7 @@ class StringFilter:
 
     def fit(
         self,
-        training_data: pd.DataFrame | pd.Series,
+        training_data: pd.DataFrame,
         target_values: Optional[pd.Series] = None,
         train_col: Optional[str | int] = None,
         target_col: Optional[str | int] = None,
@@ -385,63 +389,48 @@ class StringFilter:
             >>>)
         """
 
+        self.train_col = train_col
+        self._labeling_fns.set_col_name(train_col)  # Do we really need this?
+        self.train_col_idx = training_data.columns.get_loc(self.train_col)
+
+        # No targets provided
+        if not target_col and not target_values:
+            raise ValueError("No target column or target values provided!")
+
+        # Ambiguous targets provided
+        if target_col and target_values:
+            raise ValueError("Both target column and target values provided!")
+
+        # The user may provide a custom count vectorizer, provide default otherwise
         if not self._count_vectorizer:
             self._count_vectorizer = CountVectorizer()
 
-        def pass_by_df() -> bool:
-            if isinstance(training_data, pd.DataFrame) and train_col and target_col:
-                return True
-            elif (
-                isinstance(training_data, pd.Series)
-                and isinstance(target_values, pd.Series)
-                and not (train_col and target_col)
-            ):
-                return False
-            elif isinstance(training_data, pd.DataFrame) and not (
-                train_col and target_col
-            ):
-                raise ValueError(
-                    "DataFrame provided, but missing train_col or target_col"
-                )
-            elif isinstance(training_data, pd.DataFrame) and isinstance(
-                target_values, pd.Series
-            ):
-                raise ValueError(
-                    "Received DataFrame for training and target_values! "
-                    "Please use column names if working with DataFrames!"
-                )
-            elif (
-                isinstance(training_data, pd.Series)
-                and isinstance(target_values, pd.Series)
-                and target_col
-                and train_col
-            ):
-                warnings.warn(
-                    "Provided two series but also column names. "
-                    "When working with series column names are not needed.",
-                    RuntimeWarning,
-                )
-                return False
-
-        X: pd.Series = training_data[train_col] if pass_by_df() else training_data
-        y: pd.Series = training_data[target_col] if pass_by_df() else target_values
-        self._labeling_fns.set_col_name(train_col)
-        self._count_vectorizer.fit(X)
+        self._count_vectorizer.fit(training_data[self.train_col])
         if template_miner:
-            self._fit_template_miner(X)
-            X = X.apply(self._transform_template)
+            self._fit_template_miner(training_data)
+            x_train = training_data.apply(self._transform_template, axis=1)
 
-        X_vec = self._vectorize(X)
+        # split the dataset for the ensemble, recommend fewer data for the ensemble
+        labels = training_data[target_col] if target_col else target_values
+        split_amt = int(len(training_data) * ensemble_split)
+        train_labeling_fns, label_labeling_fns = (
+            training_data.iloc[:split_amt],
+            labels.iloc[:split_amt],
+        )
+        x_ensemble, y_ensemble = training_data.iloc[split_amt:], labels.iloc[split_amt:]
 
-        # context manager goes here
-        training_metrics = self._train_weak_learners(X_vec, y)
+        train_labeling_fns_vec = self._vectorize(train_labeling_fns[self.train_col])
 
-        import pprint
+        labeling_fns_train_metrics = self._train_weak_learners(
+            train_labeling_fns_vec, label_labeling_fns
+        )
 
-        pprint.pprint(training_metrics)
+        pprint.pprint(labeling_fns_train_metrics)
+
+        # ensemble_train_metrics = self._train_ensemble(x_ensemble, y_ensemble)
 
         return TrainingResult(
-            results=X, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
+            results=x_train, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
         )
 
     # TODO: Resolve these issues:
@@ -453,28 +442,33 @@ class StringFilter:
     # We can capture standard out by using a context manager with IO.ReadStream
     # https://stackoverflow.com/questions/44443479/python-sklearn-show-loss-values-during-training
 
-    def _train_weak_learners(self, X: np.ndarray, y: pd.Series) -> dict:
+    def _train_weak_learners(self, train_data: np.ndarray, labels: pd.Series) -> dict:
         training_results = {}
 
         def learn(item: LabelFunctionItem):
             logger.info(f"Training weak learner: {item.labeling_function.name}")
             if item.type == "sklearn":
-                trained_estimator = item.estimator.fit(X, y)
-                y_pred = self.invoke_sklearn(trained_estimator, X)
+                trained_estimator = item.estimator.fit(train_data, labels)
+                y_pred = self.invoke_sklearn(trained_estimator, train_data)
                 training_results[item.labeling_function.name] = self._get_metrics(
-                    y.to_numpy(), y_pred
+                    labels.to_numpy(), y_pred
                 )
             else:
                 raise NotImplementedError(f"Type: {item.type} not supported")
 
         for key, item in self._labeling_fns.items():
-            print(f"key: {key}")
-            print(f"item: {item}", end="\n")
             if item.learnable:
                 item.estimator = learn(item)
 
         return training_results
 
+    def _train_ensemble(self, train_data: pd.Series, labels: pd.Series) -> dict:
+        if not hasattr(self, "applier"):
+            self.applier = PandasLFApplier(lfs=self._labeling_fns.as_list())
+
+        L_train = self.applier.apply(train_data)
+
+    # </editor-fold>
     """
     +--------------------------------------------------------------------------------+
     | Evaluation                                                                     |
