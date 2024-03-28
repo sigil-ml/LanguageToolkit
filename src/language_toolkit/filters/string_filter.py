@@ -3,15 +3,14 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import pathlib
-import sys
 import warnings
 import shutil
 import time
+import dill
 import traceback
 from collections import abc
-from functools import singledispatchmethod, partialmethod
+import numpy as np
 
 # import csv
 import uuid
@@ -20,12 +19,13 @@ import uuid
 from collections import defaultdict
 from enum import Enum
 from pathlib import Path
-from typing import List, Dict, Callable, TypeAlias, Iterable, SupportsIndex, Optional
+from typing import List, Dict, Callable, Iterable, SupportsIndex, Optional
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 import joblib
-import numpy as np
+
+from functools import singledispatchmethod, partialmethod
 import pandas as pd
 from drain3 import TemplateMiner
 from drain3.template_miner_config import TemplateMinerConfig
@@ -42,7 +42,6 @@ from sklearn.metrics import (
     average_precision_score,
     balanced_accuracy_score,
     brier_score_loss,
-    class_likelihood_ratios,
     classification_report,
     confusion_matrix,
     f1_score,
@@ -56,6 +55,8 @@ from snorkel.labeling import LFAnalysis
 from snorkel.labeling import PandasLFApplier
 from snorkel.labeling import labeling_function, LabelingFunction
 from snorkel.labeling.model import LabelModel
+import sys
+import os
 
 # import rich
 from tqdm import tqdm
@@ -94,19 +95,19 @@ class FilterResult(Enum):
 
 
 # <editor-fold desc="Custom Types">
-Preprocessor: TypeAlias = (
-    abc.Callable
-    | pathlib.Path
-    | Iterable[abc.Callable | pathlib.Path]
-    | Iterable[tuple[abc.Callable | pathlib.Path, int]]
-)
-
-LabelingFunctionItem: TypeAlias = (
-    abc.Callable
-    | LabelingFunction
-    | BaseEstimator
-    | Iterable[abc.Callable | LabelingFunction | BaseEstimator]
-)
+# Preprocessor: TypeAlias = (
+#     abc.Callable
+#     | pathlib.Path
+#     | Iterable[abc.Callable | pathlib.Path]
+#     | Iterable[tuple[abc.Callable | pathlib.Path, int]]
+# )
+#
+# LabelingFunctionItem: TypeAlias = (
+#     abc.Callable
+#     | LabelingFunction
+#     | BaseEstimator
+#     | Iterable[abc.Callable | LabelingFunction | BaseEstimator]
+# )
 # </editor-fold>
 
 
@@ -130,16 +131,19 @@ class StringFilter:
 
     def predict(
         self,
-        data: pd.DataFrame | pd.Series,
-        col_name: Optional[str],
+        data: pd.DataFrame,
         use_template_miner: Optional[bool] = False,
         memoize: Optional[bool] = False,
         lru_cache_size: Optional[int] = 128,
-        return_dataframe: Optional[bool] = False,
         dask_client: Optional[bool] = None,
         dask_scheduling_strategy: Optional[str] = "threads",
     ) -> pd.DataFrame | pd.Series:
-        pass
+        if use_template_miner:
+            data[self.train_col] = data.apply(self._transform_template, axis=1)
+
+        data = self.applier.apply(data)
+        predictions = self.label_model.predict(data, self.train_col)
+        return predictions
 
     @staticmethod
     def invoke_sklearn(fn: BaseEstimator | BaseEnsemble, X: np.ndarray) -> np.ndarray:
@@ -180,7 +184,7 @@ class StringFilter:
     @singledispatchmethod
     def add_preprocessor(
         self,
-        fn: Preprocessor | Iterable[Preprocessor],
+        fn,
         position: Optional[int] = None,
     ) -> None:
         raise NotImplementedError("Invalid type for preprocessor")
@@ -209,15 +213,15 @@ class StringFilter:
         )
 
     @singledispatchmethod
-    def get_preprocessor(self, item) -> Preprocessor:
+    def get_preprocessor(self, item):
         raise IndexError("Getters only support strings and indexers")
 
     @get_preprocessor.register
-    def _(self, item: str) -> Preprocessor:
+    def _(self, item: str):
         return self._preprocessors.get(item)
 
     @get_preprocessor.register
-    def _(self, item: SupportsIndex) -> Preprocessor:
+    def _(self, item: SupportsIndex):
         return self._preprocessors[item]
 
     @remove_preprocessor.register(str)
@@ -409,7 +413,9 @@ class StringFilter:
         self._labeling_fns.m_vectorizer = self._count_vectorizer
         if template_miner:
             self._fit_template_miner(training_data)
-            x_train = training_data.apply(self._transform_template, axis=1)
+            training_data[self.train_col] = training_data.apply(
+                self._transform_template, axis=1
+            )
 
         # split the dataset for the ensemble, recommend fewer data for the ensemble
         labels = training_data[target_col] if target_col else target_values
@@ -423,6 +429,7 @@ class StringFilter:
             labels.iloc[split_amt:],
         )
 
+        # TODO: Should probably move this into the labeling function collection
         train_labeling_fns_vec = self._vectorize(train_labeling_fns[self.train_col])
 
         training_metrics = self._train_weak_learners(
@@ -458,10 +465,11 @@ class StringFilter:
                 training_results[lf_item.labeling_function.name] = self._get_metrics(
                     labels.to_numpy(), y_pred
                 )
+                return trained_estimator
             else:
                 raise NotImplementedError(f"Type: {lf_item.type} not supported")
 
-        for key, item in self._labeling_fns.items():
+        for item in self._labeling_fns.values():
             if item.learnable:
                 item.estimator = learn(item)
 
@@ -493,14 +501,13 @@ class StringFilter:
         return {
             "accuracy": accuracy_score(y_true, y_pred),
             "balanced_accuracy": balanced_accuracy_score(y_true, y_pred),
-            "class_likelihood_ratio": class_likelihood_ratios(y_true, y_pred),
             "confusion_matrix": confusion_matrix(y_true, y_pred),
             "log_loss": log_loss(y_true, y_pred),
         }
 
     def eval(self, test_data: pd.DataFrame, data_col: str, label_col: str) -> dict:
-        test_data_arr = self.applier.apply(test_data)
-        predictions = self.label_model.predict(test_data_arr, self.train_col)
+        # test_data_arr = self.applier.apply(test_data)
+        predictions = self.predict(test_data, use_template_miner=True)
         return self._get_metrics(test_data[label_col].to_numpy(), predictions[0])
 
     """
@@ -524,11 +531,59 @@ class StringFilter:
     +--------------------------------------------------------------------------------+
     """
 
-    def save(self):
-        pass
+    def save(self, save_path_stub: Path = Path("./model")) -> None:
+        """Save trained models to directory with a random uuid to prevent collisions"""
+        save_path = str(save_path_stub)
+        os.makedirs(save_path, exist_ok=True)
+        console.log(f"Saving models to {save_path}")
+        console.log("================================================================")
+        console.log(f"Saving string filter to {save_path + '/string_filter.pkl'}")
+        _string_filter_byte_str = dill.dumps(self)
+        joblib.dump(_string_filter_byte_str, save_path + "/string_filter.pkl")
+        console.log("================================================================")
+        console.log("Finished!")
 
-    def load(self):
-        pass
+    @classmethod
+    def load(cls, model_dir: Path) -> StringFilter:
+        """Restore models from a directory"""
+        assert (
+            model_dir.absolute().exists()
+        ), f"Cannot find directory at path: {model_dir}!"
+        assert (
+            model_dir.absolute().is_dir()
+        ), f"Provided path is not a directory: {model_dir}!"
+
+        models = os.listdir(model_dir)
+        model_names = [
+            "string_filter.pkl",
+        ]
+
+        for model_name in model_names:
+            assert model_name in models, f"Cannot find model at path: {model_dir}!"
+
+        console.log("Models found! Starting restoration...")
+        model_dir_path = str(model_dir.absolute())
+        model_dir_rel = str(model_dir)
+
+        def msg_factory(m):
+            return f"❌ {m} is corrupted and cannot be loaded!"
+
+        console.log("================================================================")
+        _string_filter_byte_str = joblib.load(model_dir_path + "/string_filter.pkl")
+        new_filter = dill.loads(_string_filter_byte_str)
+        assert isinstance(new_filter, StringFilter), msg_factory("Vectorizer")
+        # self.train_col = new_filter.train_col
+        # self.train_col_idx = new_filter.train_col_idx
+        # self._preprocessors = new_filter._preprocessors
+        # self._labeling_fns = new_filter._labeling_fns
+        # self._count_vectorizer = new_filter._count_vectorizer
+        # self.label_model = new_filter.label_model
+        console.log(
+            f"Loading StringFilter from {model_dir_rel + '/string_filter.pkl'}... ✅"
+        )
+        console.log("================================================================")
+        console.log("Complete!")
+        return new_filter
 
     def add_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
         r"""Adds a labeling function to the filter
@@ -665,229 +720,45 @@ class StringFilter:
         classifier_id: str = "rf",
     ) -> None:
         r"""Evaluate trained weak learners."""
-        table_title = ""
-        match classifier_id:
-            case "rf":
-                table_title = "Random Forest Performance"
-                classifier = self.rf
-                test_data = self.cv.transform(test_data["Message"])
-            case "mlp":
-                table_title = "Perceptron Performance"
-                classifier = self.mlp
-                test_data = self.cv.transform(test_data["Message"])
-            case "label_model":
-                table_title = "Label Model Performance"
-                classifier = self.label_model
-            case _:
-                classifier = None
-
-        y_pred = classifier.predict(test_data)
-        mask = np.array(y_pred == test_labels)
-
-        stats_table = Table(title=table_title, show_lines=True)
-        stats_table.add_column("Metric")
-        stats_table.add_column("Value")
-        stats_table.add_column("Percentage")
-        stats_table.add_column("Total")
-
-        num_correct = mask.sum()
-        num_incorrect = len(mask) - num_correct
-        stats_table.add_row(
-            "Correct",
-            str(num_correct),
-            f"{100 * num_correct / len(mask):.2f}%",
-            str(len(mask)),
-            style="dark_sea_green4",
-        )
-        stats_table.add_row(
-            "Incorrect",
-            str(num_incorrect),
-            f"{100 * num_incorrect / len(mask):.2f}%",
-            str(len(mask)),
-            style="dark_orange",
-        )
-        console.print(stats_table)
-
-    # def stage_one_train(self, in_data: pd.DataFrame, train_config: dict):
-    #     """Train the MLP and RF on the reserved stage one training data"""
-    #
-    #     # train vectorizer on entire data set
-    #     _ = self.cv.fit(in_data["Message"])
-    #
-    #     # produce test-train split
-    #     amt = train_config["amt"]
-    #     split_p = train_config["split"]
-    #     df = in_data[:amt]
-    #     training_mask = np.random.rand(len(df)) < split_p
-    #     training_set = df[training_mask]
-    #     training_set.iloc[:, 11] = training_set.apply(
-    #         self.template_miner_transform, axis=1
-    #     )
-    #     self.stage_two_train_data = training_set
-    #     training_set = self.cv.transform(training_set["Message"])
-    #
-    #     test_set = df[~training_mask]
-    #     test_set.iloc[:, 11] = test_set.apply(self.template_miner_transform, axis=1)
-    #     self.stage_one_test_data = test_set
-    #
-    #     training_labels = df["labels"][training_mask]
-    #     test_labels = df["labels"][~training_mask]
-    #
-    #     # train RF
-    #     start_time = time.time()
-    #     self.rf.fit(training_set, training_labels)
-    #     svm_finish_time = time.time()
-    #     elapsed_time = svm_finish_time - start_time
-    #     if self.verbose:
-    #         console.log(f"RF training complete: elapsed time {elapsed_time}s")
-    #     self.evaluate(test_set, test_labels, "rf")
-    #
-    #     # train MLP
-    #     start_time = time.time()
-    #     self.mlp.fit(training_set, training_labels)
-    #     mlp_finish_time = time.time()
-    #     elapsed_time = mlp_finish_time - start_time
-    #     if self.verbose:
-    #         console.log(f"MLP training complete: elapsed time {elapsed_time}")
-    #     self.evaluate(test_set, test_labels, "mlp")
-    #
-    # def save_template_miner_cluster_information(self) -> None:
-    #     """Save template miner clusters to a JSON for analysis"""
-    #     clusters = []
-    #     for cluster in self.template_miner.drain.clusters:
-    #         clusters.append(
-    #             {
-    #                 "id": cluster.cluster_id,
-    #                 "template": cluster.get_template(),
-    #                 "size": cluster.size,
-    #             }
-    #         )
-    #         clusters = sorted(clusters, key=lambda x: x["size"], reverse=True)
-    #         with open("clusters.json", "w", encoding="utf-8") as f:
-    #             json.dump(clusters, f, indent=4)
-    #
-    # def stage_two_train(self, in_data: pd.DataFrame, train_config: Dict):
-    #     """Train the ensemble on the reserved stage two training data"""
-    #
-    #     amt = train_config["amt"]
-    #     split_p = train_config["split"]
-    #     df = in_data[-amt:]
-    #     training_mask = np.random.rand(len(df)) < split_p
-    #     training_set = df[training_mask]
-    #     training_set.iloc[:, 11] = training_set.apply(
-    #         self.template_miner_transform, axis=1
-    #     )
-    #     self.stage_two_train_data = training_set
-    #     test_set = df[~training_mask]
-    #     test_labels = df["labels"][~training_mask]
-    #     test_set.iloc[:, 11] = test_set.apply(self.template_miner_transform, axis=1)
-    #     self.stage_two_test_data = test_set
-    #     test_set = self.applier.apply(test_set)
-    #     l_train = self.applier.apply(training_set)
-    #     self.label_model = LabelModel(cardinality=7, verbose=True)
-    #     start_time = time.time()
-    #     self.label_model.fit(L_train=l_train, n_epochs=500, log_freq=100, seed=123)
-    #     label_finish_time = time.time()
-    #     elapsed_time = label_finish_time - start_time
-    #     if self.verbose:
-    #         console.log("Label model training complete: elapsed time %s", elapsed_time)
-    #     self.evaluate(test_set, test_labels, "label_model")
-
-    # def predict(self, in_data: pd.DataFrame) -> np.ndarray:
-    #     """Predict the labels for a supplied Pandas data frame"""
-    #     in_data.loc[:, "Message"] = in_data.apply(self.template_miner_transform, axis=1)
-    #     in_data = self.applier.apply(in_data)
-    #     return self.label_model.predict(in_data)
-    #
-    # def train(self, in_data: pd.DataFrame, train_conf: Dict, serialize=False):
-    #     """Trains both the first and second stages"""
-    #     # Train template miner
-    #     self.train_template_miner(in_data)
-    #
-    #     # Train stage one
-    #     stage_one_conf = train_conf["stage-one"]
-    #     self.stage_one_train(in_data, stage_one_conf)
-    #
-    #     # Train stage two
-    #     stage_two_conf = train_conf["stage-two"]
-    #     self.stage_two_train(in_data, stage_two_conf)
-    #
-    #     # TODO: Use save models here
-    #     if serialize:
-    #         self.save_models(Path("./models"))
-
-    def save_models(self, save_path_stub: Path) -> None:
-        """Save trained models to directory with a random uuid to prevent collisions"""
-        uuid_str = uuid.uuid4().hex
-        uuid_str = str(uuid_str)[:4]
-        save_path = str(save_path_stub) + uuid_str
-        os.makedirs(save_path, exist_ok=True)
-        console.log(f"Saving models to {save_path}")
-        console.log("================================================================")
-        console.log(f"Saving vectorizer to {save_path + '/vectorizer.pkl'}")
-        joblib.dump(self.cv, save_path + "/vectorizer.pkl")
-        console.log(f"Saving template miner to {save_path + '/template_miner.pkl'}")
-        joblib.dump(self.template_miner, save_path + "/template_miner.pkl")
-        console.log(f"Saving random forest to {save_path + '/random_forest.pkl'}")
-        joblib.dump(self.rf, save_path + "/random_forest.pkl")
-        console.log(f"Saving MLP to {save_path + '/mlp.pkl'}")
-        joblib.dump(self.mlp, save_path + "/mlp.pkl")
-        console.log(f"Saving label model to {save_path + '/label_model.pkl'}")
-        joblib.dump(self.label_model, save_path + "/label_model.pkl")
-        console.log("================================================================")
-        console.log("Finished!")
-
-    def load_models(self, model_dir: Path) -> None:
-        """Restore models from a directory"""
-        assert (
-            model_dir.absolute().exists()
-        ), f"Cannot find directory at path: {model_dir}!"
-        assert (
-            model_dir.absolute().is_dir()
-        ), f"Provided path is not a directory: {model_dir}!"
-
-        models = os.listdir(model_dir)
-        model_names = [
-            "vectorizer.pkl",
-            "template_miner.pkl",
-            "random_forest.pkl",
-            "mlp.pkl",
-            "label_model.pkl",
-        ]
-
-        for model_name in model_names:
-            assert model_name in models, f"Cannot find model at path: {model_dir}!"
-
-        console.log("Models found! Starting restoration...")
-        model_dir_path = str(model_dir.absolute())
-        model_dir_rel = str(model_dir)
-
-        def msg_factory(m):
-            return f"❌ {m} is corrupted and cannot be loaded!"
-
-        console.log("================================================================")
-        self.cv = joblib.load(model_dir_path + "/vectorizer.pkl")
-        assert isinstance(self.cv, CountVectorizer), msg_factory("Vectorizer")
-        console.log(f"Loading vectorizer from {model_dir_rel + '/vectorizer.pkl'}... ✅")
-        self.template_miner = joblib.load(model_dir_path + "/template_miner.pkl")
-        assert isinstance(self.template_miner, TemplateMiner), msg_factory(
-            "Template miner"
-        )
-        console.log(
-            f"Loading template miner from {model_dir_rel + '/template_miner.pkl'}... ✅"
-        )
-        self.rf = joblib.load(model_dir_path + "/random_forest.pkl")
-        assert isinstance(self.rf, RandomForestClassifier), msg_factory("Random forest")
-        console.log(
-            f"Loading random forest from {model_dir_rel + '/random_forest.pkl'}... ✅"
-        )
-        self.mlp = joblib.load(model_dir_path + "/mlp.pkl")
-        assert isinstance(self.mlp, MLPClassifier), msg_factory("MLP")
-        console.log(f"Loading MLP from {model_dir_rel + '/mlp.pkl'}... ✅")
-        self.label_model = joblib.load(model_dir_path + "/label_model.pkl")
-        assert isinstance(self.label_model, LabelModel), msg_factory("Label model")
-        console.log(
-            f"Loading label model from {model_dir_rel + '/label model.pkl'}... ✅"
-        )
-        console.log("================================================================")
-        console.log("Complete!")
+        # table_title = ""
+        # match classifier_id:
+        #     case "rf":
+        #         table_title = "Random Forest Performance"
+        #         classifier = self.rf
+        #         test_data = self.cv.transform(test_data["Message"])
+        #     case "mlp":
+        #         table_title = "Perceptron Performance"
+        #         classifier = self.mlp
+        #         test_data = self.cv.transform(test_data["Message"])
+        #     case "label_model":
+        #         table_title = "Label Model Performance"
+        #         classifier = self.label_model
+        #     case _:
+        #         classifier = None
+        #
+        # y_pred = classifier.predict(test_data)
+        # mask = np.array(y_pred == test_labels)
+        #
+        # stats_table = Table(title=table_title, show_lines=True)
+        # stats_table.add_column("Metric")
+        # stats_table.add_column("Value")
+        # stats_table.add_column("Percentage")
+        # stats_table.add_column("Total")
+        #
+        # num_correct = mask.sum()
+        # num_incorrect = len(mask) - num_correct
+        # stats_table.add_row(
+        #     "Correct",
+        #     str(num_correct),
+        #     f"{100 * num_correct / len(mask):.2f}%",
+        #     str(len(mask)),
+        #     style="dark_sea_green4",
+        # )
+        # stats_table.add_row(
+        #     "Incorrect",
+        #     str(num_incorrect),
+        #     f"{100 * num_incorrect / len(mask):.2f}%",
+        #     str(len(mask)),
+        #     style="dark_orange",
+        # )
+        # console.print(stats_table)

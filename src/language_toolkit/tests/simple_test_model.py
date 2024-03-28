@@ -24,3 +24,8 @@ if __name__ == "__main__":
     train_df, test_df = sf.train_test_split(test_data, train_size=0.8)
     res = sf.fit(train_df, train_col="text", target_col="label", template_miner=True)
     pprint(sf.eval(test_df, "text", "label"))
+    sf.save(Path("./test_model"))
+
+    print("============= NEW MODEL =============")
+    new_filter = StringFilter.load(Path("./test_model"))
+    pprint(new_filter.eval(test_df, "text", "label"))

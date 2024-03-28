@@ -323,6 +323,9 @@ class LabelingFunctionCollection:
     def items(self):
         return self.m_register.items()
 
+    def values(self):
+        return self.m_register.values()
+
     def __len__(self):
         return len(self.m_register)
 
