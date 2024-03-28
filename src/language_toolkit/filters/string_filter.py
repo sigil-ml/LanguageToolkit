@@ -506,7 +506,6 @@ class StringFilter:
             "accuracy": accuracy_score(y_true, y_pred),
             "balanced_accuracy": balanced_accuracy_score(y_true, y_pred),
             "confusion_matrix": confusion_matrix(y_true, y_pred),
-            "log_loss": log_loss(y_true, y_pred),
         }
 
     def eval(self, test_data: pd.DataFrame, data_col: str, label_col: str) -> dict:
