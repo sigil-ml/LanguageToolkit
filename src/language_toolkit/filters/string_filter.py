@@ -138,6 +138,8 @@ class StringFilter:
         dask_client: Optional[bool] = None,
         dask_scheduling_strategy: Optional[str] = "threads",
     ) -> pd.DataFrame | pd.Series:
+        data = self._preprocessors(data, self.train_col_idx)
+
         if use_template_miner:
             data[self.train_col] = data.apply(self._transform_template, axis=1)
 
@@ -404,6 +406,8 @@ class StringFilter:
         # Ambiguous targets provided
         if target_col and target_values:
             raise ValueError("Both target column and target values provided!")
+
+        training_data = self._preprocessors(training_data, self.train_col_idx)
 
         # The user may provide a custom count vectorizer, provide default otherwise
         if not self._count_vectorizer:
