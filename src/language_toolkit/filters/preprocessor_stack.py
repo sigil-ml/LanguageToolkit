@@ -13,11 +13,13 @@ import pandas as pd  # noqa
 from loguru import logger
 from rich.console import Console  # noqa
 from rich.table import Table  # noqa
+from typing_extensions import TypeAlias
 
 console = Console()
 
 
-# Preprocessor: TypeAlias = Callable[[pd.Series, int], pd.Series] | pathlib.Path
+Preprocessor: TypeAlias = Callable[[pd.Series, SupportsIndex], pd.Series] | pathlib.Path
+"""A function (pd.Series, position) -> pd.Series or a path to a file (CSV)"""
 
 
 class PreprocessorStack:
@@ -28,9 +30,9 @@ class PreprocessorStack:
 
     def __init__(self):
         self._idx = 0
-        self._stack: list[Callable[[pd.Series, int], pd.Series] | pathlib.Path] = []
+        self._stack: list[Preprocessor] = []
 
-    def get(self, item: str) -> Callable[[pd.Series, int], pd.Series] | pathlib.Path:
+    def get(self, item: str) -> Preprocessor:
         if len(self._stack) == 0:
             raise ValueError("The stack is empty!")
 
@@ -42,7 +44,7 @@ class PreprocessorStack:
 
     def add(
         self,
-        preprocessor: Callable[[pd.Series, int], pd.Series] | pathlib.Path,
+        preprocessor: Preprocessor,
         position: int = -1,
     ) -> None:
         r"""Adds a preprocessor to the stack of preprocessors. Pre-processors must have
@@ -87,19 +89,14 @@ class PreprocessorStack:
         else:
             self._stack.insert(position, preprocessor)
 
-    def append(
-        self, preprocessor: Callable[[pd.Series, int], pd.Series] | pathlib.Path
-    ) -> None:
+    def append(self, preprocessor: Preprocessor) -> None:
         r"""Convenience function that calls add(fn, -1)"""
         self.add(preprocessor, -1)
 
     # TODO: needs to support adding without positions
     def add_multiple(
         self,
-        preprocessors: (
-            Iterable[tuple[Callable[[pd.Series, int], pd.Series] | pathlib.Path, int]]
-            | Iterable[Callable[[pd.Series, int], pd.Series] | pathlib.Path]
-        ),
+        preprocessors: (Iterable[tuple[Preprocessor, SupportsIndex] | Preprocessor]),
     ) -> None:
         r"""Adds multiple preprocessors to the stack. Takes in an iterable of tuples of
         indices and preprocessors, using the indices for insertion position.
@@ -140,7 +137,7 @@ class PreprocessorStack:
         csv_path: Path,
         search_idx: int = 0,
         replace_idx: int = 1,
-        order: int | None = None,
+        order: int = None,
     ) -> None:
         r"""Registers a CSV file to be used for substring replacement preprocessing.
 
@@ -221,9 +218,7 @@ class PreprocessorStack:
         )
 
     # TODO: Update example and check positions after removal
-    def remove(
-        self, preprocessor: Callable[[pd.Series, int], pd.Series] | pathlib.Path | str
-    ):
+    def remove(self, preprocessor: Preprocessor | str):
         r"""Remove a preprocessor from the stack.
 
         Args:
@@ -269,9 +264,7 @@ class PreprocessorStack:
         except ValueError:
             logger.warning(f"Preprocessing function: {preprocessor} not in the stack.")
 
-    def update(
-        self, preprocessor: Callable[[pd.Series, int], pd.Series] | pathlib.Path
-    ):
+    def update(self, preprocessor: Preprocessor):
         r"""Update an existing preprocessor in the stack
 
         Args:
@@ -330,9 +323,7 @@ class PreprocessorStack:
     def __len__(self):
         return len(self._stack)
 
-    def __getitem__(
-        self, item: SupportsIndex
-    ) -> Callable[[pd.Series, int], pd.Series] | pathlib.Path:
+    def __getitem__(self, item: SupportsIndex) -> Preprocessor:
         if not isinstance(item, SupportsIndex):
             raise TypeError("Preprocessor stack indices must be integers")
         return self._stack[item]
@@ -340,7 +331,7 @@ class PreprocessorStack:
     def __setitem__(
         self,
         item: SupportsIndex,
-        preprocessor: Callable[[pd.Series, int], pd.Series] | pathlib.Path,
+        preprocessor: Preprocessor,
     ) -> None:
         if not isinstance(item, SupportsIndex):
             raise TypeError("Preprocessor stack indices must be integers")
@@ -353,7 +344,7 @@ class PreprocessorStack:
             raise TypeError("Preprocessor stack indices must be integers")
         del self._stack[item]
 
-    def __next__(self) -> Callable[[pd.Series, int], pd.Series] | pathlib.Path:
+    def __next__(self) -> Preprocessor | pathlib.Path:
         self._idx += 1
         try:
             return self._stack[self._idx - 1]
