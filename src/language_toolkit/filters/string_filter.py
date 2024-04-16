@@ -2,77 +2,45 @@
 
 from __future__ import annotations
 
-import json
 import logging
+import os
 import pathlib
-import warnings
+import pprint
 import shutil
-import time
-import dill
-import traceback
+import warnings
 from collections import abc
-import numpy as np
+from dataclasses import dataclass
 
 # import csv
-import uuid
-
 # import inspect
-from collections import defaultdict
 from enum import Enum
+from functools import partialmethod, singledispatchmethod
 from pathlib import Path
-from typing import List, Dict, Callable, Iterable, SupportsIndex, Optional
-from sklearn.base import BaseEstimator
-from sklearn.model_selection import train_test_split
-from dataclasses import dataclass
-import joblib
+from typing import List, Optional, SupportsIndex
 
-from functools import singledispatchmethod, partialmethod
+import dill
+import joblib
+import numpy as np
 import pandas as pd
 from drain3 import TemplateMiner
-from drain3.template_miner_config import TemplateMinerConfig
 from rich.console import Console
-from rich.table import Table
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.neural_network import MLPClassifier
+from sklearn.base import BaseEstimator
 from sklearn.ensemble import BaseEnsemble
-from sklearn.model_selection import learning_curve
-from sklearn.metrics import (
-    accuracy_score,
-    auc,
-    average_precision_score,
-    balanced_accuracy_score,
-    brier_score_loss,
-    classification_report,
-    confusion_matrix,
-    f1_score,
-    log_loss,
-    precision_recall_curve,
-    recall_score,
-    top_k_accuracy_score,
-)
-from sklearn.svm import SVC
-from snorkel.labeling import LFAnalysis
-from snorkel.labeling import PandasLFApplier
-from snorkel.labeling import labeling_function, LabelingFunction
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, confusion_matrix
+from sklearn.model_selection import train_test_split
+from snorkel.labeling import LabelingFunction, PandasLFApplier
 from snorkel.labeling.model import LabelModel
-import sys
-import os
 
 # import rich
 from tqdm import tqdm
-import pprint
 
-from language_toolkit.filters.preprocessor_stack import PreprocessorStack
 from language_toolkit.filters.labeling_function_collection import (
-    LabelingFunctionCollection,
     LabelFunctionItem,
+    LabelingFunctionCollection,
 )
+from language_toolkit.filters.preprocessor_stack import PreprocessorStack
 from language_toolkit.logger import logger
-from language_toolkit.utils import get_class_name
-
-# from loguru import logger as log
-
 
 console = Console()
 showwarning_ = warnings.showwarning
@@ -327,7 +295,7 @@ class StringFilter:
             for file in file_gen:
                 if file.stem == "drain3":
                     found_drain_config = True
-                    logger.info(f"Loading default drain3 config!")
+                    logger.info("Loading default drain3 config!")
                     default_drain3_config_path = file.absolute()
                     new_drain3_config_path = Path("./drain3.ini")
                     shutil.copy(default_drain3_config_path, new_drain3_config_path)
@@ -598,12 +566,6 @@ class StringFilter:
         _string_filter_byte_str = joblib.load(model_dir_path + "/string_filter.pkl")
         new_filter = dill.loads(_string_filter_byte_str)
         assert isinstance(new_filter, StringFilter), msg_factory("Vectorizer")
-        # self.train_col = new_filter.train_col
-        # self.train_col_idx = new_filter.train_col_idx
-        # self._preprocessors = new_filter._preprocessors
-        # self._labeling_fns = new_filter._labeling_fns
-        # self._count_vectorizer = new_filter._count_vectorizer
-        # self.label_model = new_filter.label_model
         console.log(
             f"Loading StringFilter from {model_dir_rel + '/string_filter.pkl'}... ✅"
         )
