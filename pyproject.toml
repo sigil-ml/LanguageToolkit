@@ -1,21 +1,56 @@
+[tool.poetry]
+name = "language-toolkit"
+version = "0.1.0"
+description = "A toolkit for working with Natural Language Processing projects."
+authors = ["Athena AIML Contributors"]
+readme = "README.md"
+
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
-name = "language_toolkit"
-version = "0.0.1a"
-license = { text = "MIT License" }
-requires-python = ">= 3.10"
-dependencies = [
-    "pydantic",
-    "scikit-learn",
-    "pandas",
-    "numpy",
-    "tqdm",
-    "dask-expr",
-    "pyarrow"
-]
 
-[project.optional-dependencies]
-doc = ["sphinx", "sphinxcontrib.katex", "sphinx_copybutton", "myst-parser", "pydata-sphinx-theme"]
+# Dependencies
+
+[tool.poetry.dependencies]
+python = "3.8.*"
+pydantic = "*"
+scikit-learn = "*"
+pandas = "*"
+numpy = "*"
+tqdm = "*"
+pyarrow = "*"
+click = "*"
+dill = "*"
+drain3 = "*"
+joblib = "*"
+jupyterlab = "*"
+loguru = "*"
+rich = "*"
+snorkel = "*"
+ruff = "*"
+
+[tool.poetry.group.testing.dependencies]
+pytest = "*"
+
+
+# Optional Dependencies
+
+[tool.poetry.group.documentation]
+optional = true
+
+[tool.poetry.group.documentation.dependencies]
+sphinx = "*"
+sphinxcontrib-katex = "*"
+sphinx-copybutton = "*"
+myst-parser = "*"
+pydata-sphinx-theme = "*"
+
+# [tool.poetry.group.multi_processing]
+# optional = true
+
+# [tool.poetry.group.multi_processing.dependencies]
+# dask = "*"
+# dask-expr = "*"
+
+

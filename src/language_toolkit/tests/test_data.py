@@ -72,13 +72,12 @@ def data_factory(pull_data: bool, retain_data: bool = False) -> pd.DataFrame:
     )
 
     def preprocess(s: str) -> int:
-        match s:
-            case "ham":
-                return 0
-            case "spam":
-                return 2
-            case _:
-                return -1
+        if s == "ham":
+            return 0
+        elif s == "spam":
+            return 2
+        else:
+            return -1
 
     logger.trace("Preprocessing label column...")
     test_data["label"] = test_data["label"].apply(preprocess)

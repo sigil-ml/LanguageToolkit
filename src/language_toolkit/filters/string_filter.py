@@ -4,15 +4,14 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import pathlib
-import sys
 import warnings
 import shutil
 import time
+import dill
 import traceback
 from collections import abc
-from functools import singledispatchmethod, partialmethod
+import numpy as np
 
 # import csv
 import uuid
@@ -21,12 +20,13 @@ import uuid
 from collections import defaultdict
 from enum import Enum
 from pathlib import Path
-from typing import List, Dict, Callable, TypeAlias, Iterable, SupportsIndex, Optional
+from typing import List, Dict, Callable, Iterable, SupportsIndex, Optional
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 import joblib
-import numpy as np
+
+from functools import singledispatchmethod, partialmethod
 import pandas as pd
 from drain3 import TemplateMiner
 from drain3.template_miner_config import TemplateMinerConfig
@@ -43,7 +43,6 @@ from sklearn.metrics import (
     average_precision_score,
     balanced_accuracy_score,
     brier_score_loss,
-    class_likelihood_ratios,
     classification_report,
     confusion_matrix,
     f1_score,
@@ -57,18 +56,25 @@ from snorkel.labeling import LFAnalysis
 from snorkel.labeling import PandasLFApplier
 from snorkel.labeling import labeling_function, LabelingFunction
 from snorkel.labeling.model import LabelModel
+import sys
+import os
 
 # import rich
 from tqdm import tqdm
+import pprint
 
 from language_toolkit.filters.preprocessor_stack import PreprocessorStack
-from language_toolkit.filters.weak_learner_collection import WeakLearners, LearnerItem
+from language_toolkit.filters.labeling_function_collection import (
+    LabelingFunctionCollection,
+    LabelFunctionItem,
+)
 from language_toolkit.logger import logger
+from language_toolkit.utils import get_class_name
 
 # from loguru import logger as log
 
-console = Console()
 
+console = Console()
 showwarning_ = warnings.showwarning
 
 
@@ -89,19 +95,21 @@ class FilterResult(Enum):
     RECYCLE = 2
 
 
-Preprocessor: TypeAlias = (
-    abc.Callable
-    | pathlib.Path
-    | Iterable[abc.Callable | pathlib.Path]
-    | Iterable[tuple[abc.Callable | pathlib.Path, int]]
-)
-
-LabelingFunctionItem: TypeAlias = (
-    abc.Callable
-    | LabelingFunction
-    | BaseEstimator
-    | Iterable[abc.Callable | LabelingFunction | BaseEstimator]
-)
+# <editor-fold desc="Custom Types">
+# Preprocessor: TypeAlias = (
+#     abc.Callable
+#     | pathlib.Path
+#     | Iterable[abc.Callable | pathlib.Path]
+#     | Iterable[tuple[abc.Callable | pathlib.Path, int]]
+# )
+#
+# LabelingFunctionItem: TypeAlias = (
+#     abc.Callable
+#     | LabelingFunction
+#     | BaseEstimator
+#     | Iterable[abc.Callable | LabelingFunction | BaseEstimator]
+# )
+# </editor-fold>
 
 
 @dataclass
@@ -114,23 +122,31 @@ class TrainingResult:
 
 
 class StringFilter:
-    def __init__(self, col_name: str):
+    def __init__(self, train_col: str):
+        self.train_col = train_col
+        self.train_col_idx = None
         self._preprocessors = PreprocessorStack()
-        self._labeling_fns = WeakLearners(col_name)
+        self._labeling_fns = LabelingFunctionCollection(train_col)
         self._count_vectorizer = None
+        self.label_model = None
 
     def predict(
         self,
-        data: pd.DataFrame | pd.Series,
-        col_name: Optional[str],
+        data: pd.DataFrame,
         use_template_miner: Optional[bool] = False,
         memoize: Optional[bool] = False,
         lru_cache_size: Optional[int] = 128,
-        return_dataframe: Optional[bool] = False,
         dask_client: Optional[bool] = None,
         dask_scheduling_strategy: Optional[str] = "threads",
     ) -> pd.DataFrame | pd.Series:
-        pass
+        data = self._preprocessors(data, self.train_col_idx)
+
+        if use_template_miner:
+            data[self.train_col] = data.apply(self._transform_template, axis=1)
+
+        data = self.applier.apply(data)
+        predictions = self.label_model.predict(data, self.train_col)
+        return predictions
 
     @staticmethod
     def invoke_sklearn(fn: BaseEstimator | BaseEnsemble, X: np.ndarray) -> np.ndarray:
@@ -144,15 +160,16 @@ class StringFilter:
         return y_pred
 
     @partialmethod
-    def _transform_template(self, text: str) -> str:
+    def _transform_template(self, ds: pd.Series) -> str:
         """Transform a string into a matching template"""
         if not hasattr(self, "template_miner"):
             raise ValueError("Template transformation called without template_miner")
-        cluster = self.template_miner.match(text)
+        query_str = ds[self.train_col]
+        cluster = self.template_miner.match(query_str)
         if cluster:
             return cluster.get_template()
         else:
-            return text
+            return query_str
 
     def _vectorize(self, text: pd.Series) -> np.ndarray:
         """Transform a string into a vector of one hot encodings"""
@@ -165,11 +182,12 @@ class StringFilter:
     | Preprocessors CR_D                                                             |
     +--------------------------------------------------------------------------------+
     """
+    # <editor-fold desc="Preprocessor CR_D Methods">
 
     @singledispatchmethod
     def add_preprocessor(
         self,
-        fn: Preprocessor | Iterable[Preprocessor],
+        fn,
         position: Optional[int] = None,
     ) -> None:
         raise NotImplementedError("Invalid type for preprocessor")
@@ -198,15 +216,15 @@ class StringFilter:
         )
 
     @singledispatchmethod
-    def get_preprocessor(self, item) -> Preprocessor:
+    def get_preprocessor(self, item):
         raise IndexError("Getters only support strings and indexers")
 
     @get_preprocessor.register
-    def _(self, item: str) -> Preprocessor:
+    def _(self, item: str):
         return self._preprocessors.get(item)
 
     @get_preprocessor.register
-    def _(self, item: SupportsIndex) -> Preprocessor:
+    def _(self, item: SupportsIndex):
         return self._preprocessors[item]
 
     @remove_preprocessor.register(str)
@@ -218,11 +236,13 @@ class StringFilter:
     def _(self, item: SupportsIndex) -> None:
         del self._preprocessors[item]
 
+    # </editor-fold>
     """
     +--------------------------------------------------------------------------------+
     | Labeling Function CR_D                                                         |
     +--------------------------------------------------------------------------------+
     """
+    # <editor-fold desc="Labeling Functions CR_D Methods">
 
     @singledispatchmethod
     def add_labeling_function(
@@ -244,25 +264,27 @@ class StringFilter:
         self._labeling_fns.extend(fn)
 
     @singledispatchmethod
-    def get_labeling_function(self, item) -> LearnerItem:
+    def get_labeling_function(self, item) -> LabelFunctionItem:
         raise IndexError("Expected strings or an object which supports indexing!")
 
     @get_labeling_function.register
-    def _(self, item: str) -> LearnerItem:
+    def _(self, item: str) -> LabelFunctionItem:
         return self._labeling_fns.get(item)
 
     @get_labeling_function.register
-    def _(self, item: SupportsIndex) -> LearnerItem:
+    def _(self, item: SupportsIndex) -> LabelFunctionItem:
         return self._labeling_fns[item]
 
     def remove_labeling_function(self, item: str) -> None:
         self._labeling_fns.remove(item)
 
+    # </editor-fold>
     """
     +--------------------------------------------------------------------------------+
     | Training                                                                       |
     +--------------------------------------------------------------------------------+
     """
+    # <editor-fold desc="Training Methods">
 
     @staticmethod
     def train_test_split(
@@ -292,7 +314,7 @@ class StringFilter:
             data, train_size=train_size, shuffle=shuffle, random_state=seed
         )
 
-    def _fit_template_miner(self, data: pd.DataFrame | pd.Series):
+    def _fit_template_miner(self, data: pd.DataFrame):
         """Train the drain3 template miner first on all available data"""
         if not hasattr(self, "template_miner"):
             self.template_miner = TemplateMiner()
@@ -312,18 +334,12 @@ class StringFilter:
                     break
             if not found_drain_config:
                 raise ValueError(
-                    "Cannot find example drain3.ini! Suggest redownloading the toolkit."
+                    "Cannot find example drain3.ini! Suggest re-downloading the toolkit."
                 )
 
-        match data.__class__.__name__:
-            case "DataFrame":
-                for log_line in tqdm(data.itertuples()):
-                    _ = self.template_miner.add_log_message(log_line[2])
-            case "Series":
-                for log_line in tqdm(data.items()):
-                    _ = self.template_miner.add_log_message(log_line[1])
-            case _:
-                raise ValueError(f"Cannot train on dtype: {data.__class__.__name__}")
+        # Increment by 1 since itertuples has the index as the first item in the tuple
+        for log_line in tqdm(data.itertuples()):
+            _ = self.template_miner.add_log_message(log_line[self.train_col_idx + 1])
 
         logger.info("Template miner training complete!")
 
@@ -343,7 +359,7 @@ class StringFilter:
 
     def fit(
         self,
-        training_data: pd.DataFrame | pd.Series,
+        training_data: pd.DataFrame,
         target_values: Optional[pd.Series] = None,
         train_col: Optional[str | int] = None,
         target_col: Optional[str | int] = None,
@@ -381,72 +397,57 @@ class StringFilter:
             >>>)
         """
 
+        self.train_col = train_col
+        self.train_col_idx = training_data.columns.get_loc(self.train_col)
+
+        # No targets provided
+        if not target_col and not target_values:
+            raise ValueError("No target column or target values provided!")
+
+        # Ambiguous targets provided
+        if target_col and target_values:
+            raise ValueError("Both target column and target values provided!")
+
+        training_data = self._preprocessors(training_data, self.train_col_idx)
+
+        # The user may provide a custom count vectorizer, provide default otherwise
         if not self._count_vectorizer:
             self._count_vectorizer = CountVectorizer()
 
-        def pass_by_df() -> str:
-            nonlocal training_data
-            nonlocal train_col
-            nonlocal target_col
-            nonlocal target_values
-
-            if isinstance(training_data, pd.DataFrame) and train_col and target_col:
-                return "frame"
-            elif (
-                isinstance(training_data, pd.Series)
-                and isinstance(target_values, pd.Series)
-                and not (train_col and target_col)
-            ):
-                return "series"
-            elif isinstance(training_data, pd.DataFrame) and not (
-                train_col and target_col
-            ):
-                raise ValueError(
-                    "DataFrame provided, but missing train_col or target_col"
-                )
-            elif isinstance(training_data, pd.DataFrame) and isinstance(
-                target_values, pd.Series
-            ):
-                raise ValueError(
-                    "Received DataFrame for training and target_values! "
-                    "Please use column names if working with DataFrames!"
-                )
-            elif (
-                isinstance(training_data, pd.Series)
-                and isinstance(target_values, pd.Series)
-                and target_col
-                and train_col
-            ):
-                warnings.warn(
-                    "Provided two series but also column names. "
-                    "When working with series column names are not needed.",
-                    RuntimeWarning,
-                )
-                return "series"
-
-        X: pd.Series = (
-            training_data[train_col] if pass_by_df() == "frame" else training_data
-        )
-        y: pd.Series = (
-            training_data[target_col] if pass_by_df() == "frame" else target_values
-        )
-
-        self._count_vectorizer.fit(X)
+        self._count_vectorizer.fit(training_data[self.train_col])
+        self._labeling_fns.m_vectorizer = self._count_vectorizer
         if template_miner:
-            self._fit_template_miner(X)
-            X = X.apply(self._transform_template)
+            self._fit_template_miner(training_data)
+            training_data[self.train_col] = training_data.apply(
+                self._transform_template, axis=1
+            )
 
-        X_vec = self._vectorize(X)
+        # split the dataset for the ensemble, recommend fewer data for the ensemble
+        labels = training_data[target_col] if target_col else target_values
+        split_amt = int(len(training_data) * ensemble_split)
+        train_labeling_fns, label_labeling_fns = (
+            training_data.iloc[:split_amt],
+            labels.iloc[:split_amt],
+        )
+        train_ensemble, label_ensemble = (
+            training_data.iloc[split_amt:],
+            labels.iloc[split_amt:],
+        )
 
-        # context manager goes here
-        training_metrics = self._train_weak_learners(X_vec, y)
+        # TODO: Should probably move this into the labeling function collection
+        train_labeling_fns_vec = self._vectorize(train_labeling_fns[self.train_col])
 
-        import pprint
+        training_metrics = self._train_weak_learners(
+            train_labeling_fns_vec, label_labeling_fns
+        )
+
+        ensemble_train_metrics = self._train_ensemble(train_ensemble, label_ensemble)
+        training_metrics.update(ensemble_train_metrics)
 
         pprint.pprint(training_metrics)
 
         return TrainingResult(
-            results=X, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
+            results=None, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
         )
 
     # TODO: Resolve these issues:
@@ -458,25 +459,64 @@ class StringFilter:
     # We can capture standard out by using a context manager with IO.ReadStream
     # https://stackoverflow.com/questions/44443479/python-sklearn-show-loss-values-during-training
 
-    def _train_weak_learners(self, X: np.ndarray, y: pd.Series) -> dict:
+    def _train_weak_learners(self, data: np.ndarray, labels: pd.Series) -> dict:
         training_results = {}
+        split_amt = int(data.shape[0] * 0.9)
+        train_data, train_labels = (
+            data[:split_amt],
+            labels.iloc[:split_amt],
+        )
+        test_data, test_labels = (
+            data[split_amt:],
+            labels.iloc[split_amt:],
+        )
 
-        def learn(item):
-            logger.info(f"Training weak learner: {item.fn.name}")
-            if item.item_type == "sklearn":
-                _f = self._labeling_fns.m_learners[item.fn.name]
-                _f.fit(X, y)
-                y_pred = self.invoke_sklearn(_f, X)
-                training_results[item.fn.name] = self._get_metrics(y.to_numpy(), y_pred)
+        def learn(lf_item: LabelFunctionItem):
+            logger.info(f"Training weak learner: {lf_item.labeling_function.name}")
+            if lf_item.type == "sklearn":
+                trained_estimator = lf_item.estimator.fit(train_data, train_labels)
+                y_pred = self.invoke_sklearn(trained_estimator, test_data)
+                training_results[lf_item.labeling_function.name] = self._get_metrics(
+                    test_labels.to_numpy(), y_pred
+                )
+                return trained_estimator
             else:
-                raise NotImplementedError(f"Type: {item.item_type} not supported")
+                raise NotImplementedError(f"Type: {lf_item.type} not supported")
 
-        for labeling_item in self._labeling_fns:
-            if labeling_item.learnable:
-                learn(labeling_item)
+        for item in self._labeling_fns.values():
+            if item.learnable:
+                item.estimator = learn(item)
 
         return training_results
 
+    def _train_ensemble(self, data: pd.DataFrame, labels: pd.Series) -> dict:
+        if not hasattr(self, "applier"):
+            self.applier = PandasLFApplier(lfs=self._labeling_fns.as_list())
+
+        split_amt = int(len(data) * 0.9)
+        train_data, train_label = (
+            data.iloc[:split_amt],
+            labels.iloc[:split_amt],
+        )
+        test_data, test_label = (
+            data.iloc[split_amt:],
+            labels.iloc[split_amt:],
+        )
+
+        train_label_array = self.applier.apply(train_data)
+        test_label_array = self.applier.apply(test_data)
+        cardinality = len(self._labeling_fns)
+        self.label_model = LabelModel(cardinality=4, verbose=True)
+        self.label_model.fit(
+            L_train=train_label_array, n_epochs=500, log_freq=100, seed=123
+        )
+        return {
+            "label_model": self._get_metrics(
+                test_label.to_numpy(), self.label_model.predict(test_label_array)
+            )
+        }
+
+    # </editor-fold>
     """
     +--------------------------------------------------------------------------------+
     | Evaluation                                                                     |
@@ -488,23 +528,13 @@ class StringFilter:
         return {
             "accuracy": accuracy_score(y_true, y_pred),
             "balanced_accuracy": balanced_accuracy_score(y_true, y_pred),
-            "class_likelihood_ratio": class_likelihood_ratios(y_true, y_pred),
             "confusion_matrix": confusion_matrix(y_true, y_pred),
-            "log_loss": log_loss(y_true, y_pred),
         }
 
-    #  TODO: Add warning if use_template_miner is false
-
-    # def fit_transform(
-    #     self,
-    #     training_data: pd.DataFrame | pd.Series,
-    #     target_values: Optional[pd.Series] = None,
-    #     train_col: Optional[str | int] = None,
-    #     target_col: Optional[str | int] = None,
-    #     template_miner: Optional[bool] = False,
-    #     visualize: Optional[bool] = False,
-    # ) -> tuple[pd.DataFrame | pd.Series, TrainingResult]:
-    #     pass
+    def eval(self, test_data: pd.DataFrame, data_col: str, label_col: str) -> dict:
+        # test_data_arr = self.applier.apply(test_data)
+        predictions = self.predict(test_data, use_template_miner=False)
+        return self._get_metrics(test_data[label_col].to_numpy(), predictions[0])
 
     """
     +--------------------------------------------------------------------------------+
@@ -527,11 +557,59 @@ class StringFilter:
     +--------------------------------------------------------------------------------+
     """
 
-    def save(self):
-        pass
+    def save(self, save_path_stub: Path = Path("./model")) -> None:
+        """Save trained models to directory with a random uuid to prevent collisions"""
+        save_path = str(save_path_stub)
+        os.makedirs(save_path, exist_ok=True)
+        console.log(f"Saving models to {save_path}")
+        console.log("================================================================")
+        console.log(f"Saving string filter to {save_path + '/string_filter.pkl'}")
+        _string_filter_byte_str = dill.dumps(self)
+        joblib.dump(_string_filter_byte_str, save_path + "/string_filter.pkl")
+        console.log("================================================================")
+        console.log("Finished!")
 
-    def load(self):
-        pass
+    @classmethod
+    def load(cls, model_dir: Path) -> StringFilter:
+        """Restore models from a directory"""
+        assert (
+            model_dir.absolute().exists()
+        ), f"Cannot find directory at path: {model_dir}!"
+        assert (
+            model_dir.absolute().is_dir()
+        ), f"Provided path is not a directory: {model_dir}!"
+
+        models = os.listdir(model_dir)
+        model_names = [
+            "string_filter.pkl",
+        ]
+
+        for model_name in model_names:
+            assert model_name in models, f"Cannot find model at path: {model_dir}!"
+
+        console.log("Models found! Starting restoration...")
+        model_dir_path = str(model_dir.absolute())
+        model_dir_rel = str(model_dir)
+
+        def msg_factory(m):
+            return f"❌ {m} is corrupted and cannot be loaded!"
+
+        console.log("================================================================")
+        _string_filter_byte_str = joblib.load(model_dir_path + "/string_filter.pkl")
+        new_filter = dill.loads(_string_filter_byte_str)
+        assert isinstance(new_filter, StringFilter), msg_factory("Vectorizer")
+        # self.train_col = new_filter.train_col
+        # self.train_col_idx = new_filter.train_col_idx
+        # self._preprocessors = new_filter._preprocessors
+        # self._labeling_fns = new_filter._labeling_fns
+        # self._count_vectorizer = new_filter._count_vectorizer
+        # self.label_model = new_filter.label_model
+        console.log(
+            f"Loading StringFilter from {model_dir_rel + '/string_filter.pkl'}... ✅"
+        )
+        console.log("================================================================")
+        console.log("Complete!")
+        return new_filter
 
     def add_labeling_fn(self, labeling_fn: LabelingFunction) -> None:
         r"""Adds a labeling function to the filter
@@ -668,231 +746,45 @@ class StringFilter:
         classifier_id: str = "rf",
     ) -> None:
         r"""Evaluate trained weak learners."""
-        table_title = ""
-        match classifier_id:
-            case "rf":
-                table_title = "Random Forest Performance"
-                classifier = self.rf
-                test_data = self.cv.transform(test_data["Message"])
-            case "mlp":
-                table_title = "Perceptron Performance"
-                classifier = self.mlp
-                test_data = self.cv.transform(test_data["Message"])
-            case "label_model":
-                table_title = "Label Model Performance"
-                classifier = self.label_model
-            case _:
-                classifier = None
-
-        y_pred = classifier.predict(test_data)
-        mask = np.array(y_pred == test_labels)
-
-        stats_table = Table(title=table_title, show_lines=True)
-        stats_table.add_column("Metric")
-        stats_table.add_column("Value")
-        stats_table.add_column("Percentage")
-        stats_table.add_column("Total")
-
-        num_correct = mask.sum()
-        num_incorrect = len(mask) - num_correct
-        stats_table.add_row(
-            "Correct",
-            str(num_correct),
-            f"{100 * num_correct / len(mask):.2f}%",
-            str(len(mask)),
-            style="dark_sea_green4",
-        )
-        stats_table.add_row(
-            "Incorrect",
-            str(num_incorrect),
-            f"{100 * num_incorrect / len(mask):.2f}%",
-            str(len(mask)),
-            style="dark_orange",
-        )
-        console.print(stats_table)
-
-    # def stage_one_train(self, in_data: pd.DataFrame, train_config: dict):
-    #     """Train the MLP and RF on the reserved stage one training data"""
-    #
-    #     # train vectorizer on entire data set
-    #     _ = self.cv.fit(in_data["Message"])
-    #
-    #     # produce test-train split
-    #     amt = train_config["amt"]
-    #     split_p = train_config["split"]
-    #     df = in_data[:amt]
-    #     training_mask = np.random.rand(len(df)) < split_p
-    #     training_set = df[training_mask]
-    #     training_set.iloc[:, 11] = training_set.apply(
-    #         self.template_miner_transform, axis=1
-    #     )
-    #     self.stage_two_train_data = training_set
-    #     training_set = self.cv.transform(training_set["Message"])
-    #
-    #     test_set = df[~training_mask]
-    #     test_set.iloc[:, 11] = test_set.apply(self.template_miner_transform, axis=1)
-    #     self.stage_one_test_data = test_set
-    #
-    #     training_labels = df["labels"][training_mask]
-    #     test_labels = df["labels"][~training_mask]
-    #
-    #     # train RF
-    #     start_time = time.time()
-    #     self.rf.fit(training_set, training_labels)
-    #     svm_finish_time = time.time()
-    #     elapsed_time = svm_finish_time - start_time
-    #     if self.verbose:
-    #         console.log(f"RF training complete: elapsed time {elapsed_time}s")
-    #     self.evaluate(test_set, test_labels, "rf")
-    #
-    #     # train MLP
-    #     start_time = time.time()
-    #     self.mlp.fit(training_set, training_labels)
-    #     mlp_finish_time = time.time()
-    #     elapsed_time = mlp_finish_time - start_time
-    #     if self.verbose:
-    #         console.log(f"MLP training complete: elapsed time {elapsed_time}")
-    #     self.evaluate(test_set, test_labels, "mlp")
-    #
-    # def save_template_miner_cluster_information(self) -> None:
-    #     """Save template miner clusters to a JSON for analysis"""
-    #     clusters = []
-    #     for cluster in self.template_miner.drain.clusters:
-    #         clusters.append(
-    #             {
-    #                 "id": cluster.cluster_id,
-    #                 "template": cluster.get_template(),
-    #                 "size": cluster.size,
-    #             }
-    #         )
-    #         clusters = sorted(clusters, key=lambda x: x["size"], reverse=True)
-    #         with open("clusters.json", "w", encoding="utf-8") as f:
-    #             json.dump(clusters, f, indent=4)
-    #
-    # def stage_two_train(self, in_data: pd.DataFrame, train_config: Dict):
-    #     """Train the ensemble on the reserved stage two training data"""
-    #
-    #     amt = train_config["amt"]
-    #     split_p = train_config["split"]
-    #     df = in_data[-amt:]
-    #     training_mask = np.random.rand(len(df)) < split_p
-    #     training_set = df[training_mask]
-    #     training_set.iloc[:, 11] = training_set.apply(
-    #         self.template_miner_transform, axis=1
-    #     )
-    #     self.stage_two_train_data = training_set
-    #     test_set = df[~training_mask]
-    #     test_labels = df["labels"][~training_mask]
-    #     test_set.iloc[:, 11] = test_set.apply(self.template_miner_transform, axis=1)
-    #     self.stage_two_test_data = test_set
-    #     test_set = self.applier.apply(test_set)
-    #     l_train = self.applier.apply(training_set)
-    #     self.label_model = LabelModel(cardinality=7, verbose=True)
-    #     start_time = time.time()
-    #     self.label_model.fit(L_train=l_train, n_epochs=500, log_freq=100, seed=123)
-    #     label_finish_time = time.time()
-    #     elapsed_time = label_finish_time - start_time
-    #     if self.verbose:
-    #         console.log("Label model training complete: elapsed time %s", elapsed_time)
-    #     self.evaluate(test_set, test_labels, "label_model")
-
-    # def predict(self, in_data: pd.DataFrame) -> np.ndarray:
-    #     """Predict the labels for a supplied Pandas data frame"""
-    #     in_data.loc[:, "Message"] = in_data.apply(self.template_miner_transform, axis=1)
-    #     in_data = self.applier.apply(in_data)
-    #     return self.label_model.predict(in_data)
-    #
-    # def train(self, in_data: pd.DataFrame, train_conf: Dict, serialize=False):
-    #     """Trains both the first and second stages"""
-    #     # Train template miner
-    #     self.train_template_miner(in_data)
-    #
-    #     # Train stage one
-    #     stage_one_conf = train_conf["stage-one"]
-    #     self.stage_one_train(in_data, stage_one_conf)
-    #
-    #     # Train stage two
-    #     stage_two_conf = train_conf["stage-two"]
-    #     self.stage_two_train(in_data, stage_two_conf)
-    #
-    #     # TODO: Use save models here
-    #     if serialize:
-    #         self.save_models(Path("./models"))
-
-    def save_models(self, save_path_stub: Path) -> None:
-        """Save trained models to directory with a random uuid to prevent collisions"""
-        uuid_str = uuid.uuid4().hex
-        uuid_str = str(uuid_str)[:4]
-        save_path = str(save_path_stub) + uuid_str
-        os.makedirs(save_path, exist_ok=True)
-        console.log(f"Saving models to {save_path}")
-        console.log("================================================================")
-        console.log(f"Saving vectorizer to {save_path + '/vectorizer.pkl'}")
-        joblib.dump(self.cv, save_path + "/vectorizer.pkl")
-        console.log(f"Saving template miner to {save_path + '/template_miner.pkl'}")
-        joblib.dump(self.template_miner, save_path + "/template_miner.pkl")
-        console.log(f"Saving random forest to {save_path + '/random_forest.pkl'}")
-        joblib.dump(self.rf, save_path + "/random_forest.pkl")
-        console.log(f"Saving MLP to {save_path + '/mlp.pkl'}")
-        joblib.dump(self.mlp, save_path + "/mlp.pkl")
-        console.log(f"Saving label model to {save_path + '/label_model.pkl'}")
-        joblib.dump(self.label_model, save_path + "/label_model.pkl")
-        console.log("================================================================")
-        console.log("Finished!")
-
-    def load_models(self, model_dir: Path) -> None:
-        """Restore models from a directory"""
-        assert (
-            model_dir.absolute().exists()
-        ), f"Cannot find directory at path: {model_dir}!"
-        assert (
-            model_dir.absolute().is_dir()
-        ), f"Provided path is not a directory: {model_dir}!"
-
-        models = os.listdir(model_dir)
-        model_names = [
-            "vectorizer.pkl",
-            "template_miner.pkl",
-            "random_forest.pkl",
-            "mlp.pkl",
-            "label_model.pkl",
-        ]
-
-        for model_name in model_names:
-            assert model_name in models, f"Cannot find model at path: {model_dir}!"
-
-        console.log("Models found! Starting restoration...")
-        model_dir_path = str(model_dir.absolute())
-        model_dir_rel = str(model_dir)
-
-        def msg_factory(m):
-            return f"❌ {m} is corrupted and cannot be loaded!"
-
-        console.log("================================================================")
-        self.cv = joblib.load(model_dir_path + "/vectorizer.pkl")
-        assert isinstance(self.cv, CountVectorizer), msg_factory("Vectorizer")
-        console.log(
-            f"Loading vectorizer from {model_dir_rel + '/vectorizer.pkl'}... ✅"
-        )
-        self.template_miner = joblib.load(model_dir_path + "/template_miner.pkl")
-        assert isinstance(self.template_miner, TemplateMiner), msg_factory(
-            "Template miner"
-        )
-        console.log(
-            f"Loading template miner from {model_dir_rel + '/template_miner.pkl'}... ✅"
-        )
-        self.rf = joblib.load(model_dir_path + "/random_forest.pkl")
-        assert isinstance(self.rf, RandomForestClassifier), msg_factory("Random forest")
-        console.log(
-            f"Loading random forest from {model_dir_rel + '/random_forest.pkl'}... ✅"
-        )
-        self.mlp = joblib.load(model_dir_path + "/mlp.pkl")
-        assert isinstance(self.mlp, MLPClassifier), msg_factory("MLP")
-        console.log(f"Loading MLP from {model_dir_rel + '/mlp.pkl'}... ✅")
-        self.label_model = joblib.load(model_dir_path + "/label_model.pkl")
-        assert isinstance(self.label_model, LabelModel), msg_factory("Label model")
-        console.log(
-            f"Loading label model from {model_dir_rel + '/label model.pkl'}... ✅"
-        )
-        console.log("================================================================")
-        console.log("Complete!")
+        # table_title = ""
+        # match classifier_id:
+        #     case "rf":
+        #         table_title = "Random Forest Performance"
+        #         classifier = self.rf
+        #         test_data = self.cv.transform(test_data["Message"])
+        #     case "mlp":
+        #         table_title = "Perceptron Performance"
+        #         classifier = self.mlp
+        #         test_data = self.cv.transform(test_data["Message"])
+        #     case "label_model":
+        #         table_title = "Label Model Performance"
+        #         classifier = self.label_model
+        #     case _:
+        #         classifier = None
+        #
+        # y_pred = classifier.predict(test_data)
+        # mask = np.array(y_pred == test_labels)
+        #
+        # stats_table = Table(title=table_title, show_lines=True)
+        # stats_table.add_column("Metric")
+        # stats_table.add_column("Value")
+        # stats_table.add_column("Percentage")
+        # stats_table.add_column("Total")
+        #
+        # num_correct = mask.sum()
+        # num_incorrect = len(mask) - num_correct
+        # stats_table.add_row(
+        #     "Correct",
+        #     str(num_correct),
+        #     f"{100 * num_correct / len(mask):.2f}%",
+        #     str(len(mask)),
+        #     style="dark_sea_green4",
+        # )
+        # stats_table.add_row(
+        #     "Incorrect",
+        #     str(num_incorrect),
+        #     f"{100 * num_incorrect / len(mask):.2f}%",
+        #     str(len(mask)),
+        #     style="dark_orange",
+        # )
+        # console.print(stats_table)
