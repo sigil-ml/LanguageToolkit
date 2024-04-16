@@ -5,17 +5,17 @@ from functools import partial
 from pathlib import Path
 from typing import Callable, Iterable, SupportsIndex
 
-# import dask
-from loguru import logger
-
 # dask.config.set({"dataframe.query-planning": True})
 # import dask.dataframe as dd  # noqa
 import pandas as pd  # noqa
+
+# import dask
+from loguru import logger
 from rich.console import Console  # noqa
 from rich.table import Table  # noqa
 
-
 console = Console()
+
 
 # Preprocessor: TypeAlias = Callable[[pd.Series, int], pd.Series] | pathlib.Path
 
@@ -32,7 +32,7 @@ class PreprocessorStack:
 
     def get(self, item: str) -> Callable[[pd.Series, int], pd.Series] | pathlib.Path:
         if len(self._stack) == 0:
-            raise ValueError(f"The stack is empty!")
+            raise ValueError("The stack is empty!")
 
         for pr in self._stack:
             if pr.__name__ == item:
@@ -187,10 +187,10 @@ class PreprocessorStack:
             raise ValueError("Pandas DataFrame must have at least two columns.")
 
         if search_idx < 0 or search_idx > num_cols:
-            raise IndexError(f"Search index must be in [0, df.columns.size)")
+            raise IndexError("Search index must be in [0, df.columns.size)")
 
         if replace_idx < 0 or replace_idx > num_cols:
-            raise IndexError(f"Replacement index must be in [0, df.columns.size)")
+            raise IndexError("Replacement index must be in [0, df.columns.size)")
 
         assert search_idx != replace_idx, "Search and replace must be different!"
 
@@ -313,7 +313,8 @@ class PreprocessorStack:
     ) -> pd.DataFrame:
         r"""Sequentially execute functions in the preprocessor stack"""
         if parallel:
-            df = dd.from_pandas(df, npartitions=num_partitions)
+            pass
+            # df = dd.from_pandas(df, npartitions=num_partitions)
 
         for preprocessor in self._stack:
             partial_fn = partial(preprocessor, col_idx=col_idx)

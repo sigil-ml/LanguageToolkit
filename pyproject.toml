@@ -28,6 +28,7 @@ jupyterlab = "*"
 loguru = "*"
 rich = "*"
 snorkel = "*"
+ruff = "*"
 
 [tool.poetry.group.testing.dependencies]
 pytest = "*"
