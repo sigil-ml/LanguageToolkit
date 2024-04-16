@@ -4,14 +4,17 @@ from language_toolkit.logger import logger
 import pandas as pd
 from pathlib import Path
 from test_data import data_factory
-from example_functions import rf
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from pprint import pprint
 
 if __name__ == "__main__":
     nb = MultinomialNB()
-    lr = LogisticRegression()
+    # lr = LogisticRegression()
+    rf = RandomForestClassifier()
+    mlp = MLPClassifier()
 
     # Define Data
     # test_data = data_factory(pull_data=False, retain_data=True)
@@ -44,10 +47,12 @@ if __name__ == "__main__":
 
     sf.add_labeling_function(rf)
     sf.add_labeling_function(nb)
-    # sf.add_labeling_function(lr)
+    # sf.add_labeling_function(rf)
+    # sf.add_labeling_function(nb)
+    # sf.add_labeling_function(mlp)
     train_df, test_df = sf.train_test_split(test_data, train_size=0.8)
     res = sf.fit(
-        train_df, train_col="Message", target_col="labels", template_miner=True
+        train_df, train_col="Message", target_col="labels", template_miner=False
     )
     pprint(sf.eval(test_df, "Message", "labels"))
     sf.save(Path("./test_model"))

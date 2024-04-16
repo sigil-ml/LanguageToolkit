@@ -458,16 +458,25 @@ class StringFilter:
     # We can capture standard out by using a context manager with IO.ReadStream
     # https://stackoverflow.com/questions/44443479/python-sklearn-show-loss-values-during-training
 
-    def _train_weak_learners(self, train_data: np.ndarray, labels: pd.Series) -> dict:
+    def _train_weak_learners(self, data: np.ndarray, labels: pd.Series) -> dict:
         training_results = {}
+        split_amt = int(data.shape[0] * 0.9)
+        train_data, train_labels = (
+            data[:split_amt],
+            labels.iloc[:split_amt],
+        )
+        test_data, test_labels = (
+            data[split_amt:],
+            labels.iloc[split_amt:],
+        )
 
         def learn(lf_item: LabelFunctionItem):
             logger.info(f"Training weak learner: {lf_item.labeling_function.name}")
             if lf_item.type == "sklearn":
-                trained_estimator = lf_item.estimator.fit(train_data, labels)
-                y_pred = self.invoke_sklearn(trained_estimator, train_data)
+                trained_estimator = lf_item.estimator.fit(train_data, train_labels)
+                y_pred = self.invoke_sklearn(trained_estimator, test_data)
                 training_results[lf_item.labeling_function.name] = self._get_metrics(
-                    labels.to_numpy(), y_pred
+                    test_labels.to_numpy(), y_pred
                 )
                 return trained_estimator
             else:
@@ -479,17 +488,30 @@ class StringFilter:
 
         return training_results
 
-    def _train_ensemble(self, train_data: pd.DataFrame, labels: pd.Series) -> dict:
+    def _train_ensemble(self, data: pd.DataFrame, labels: pd.Series) -> dict:
         if not hasattr(self, "applier"):
             self.applier = PandasLFApplier(lfs=self._labeling_fns.as_list())
 
-        label_array = self.applier.apply(train_data)
+        split_amt = int(len(data) * 0.9)
+        train_data, train_label = (
+            data.iloc[:split_amt],
+            labels.iloc[:split_amt],
+        )
+        test_data, test_label = (
+            data.iloc[split_amt:],
+            labels.iloc[split_amt:],
+        )
+
+        train_label_array = self.applier.apply(train_data)
+        test_label_array = self.applier.apply(test_data)
         cardinality = len(self._labeling_fns)
-        self.label_model = LabelModel(cardinality=cardinality, verbose=True)
-        self.label_model.fit(L_train=label_array, n_epochs=500, log_freq=100, seed=123)
+        self.label_model = LabelModel(cardinality=4, verbose=True)
+        self.label_model.fit(
+            L_train=train_label_array, n_epochs=500, log_freq=100, seed=123
+        )
         return {
             "label_model": self._get_metrics(
-                labels.to_numpy(), self.label_model.predict(label_array)
+                test_label.to_numpy(), self.label_model.predict(test_label_array)
             )
         }
 
@@ -510,7 +532,7 @@ class StringFilter:
 
     def eval(self, test_data: pd.DataFrame, data_col: str, label_col: str) -> dict:
         # test_data_arr = self.applier.apply(test_data)
-        predictions = self.predict(test_data, use_template_miner=True)
+        predictions = self.predict(test_data, use_template_miner=False)
         return self._get_metrics(test_data[label_col].to_numpy(), predictions[0])
 
     """
