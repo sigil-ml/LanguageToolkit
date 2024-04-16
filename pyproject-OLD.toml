@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "language_toolkit"
+version = "0.0.1a"
+license = { text = "MIT License" }
+requires-python = ">= 3.10"
+dependencies = [
+    "pydantic",
+    "scikit-learn",
+    "pandas",
+    "numpy",
+    "tqdm",
+    "dask-expr",
+    "pyarrow"
+]
+
+[project.optional-dependencies]
+doc = ["sphinx", "sphinxcontrib.katex", "sphinx_copybutton", "myst-parser", "pydata-sphinx-theme"]
