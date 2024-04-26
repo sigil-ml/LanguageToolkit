@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "language-toolkit"
-version = "0.1.0"
+name = "language_toolkit"
+version = "0.5.0"
 description = "A toolkit for working with Natural Language Processing projects."
 authors = ["Athena AIML Contributors"]
 readme = "README.md"
@@ -53,4 +53,5 @@ pydata-sphinx-theme = "*"
 # dask = "*"
 # dask-expr = "*"
 
-
+[tool.poetry.scripts]
+hello-world = "language_toolkit.utils:hello"
