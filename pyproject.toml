@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "language_toolkit"
-version = "0.6.0"
+version = "0.7.0"
 description = "A toolkit for working with Natural Language Processing projects."
 authors = ["Athena AIML Contributors"]
 readme = "README.md"
