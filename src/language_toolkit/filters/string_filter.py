@@ -392,24 +392,22 @@ class StringFilter:
 
         # split the dataset for the ensemble, recommend fewer data for the ensemble
         labels = training_data[target_col] if target_col else target_values
-        split_amt = int(len(training_data) * ensemble_split)
-        train_labeling_fns, label_labeling_fns = (
-            training_data.iloc[:split_amt],
-            labels.iloc[:split_amt],
-        )
-        train_ensemble, label_ensemble = (
-            training_data.iloc[split_amt:],
-            labels.iloc[split_amt:],
-        )
+        # split_amt = int(len(training_data) * ensemble_split)
+        # train_labeling_fns, label_labeling_fns = (
+        #     training_data.iloc[:split_amt],
+        #     labels.iloc[:split_amt],
+        # )
+        # train_ensemble, label_ensemble = (
+        #     training_data.iloc[split_amt:],
+        #     labels.iloc[split_amt:],
+        # )
 
         # TODO: Should probably move this into the labeling function collection
-        train_labeling_fns_vec = self._vectorize(train_labeling_fns[self.train_col])
+        train_labeling_fns_vec = self._vectorize(training_data[self.train_col])
 
-        training_metrics = self._train_weak_learners(
-            train_labeling_fns_vec, label_labeling_fns
-        )
+        training_metrics = self._train_weak_learners(train_labeling_fns_vec, labels)
 
-        ensemble_train_metrics = self._train_ensemble(train_ensemble, label_ensemble)
+        ensemble_train_metrics = self._train_ensemble(training_data, labels)
         training_metrics.update(ensemble_train_metrics)
 
         pprint.pprint(training_metrics)

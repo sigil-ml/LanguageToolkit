@@ -3,7 +3,7 @@ from __future__ import annotations
 import pathlib
 from functools import partial
 from pathlib import Path
-from typing import Callable, Iterable, SupportsIndex
+from typing import Callable, Iterable, SupportsIndex, Union
 
 # dask.config.set({"dataframe.query-planning": True})
 # import dask.dataframe as dd  # noqa
@@ -18,7 +18,9 @@ from typing_extensions import TypeAlias
 console = Console()
 
 
-Preprocessor: TypeAlias = Callable[[pd.Series, SupportsIndex], pd.Series] | pathlib.Path
+Preprocessor: TypeAlias = Union[
+    Callable[[pd.Series, SupportsIndex], pd.Series], pathlib.Path
+]
 """A function (pd.Series, position) -> pd.Series or a path to a file (CSV)"""
 
 

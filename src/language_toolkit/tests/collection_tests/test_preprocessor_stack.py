@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from at_nlp.filters.preprocessor_stack import PreprocessorStack
+from language_toolkit.filters.preprocessor_stack import PreprocessorStack
 
 TEST_MSGS = ["1", "22", "333", "4444", "55555", "666666", "7777777" "hello", "hola"]
 
