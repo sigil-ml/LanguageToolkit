@@ -1,13 +1,16 @@
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
-from sklearn.neural_network import MLPClassifier
-from snorkel.labeling import labeling_function, LabelingFunction
 from enum import Enum, unique
 
 import pandas as pd
 import pytest
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
+from snorkel.labeling import LabelingFunction, labeling_function
 
-from at_nlp.filters.weak_learner_collection import WeakLearners
+from language_toolkit.filters.labeling_function_collection import (
+    LabelingFunctionCollection,
+)
+    LabelingFunctionCollection
 
 TEST_MSGS = ["1", "22", "333", "4444", "55555", "666666", "7777777" "hello", "hola"]
 
@@ -70,12 +73,12 @@ class TestCRUDLabelingFunctions:
 
     @pytest.fixture
     def empty_learner_collection(self):
-        wl_col = WeakLearners(col_name="text")
+        wl_col = LabelingFunctionCollection(col_name="text")
         yield wl_col
 
     @pytest.fixture
     def full_learner_collection(self):
-        wl_col = WeakLearners(col_name="text")
+        wl_col = LabelingFunctionCollection(col_name="text")
         wl_col.extend([lf_fn_ex_01, lf_fn_ex_02])
         yield wl_col
 
@@ -116,12 +119,12 @@ class TestCRUDPrimitiveFunctions:
 
     @pytest.fixture
     def empty_learner_collection(self):
-        wl_col = WeakLearners(col_name="text")
+        wl_col = LabelingFunctionCollection(col_name="text")
         yield wl_col
 
     @pytest.fixture
     def full_learner_collection(self):
-        wl_col = WeakLearners(col_name="text")
+        wl_col = LabelingFunctionCollection(col_name="text")
         wl_col.extend([pr_fn_ex_01, pr_fn_ex_02])
         yield wl_col
 
@@ -170,12 +173,12 @@ class TestCRUDSKLearnFunctions:
 
     @pytest.fixture
     def empty_learner_collection(self):
-        wl_col = WeakLearners(col_name="text")
+        wl_col = LabelingFunctionCollection(col_name="text")
         yield wl_col
 
     @pytest.fixture
     def full_learner_collection(self):
-        wl_col = WeakLearners(col_name="text")
+        wl_col = LabelingFunctionCollection(col_name="text")
         wl_col.extend([rf, sv, mlp])
         yield wl_col
 
@@ -215,12 +218,12 @@ class TestCRUDSKLearnFunctions:
 class TestWeakLearnerCollectionUtilities:
     @pytest.fixture
     def empty_learner_collection(self):
-        wl_col = WeakLearners(col_name="text")
+        wl_col = LabelingFunctionCollection(col_name="text")
         yield wl_col
 
     @pytest.fixture
     def full_learner_collection(self):
-        wl_col = WeakLearners(col_name="text")
+        wl_col = LabelingFunctionCollection(col_name="text")
         wl_col.extend([lf_fn_ex_01, pr_fn_ex_01, rf])
         yield wl_col
 

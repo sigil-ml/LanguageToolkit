@@ -1,18 +1,19 @@
 from __future__ import annotations
 
-from functools import singledispatchmethod
-from dataclasses import dataclass
 from collections import abc
-from typing import SupportsIndex
-from collections import UserDict
+from dataclasses import dataclass
+from functools import singledispatchmethod
+from typing import TypeVar
 
 import pandas as pd
-from snorkel.labeling import LabelingFunction, labeling_function
 from sklearn.base import BaseEstimator
 from sklearn.ensemble import BaseEnsemble
+from snorkel.labeling import LabelingFunction, labeling_function
 
-from language_toolkit.utils import get_class_name
 from language_toolkit.logger import logger
+from language_toolkit.utils import get_class_name
+
+_LF = TypeVar("_LF", LabelingFunction, abc.Callable, BaseEstimator)
 
 
 @dataclass
@@ -35,7 +36,7 @@ class LabelingFunctionCollection:
     def register(
         self,
         labeling_fn: LabelingFunction,
-        estimator: BaseEstimator | BaseEnsemble | None = None,
+        estimator: BaseEstimator | BaseEnsemble = None,
         learnable: bool = False,
         item_type: str | None = None,
     ) -> None:
@@ -54,9 +55,9 @@ class LabelingFunctionCollection:
     @singledispatchmethod
     def add(
         self,
-        fn: abc.Callable | LabelingFunction | BaseEstimator,
+        fn: _LF,
         learnable: bool = False,
-        item_type: str | None = None,
+        item_type: str = None,
     ) -> None:
         r"""Dispatches to one of the following methods:
             1. :meth:`add_labeling_function`
@@ -192,9 +193,7 @@ class LabelingFunctionCollection:
         else:
             raise ValueError(f"Estimator {estimator} does not have a call method")
 
-    def extend(
-        self, fns: abc.Iterable[LabelingFunction | abc.Callable | BaseEstimator]
-    ) -> None:
+    def extend(self, fns: abc.Iterable[_LF]) -> None:
         """Extends internal collection with a list of fns. Assumes each function is
         non-trainable unless it subclasses BaseEstimator.
         """
@@ -328,37 +327,3 @@ class LabelingFunctionCollection:
 
     def __len__(self):
         return len(self.m_register)
-
-    # def __getitem__(self, item: SupportsIndex) -> LabelFunctionItem:
-    #     if not isinstance(item, SupportsIndex):
-    #         raise TypeError("Collection indices must be integers")
-    #     return self.m_register[list(self.m_register.keys())[item]]
-
-    # def __getitem__(self, item):
-    #     return self.m_register[item]
-
-    # def __
-
-    # def __setitem__(self, key, value):
-    #     self.m_register[key] = value
-
-    # def __setitem__(self, item: SupportsIndex, learner_item: LearnerItem) -> None:
-    #     if not isinstance(item, SupportsIndex):
-    #         raise TypeError("Collection indices must be integers")
-    #     self.m_labeling_fns[item] = learner_item
-
-    # def __delitem__(self, item: SupportsIndex) -> None:
-    #     if not isinstance(item, SupportsIndex):
-    #         raise TypeError("Collection indices do not support indexing!")
-    #     del self.m_labeling_fns[item]
-
-    # def __next__(self) -> LearnerItem:
-    #     self.m_idx += 1
-    #     try:
-    #         return self.m_labeling_fns[self.m_idx - 1]
-    #     except IndexError:
-    #         self.m_idx = 0
-    #         raise StopIteration
-    #
-    # def __repr__(self):
-    #     print(self.m_labeling_fns)
