@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "language-toolkit"
-version = "0.1.0"
+name = "language_toolkit"
+version = "0.5.0"
 description = "A toolkit for working with Natural Language Processing projects."
 authors = ["Athena AIML Contributors"]
 readme = "README.md"
@@ -45,12 +45,3 @@ sphinxcontrib-katex = "*"
 sphinx-copybutton = "*"
 myst-parser = "*"
 pydata-sphinx-theme = "*"
-
-# [tool.poetry.group.multi_processing]
-# optional = true
-
-# [tool.poetry.group.multi_processing.dependencies]
-# dask = "*"
-# dask-expr = "*"
-
-
