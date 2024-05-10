@@ -29,6 +29,7 @@ loguru = "*"
 rich = "*"
 snorkel = "*"
 ruff = "*"
+wordcloud = "^1.9.3"
 
 [tool.poetry.group.testing.dependencies]
 pytest = "*"
@@ -45,3 +46,12 @@ sphinxcontrib-katex = "*"
 sphinx-copybutton = "*"
 myst-parser = "*"
 pydata-sphinx-theme = "*"
+
+[tool.ruff]
+line-length = 80
+
+[tool.ruff.lint]
+select = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

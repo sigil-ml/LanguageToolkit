@@ -14,7 +14,7 @@ from dataclasses import dataclass
 # import csv
 # import inspect
 from enum import Enum
-from functools import partialmethod, singledispatchmethod
+from functools import lru_cache, partialmethod, singledispatchmethod
 from pathlib import Path
 from typing import List, Optional, SupportsIndex
 
@@ -27,8 +27,13 @@ from rich.console import Console
 from sklearn.base import BaseEstimator
 from sklearn.ensemble import BaseEnsemble
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, confusion_matrix
+from sklearn.metrics import (
+    accuracy_score,
+    balanced_accuracy_score,
+    confusion_matrix,
+)
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 from snorkel.labeling import LabelingFunction, PandasLFApplier
 from snorkel.labeling.model import LabelModel
 
@@ -101,37 +106,42 @@ class StringFilter:
     def predict(
         self,
         data: pd.DataFrame,
-        use_template_miner: Optional[bool] = False,
-        memoize: Optional[bool] = False,
-        lru_cache_size: Optional[int] = 128,
-        dask_client: Optional[bool] = None,
-        dask_scheduling_strategy: Optional[str] = "threads",
+        use_template_miner: bool = False,
     ) -> pd.DataFrame | pd.Series:
-        data = self._preprocessors(data, self.train_col_idx)
-
+        data = self._preprocessors(
+            data,
+            self.train_col_idx,
+        )
         if use_template_miner:
             data[self.train_col] = data.apply(self._transform_template, axis=1)
 
         data = self.applier.apply(data)
-        predictions = self.label_model.predict(data, self.train_col)
-        return predictions
+        preds = self.label_model.predict(data, self.train_col)
+
+        return preds
 
     @staticmethod
-    def invoke_sklearn(fn: BaseEstimator | BaseEnsemble, X: np.ndarray) -> np.ndarray:
+    def invoke_sklearn(
+        fn: BaseEstimator | BaseEnsemble, X: np.ndarray
+    ) -> np.ndarray:
         """Attempts to call predict or transform on the provided sklearn estimator"""
         if hasattr(fn, "predict"):
             y_pred = fn.predict(X)
         elif hasattr(fn, "transform"):
             y_pred = fn.transform(X)
         else:
-            raise ValueError(f"Function: {fn} does not have the correct methods!")
+            raise ValueError(
+                f"Function: {fn} does not have the correct methods!"
+            )
         return y_pred
 
     @partialmethod
     def _transform_template(self, ds: pd.Series) -> str:
         """Transform a string into a matching template"""
         if not hasattr(self, "template_miner"):
-            raise ValueError("Template transformation called without template_miner")
+            raise ValueError(
+                "Template transformation called without template_miner"
+            )
         query_str = ds[self.train_col]
         cluster = self.template_miner.match(query_str)
         if cluster:
@@ -222,6 +232,7 @@ class StringFilter:
     @add_labeling_function.register(LabelingFunction)
     @add_labeling_function.register(BaseEstimator)
     @add_labeling_function.register(BaseEnsemble)
+    @add_labeling_function.register(Pipeline)
     def _(self, fn) -> None:
         """Handles the single addition case"""
         self._labeling_fns.add(fn)
@@ -233,7 +244,9 @@ class StringFilter:
 
     @singledispatchmethod
     def get_labeling_function(self, item) -> LabelFunctionItem:
-        raise IndexError("Expected strings or an object which supports indexing!")
+        raise IndexError(
+            "Expected strings or an object which supports indexing!"
+        )
 
     @get_labeling_function.register
     def _(self, item: str) -> LabelFunctionItem:
@@ -288,7 +301,9 @@ class StringFilter:
             self.template_miner = TemplateMiner()
 
         if not Path("./drain3.ini").exists():
-            logger.warning("Cannot find a drain3.ini in the current working directory!")
+            logger.warning(
+                "Cannot find a drain3.ini in the current working directory!"
+            )
             logger.info("Creating a default drain3.ini file")
             file_gen = Path().glob("**/*.ini")
             found_drain_config = False
@@ -298,7 +313,9 @@ class StringFilter:
                     logger.info("Loading default drain3 config!")
                     default_drain3_config_path = file.absolute()
                     new_drain3_config_path = Path("./drain3.ini")
-                    shutil.copy(default_drain3_config_path, new_drain3_config_path)
+                    shutil.copy(
+                        default_drain3_config_path, new_drain3_config_path
+                    )
                     break
             if not found_drain_config:
                 raise ValueError(
@@ -307,7 +324,9 @@ class StringFilter:
 
         # Increment by 1 since itertuples has the index as the first item in the tuple
         for log_line in tqdm(data.itertuples()):
-            _ = self.template_miner.add_log_message(log_line[self.train_col_idx + 1])
+            _ = self.template_miner.add_log_message(
+                log_line[self.train_col_idx + 1]
+            )
 
         logger.info("Template miner training complete!")
 
@@ -382,13 +401,13 @@ class StringFilter:
         if not self._count_vectorizer:
             self._count_vectorizer = CountVectorizer()
 
-        self._count_vectorizer.fit(training_data[self.train_col])
-        self._labeling_fns.m_vectorizer = self._count_vectorizer
         if template_miner:
             self._fit_template_miner(training_data)
             training_data[self.train_col] = training_data.apply(
                 self._transform_template, axis=1
             )
+        self._count_vectorizer.fit(training_data[self.train_col])
+        self._labeling_fns.m_vectorizer = self._count_vectorizer
 
         # split the dataset for the ensemble, recommend fewer data for the ensemble
         labels = training_data[target_col] if target_col else target_values
@@ -405,7 +424,9 @@ class StringFilter:
         # TODO: Should probably move this into the labeling function collection
         train_labeling_fns_vec = self._vectorize(training_data[self.train_col])
 
-        training_metrics = self._train_weak_learners(train_labeling_fns_vec, labels)
+        training_metrics = self._train_weak_learners(
+            train_labeling_fns_vec, labels
+        )
 
         ensemble_train_metrics = self._train_ensemble(training_data, labels)
         training_metrics.update(ensemble_train_metrics)
@@ -413,7 +434,11 @@ class StringFilter:
         pprint.pprint(training_metrics)
 
         return TrainingResult(
-            results=None, accuracy=0.0, precision=0.0, n_correct=0, n_incorrect=0
+            results=None,
+            accuracy=0.0,
+            precision=0.0,
+            n_correct=0,
+            n_incorrect=0,
         )
 
     # TODO: Resolve these issues:
@@ -427,7 +452,7 @@ class StringFilter:
 
     def _train_weak_learners(self, data: np.ndarray, labels: pd.Series) -> dict:
         training_results = {}
-        split_amt = int(data.shape[0] * 0.9)
+        split_amt = int(data.shape[0] * 0.95)
         train_data, train_labels = (
             data[:split_amt],
             labels.iloc[:split_amt],
@@ -438,12 +463,16 @@ class StringFilter:
         )
 
         def learn(lf_item: LabelFunctionItem):
-            logger.info(f"Training weak learner: {lf_item.labeling_function.name}")
+            logger.info(
+                f"Training weak learner: {lf_item.labeling_function.name}"
+            )
             if lf_item.type == "sklearn":
-                trained_estimator = lf_item.estimator.fit(train_data, train_labels)
+                trained_estimator = lf_item.estimator.fit(
+                    train_data, train_labels
+                )
                 y_pred = self.invoke_sklearn(trained_estimator, test_data)
-                training_results[lf_item.labeling_function.name] = self._get_metrics(
-                    test_labels.to_numpy(), y_pred
+                training_results[lf_item.labeling_function.name] = (
+                    self._get_metrics(test_labels.to_numpy(), y_pred)
                 )
                 return trained_estimator
             else:
@@ -459,7 +488,7 @@ class StringFilter:
         if not hasattr(self, "applier"):
             self.applier = PandasLFApplier(lfs=self._labeling_fns.as_list())
 
-        split_amt = int(len(data) * 0.9)
+        split_amt = int(len(data) * 0.95)
         train_data, train_label = (
             data.iloc[:split_amt],
             labels.iloc[:split_amt],
@@ -471,14 +500,14 @@ class StringFilter:
 
         train_label_array = self.applier.apply(train_data)
         test_label_array = self.applier.apply(test_data)
-        cardinality = len(self._labeling_fns)
-        self.label_model = LabelModel(cardinality=4, verbose=True)
+        self.label_model = LabelModel(cardinality=3, verbose=True)
         self.label_model.fit(
-            L_train=train_label_array, n_epochs=500, log_freq=100, seed=123
+            L_train=train_label_array, n_epochs=1000, log_freq=100, seed=123
         )
         return {
             "label_model": self._get_metrics(
-                test_label.to_numpy(), self.label_model.predict(test_label_array)
+                test_label.to_numpy(),
+                self.label_model.predict(test_label_array),
             )
         }
 
@@ -497,10 +526,18 @@ class StringFilter:
             "confusion_matrix": confusion_matrix(y_true, y_pred),
         }
 
-    def eval(self, test_data: pd.DataFrame, data_col: str, label_col: str) -> dict:
-        # test_data_arr = self.applier.apply(test_data)
-        predictions = self.predict(test_data, use_template_miner=False)
-        return self._get_metrics(test_data[label_col].to_numpy(), predictions[0])
+    def eval(
+        self,
+        test_data: pd.DataFrame,
+        label_col: str,
+        use_template_miner: bool = False,
+    ) -> dict:
+        predictions = self.predict(
+            test_data, use_template_miner=use_template_miner
+        )
+        return self._get_metrics(
+            test_data[label_col].to_numpy(), predictions[0]
+        )
 
     """
     +--------------------------------------------------------------------------------+
@@ -528,11 +565,17 @@ class StringFilter:
         save_path = str(save_path_stub)
         os.makedirs(save_path, exist_ok=True)
         console.log(f"Saving models to {save_path}")
-        console.log("================================================================")
-        console.log(f"Saving string filter to {save_path + '/string_filter.pkl'}")
+        console.log(
+            "================================================================"
+        )
+        console.log(
+            f"Saving string filter to {save_path + '/string_filter.pkl'}"
+        )
         _string_filter_byte_str = dill.dumps(self)
         joblib.dump(_string_filter_byte_str, save_path + "/string_filter.pkl")
-        console.log("================================================================")
+        console.log(
+            "================================================================"
+        )
         console.log("Finished!")
 
     @classmethod
@@ -551,7 +594,9 @@ class StringFilter:
         ]
 
         for model_name in model_names:
-            assert model_name in models, f"Cannot find model at path: {model_dir}!"
+            assert (
+                model_name in models
+            ), f"Cannot find model at path: {model_dir}!"
 
         console.log("Models found! Starting restoration...")
         model_dir_path = str(model_dir.absolute())
@@ -560,14 +605,20 @@ class StringFilter:
         def msg_factory(m):
             return f"❌ {m} is corrupted and cannot be loaded!"
 
-        console.log("================================================================")
-        _string_filter_byte_str = joblib.load(model_dir_path + "/string_filter.pkl")
+        console.log(
+            "================================================================"
+        )
+        _string_filter_byte_str = joblib.load(
+            model_dir_path + "/string_filter.pkl"
+        )
         new_filter = dill.loads(_string_filter_byte_str)
         assert isinstance(new_filter, StringFilter), msg_factory("Vectorizer")
         console.log(
             f"Loading StringFilter from {model_dir_rel + '/string_filter.pkl'}... ✅"
         )
-        console.log("================================================================")
+        console.log(
+            "================================================================"
+        )
         console.log("Complete!")
         return new_filter
 
@@ -599,7 +650,7 @@ class StringFilter:
             raise ValueError(
                 f"Supplied function must be a Snorkel labeling function; got {type(labeling_fn)}"
             )
-        self._labeling_fns.append(labeling_fn)
+        self._labeling_fns.add(labeling_fn)
 
     # TODO: Finish this function
     def add_multiple_labeling_fns(
@@ -618,7 +669,9 @@ class StringFilter:
 
         """
         if len(labeling_fn_list) == 0:
-            logging.warning("No labeling functions supplied, skipping registration")
+            logging.warning(
+                "No labeling functions supplied, skipping registration"
+            )
             return
         for fn in labeling_fn_list:
             if not isinstance(fn, LabelingFunction):

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pathlib
-from functools import partial
+from functools import lru_cache, partial
 from pathlib import Path
 from typing import Callable, Iterable, SupportsIndex, Union
 
@@ -76,7 +76,9 @@ class PreprocessorStack:
 
         """
         if not isinstance(position, SupportsIndex):
-            raise IndexError(f"Position {position} is not valid for list indexing.")
+            raise IndexError(
+                f"Position {position} is not valid for list indexing."
+            )
 
         if position > len(self._stack) + 1:
             raise IndexError(
@@ -84,7 +86,9 @@ class PreprocessorStack:
             )
 
         if position < -1:
-            raise IndexError(f"Index {position} should be in range [0, len(stack)).")
+            raise IndexError(
+                f"Index {position} should be in range [0, len(stack))."
+            )
 
         if position == -1 or position >= len(self._stack):
             self._stack.append(preprocessor)
@@ -92,13 +96,15 @@ class PreprocessorStack:
             self._stack.insert(position, preprocessor)
 
     def append(self, preprocessor: Preprocessor) -> None:
-        r"""Convenience function that calls add(fn, -1)"""
+        r"""Convenience function that calls add(fn, -1)."""
         self.add(preprocessor, -1)
 
     # TODO: needs to support adding without positions
     def add_multiple(
         self,
-        preprocessors: (Iterable[tuple[Preprocessor, SupportsIndex] | Preprocessor]),
+        preprocessors: (
+            Iterable[tuple[Preprocessor, SupportsIndex] | Preprocessor]
+        ),
     ) -> None:
         r"""Adds multiple preprocessors to the stack. Takes in an iterable of tuples of
         indices and preprocessors, using the indices for insertion position.
@@ -126,7 +132,8 @@ class PreprocessorStack:
                             self.add_csv_preprocessor(preprocessor_tuple[0])
                         else:
                             self.add_csv_preprocessor(
-                                preprocessor_tuple[0], order=preprocessor_tuple[1]
+                                preprocessor_tuple[0],
+                                order=preprocessor_tuple[1],
                             )
                 else:
                     self.add(*preprocessor_tuple)
@@ -177,7 +184,9 @@ class PreprocessorStack:
         if not isinstance(csv_path, Path):
             raise ValueError("CSV path must be a pathlib.Path object.")
 
-        assert csv_path.exists(), f"CSV file {csv_path.absolute()} does not exist!"
+        assert (
+            csv_path.exists()
+        ), f"CSV file {csv_path.absolute()} does not exist!"
 
         csv_df = pd.read_csv(csv_path)
         num_cols = csv_df.columns.size
@@ -189,9 +198,13 @@ class PreprocessorStack:
             raise IndexError("Search index must be in [0, df.columns.size)")
 
         if replace_idx < 0 or replace_idx > num_cols:
-            raise IndexError("Replacement index must be in [0, df.columns.size)")
+            raise IndexError(
+                "Replacement index must be in [0, df.columns.size)"
+            )
 
-        assert search_idx != replace_idx, "Search and replace must be different!"
+        assert (
+            search_idx != replace_idx
+        ), "Search and replace must be different!"
 
         csv_name = csv_path.stem
         search_col_name = csv_df.columns[search_idx]
@@ -264,7 +277,9 @@ class PreprocessorStack:
             else:
                 self._stack.remove(preprocessor)
         except ValueError:
-            logger.warning(f"Preprocessing function: {preprocessor} not in the stack.")
+            logger.warning(
+                f"Preprocessing function: {preprocessor} not in the stack."
+            )
 
     def update(self, preprocessor: Preprocessor):
         r"""Update an existing preprocessor in the stack

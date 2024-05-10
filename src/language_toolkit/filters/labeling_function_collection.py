@@ -8,6 +8,7 @@ from typing import TypeVar
 import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.ensemble import BaseEnsemble
+from sklearn.pipeline import Pipeline
 from snorkel.labeling import LabelingFunction, labeling_function
 
 from language_toolkit.logger import logger
@@ -151,6 +152,7 @@ class LabelingFunctionCollection:
     # noinspection GrazieInspection
     @add.register(BaseEstimator)
     @add.register(BaseEnsemble)
+    @add.register(Pipeline)
     def add_sklearn(self, estimator):
         r"""Adds an estimator from Sci-kit learn to the collection. Assumes the function
         has trainable parameters. All inputs will be vectorized beforehand.
@@ -191,7 +193,9 @@ class LabelingFunctionCollection:
         elif hasattr(estimator, "transform"):
             return estimator.transform
         else:
-            raise ValueError(f"Estimator {estimator} does not have a call method")
+            raise ValueError(
+                f"Estimator {estimator} does not have a call method"
+            )
 
     def extend(self, fns: abc.Iterable[_LF]) -> None:
         """Extends internal collection with a list of fns. Assumes each function is
