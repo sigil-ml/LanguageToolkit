@@ -6,9 +6,14 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.exceptions import ConvergenceWarning
 import joblib
 import os
 from time import time
+import warnings
+
+warnings.filterwarnings('ignore', category=ConvergenceWarning)
+
 
 def replace_acronyms(text, acronym_dict):
     words = text.split()
@@ -28,9 +33,6 @@ acronym_dict = dict(zip(acronyms, acronym_meaning))
 
 # Replace acronyms in x_train
 x_train = x_train.apply(lambda text: replace_acronyms(text, acronym_dict))
-
-# Convert all instances of 2 in y_train to 1
-y_train = y_train.replace(2, 1)
 
 # Vectorize the text data
 vectorizer = CountVectorizer()
