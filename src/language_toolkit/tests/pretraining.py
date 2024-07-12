@@ -1,19 +1,15 @@
-import numpy as np
-import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.exceptions import ConvergenceWarning
+
 import joblib
 import os
 from time import time
-import warnings
-
-warnings.filterwarnings('ignore', category=ConvergenceWarning)
-
+import numpy as np
+import pandas as pd
 
 def replace_acronyms(text, acronym_dict):
     words = text.split()
@@ -73,7 +69,7 @@ param_grid_lr = {
 }
 
 print("Tuning Logistic Regression")
-lr = LogisticRegression()
+lr = LogisticRegression(max_iter=200)
 grid_search_lr = GridSearchCV(estimator=lr, param_grid=param_grid_lr, cv=5, n_jobs=-1)
 grid_search_lr = fit_model(grid_search_lr, x_train_vectorized, y_train)
 best_lr = grid_search_lr.best_estimator_
