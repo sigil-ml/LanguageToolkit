@@ -5,13 +5,10 @@ import pandas as pd
 import joblib
 import re
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import MultinomialNB
 from snorkel.labeling import labeling_function
 
 from language_toolkit.filters.string_filter import StringFilter
-from language_toolkit.logger import logger
+from pretraining import refactor
 
 def replace_acronyms(text, acronym_dict):
     words = text.split()
@@ -26,7 +23,7 @@ if __name__ == "__main__":
     # Load pretrained models
     rf = joblib.load('models/best_rf.pkl')
     lr = joblib.load('models/best_lr.pkl')
-    nb = joblib.load('models/best_nb.pkl')
+    qda = joblib.load('models/best_qda.pkl')
 
     # Define Data
     test_data = pd.read_csv("src/language_toolkit/tests/data/(CUI) alexa_816th_file_1a1.csv")
@@ -44,7 +41,7 @@ if __name__ == "__main__":
     test_data['Message'] = test_data['Message'].apply(lambda text: replace_acronyms(text, acronym_dict))
 
     # Ensure the target column is of integer type
-    test_data['labels'] = test_data['labels'].astype(int)
+    test_data['labels'] = refactor(test_data['labels']).astype(int)
 
     # Vectorize the text data
     vectorizer = CountVectorizer()
@@ -88,7 +85,7 @@ if __name__ == "__main__":
 
     @labeling_function()
     def lf_spam(x):
-        return 2 if any(i.lower() in x.Message.lower() for i in spam_messages) else 0
+        return 1 if any(i.lower() in x.Message.lower() for i in spam_messages) else 0
 
     @labeling_function()
     def lf_ham(x):
@@ -101,24 +98,24 @@ if __name__ == "__main__":
     @labeling_function()
     def lf_rf(x):
         vectorized_message = vectorizer.transform([x.Message])
-        return rf.predict(vectorized_message)[0]
-
-    @labeling_function()
-    def lf_nb(x):
-        vectorized_message = vectorizer.transform([x.Message]).toarray()
-        return nb.predict(vectorized_message)[0]
+        return refactor(rf.predict(vectorized_message)[0])
 
     @labeling_function()
     def lf_lr(x):
         vectorized_message = vectorizer.transform([x.Message])
-        return lr.predict(vectorized_message)[0]
+        return refactor(lr.predict(vectorized_message)[0])
+
+    @labeling_function()
+    def lf_qda(x):
+        vectorized_message = vectorizer.transform([x.Message])
+        return refactor(qda.predict(vectorized_message.toarray())[0])
 
     sf.add_labeling_function(lf_spam)
     sf.add_labeling_function(lf_ham)
     sf.add_labeling_function(lf_word_count)
     sf.add_labeling_function(lf_rf)
-    sf.add_labeling_function(lf_nb)
     sf.add_labeling_function(lf_lr)
+    # sf.add_labeling_function(lf_qda)
 
     train_df, test_df = sf.train_test_split(test_data, train_size=0.8, shuffle=True)
     res = sf.fit(train_df, train_col="Message", target_col="labels", template_miner=True)

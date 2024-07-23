@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos,jetbrains+all,jupyternotebooks
 
 *.csv
+*.pkl
 /test_model/
 poetry.lock
 
