@@ -1,27 +1,5 @@
-# import pandas as pd
-# from drain3 import TemplateMiner
-# from pprint import pprint
-# import spacy 
-
-# if __name__=="__main__":
-#     df = pd.read_csv("C:/Users/Zemyna.Mikalciute/LanguageToolkit/src/language_toolkit/tests/data/(CUI).csv", encoding="utf-8")
-#     tm = TemplateMiner()
-
-#     for row in df["Message"][1:141]:
-#         tm.add_log_message(row)
-
-#         matched_messages = {}
-
-
-#     unique_temp = set()
-
-#     for row in df["Message"]:
-#         t = tm.match(row)
-#         if t:
-#             matched_messages[row] = t.get_template()  # Store message and its matched template in the dictionary
-
-#     #pprint(unique_temp)
-#     pprint(matched_messages)
+#  The goal of this file is to have a way to inport a csv file and run it through the drain3 Template miner, training it,
+# whilst being able to pull commonly used template and analyze it's ability to detect templates. 
 
 import pandas as pd
 import spacy
@@ -33,7 +11,7 @@ nlp = spacy.load("en_core_web_sm")
 
 if __name__=="__main__":
     # Read data from a CSV file
-    df = pd.read_csv("C:/Users/Zemyna.Mikalciute/LanguageToolkit/src/language_toolkit/tests/data/(CUI) mm_il4_team_usaf-618aoc-mod_channel_Internal 618 AOC AAD.csv", encoding="utf-8")
+    df = pd.read_csv("C:/Users/Zemyna.Mikalciute/LanguageToolkit/src/language_toolkit/tests/data/(CUI).csv", encoding="utf-8")
  
     # Create a TemplateMiner object
     tm = TemplateMiner()
@@ -41,7 +19,7 @@ if __name__=="__main__":
     # Process the messages using the TemplateMiner object
     matched_messages = {}
     total_processed_messages = 0
-    for row in df["message"]:
+    for row in df["Message"]:
         if not isinstance(row, (str, bytes)):
           row = str(row)
         tm.add_log_message(row)
@@ -60,7 +38,7 @@ if __name__=="__main__":
     # Ask the user for the minimum match percentage
     min_match_percentage = float(input("Enter the minimum match percentage: "))
 
-    # Ask the user if they want to extract the features of the templates
+    # Ask the user if they want to extract the features of the templates (TODO fix issues with feature extraction)
     extract_features = input("Do you want to extract the features of the templates? (y/n): ")
 
     # Loop through each message in the matched_messages dictionary
