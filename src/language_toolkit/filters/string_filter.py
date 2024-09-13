@@ -63,9 +63,8 @@ class FilterResult(Enum):
     """Enumeration of categories for each message"""
 
     ABSTAIN = -1
-    ACTION = 0
-    REVIEW = 1
-    RECYCLE = 2
+    ACTION = 1
+    RECYCLE = 0
 
 
 # <editor-fold desc="Custom Types">
@@ -500,7 +499,7 @@ class StringFilter:
 
         train_label_array = self.applier.apply(train_data)
         test_label_array = self.applier.apply(test_data)
-        self.label_model = LabelModel(cardinality=3, verbose=True)
+        self.label_model = LabelModel(cardinality=2, verbose=True)
         self.label_model.fit(
             L_train=train_label_array, n_epochs=1000, log_freq=100, seed=123
         )

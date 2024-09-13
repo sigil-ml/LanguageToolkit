@@ -31,9 +31,13 @@ if __name__ == "__main__":
     # Define Data
     # test_data = data_factory(pull_data=False, retain_data=True)
     test_data = pd.read_csv(
-        "./src/language_toolkit/tests/data/(CUI) alexa_816th_file_1a1.csv"
+        "./src/language_toolkit/tests/data/corrected.csv"
     )
-
+    
+    # test_data = pd.read_csv(
+    #     "./src/language_toolkit/tests/data/(CUI) alexa_816th_file_1a1.csv"
+    # )
+    
     # Define the filter
     sf = StringFilter("Message")
     sf.add_preprocessor(Path("./src/language_toolkit/tests/data/acronyms.csv"))
@@ -70,15 +74,16 @@ if __name__ == "__main__":
     ]
 
     sf.add_labeling_function(
-        lambda x: 2 if any(i.lower() in x.lower() for i in spam_messages) else 0
+        lambda x: 1 if any(i.lower() in x.lower() for i in spam_messages) else 0
     )
     sf.add_labeling_function(
-        lambda x: 0 if any(i.lower() in x.lower() for i in ham_messages) else 2
+        lambda x: 0 if any(i.lower() in x.lower() for i in ham_messages) else 1
     )
-    sf.add_labeling_function(lambda x: 0 if len(x.split()) > 2 else 2)
+    sf.add_labeling_function(lambda x: 1 if len(x.split()) > 2 else 0)
 
     sf.add_labeling_function(rf)
     sf.add_labeling_function(nb)
+    # sf.add_labeling_function(mlp)
 
     train_df, test_df = sf.train_test_split(
         test_data, train_size=0.8, shuffle=True
@@ -87,8 +92,8 @@ if __name__ == "__main__":
         train_df, train_col="Message", target_col="labels", template_miner=True
     )
     pprint(sf.eval(test_df, "labels", use_template_miner=True))
-    sf.save(Path("./test_model1"))
+    sf.save(Path("./spam_model"))
 
-    print("============= NEW MODEL =============")
+    # print("============= NEW MODEL =============")
     # new_filter = StringFilter.load(Path("./test_model"))
     # pprint(new_filter.eval(test_df, "Message", "labels"))
