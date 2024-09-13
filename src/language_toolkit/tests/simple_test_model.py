@@ -3,7 +3,7 @@ from pprint import pprint
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neural_network import MLPClassifier
@@ -22,19 +22,27 @@ if __name__ == "__main__":
     # lr = LogisticRegression()
     rf = RandomForestClassifier()
     mlp = MLPClassifier()
+    gb = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0,
+    max_depth=1, random_state=0)
 
-    pipe = make_pipeline(
-        StandardScaler(with_mean=False),
-        LinearSVC(dual=False, random_state=0, tol=1e-5, max_iter=5000),
-    )
+    # pipe = make_pipeline(
+    #     StandardScaler(with_mean=False),
+    #     LinearSVC(dual=False, random_state=0, tol=1e-5, max_iter=5000),
+    # )
 
     # Define Data
     # test_data = data_factory(pull_data=False, retain_data=True)
-    test_data = pd.read_csv(
+    data = pd.read_csv(
         "./src/language_toolkit/tests/data/corrected.csv"
     )
     
-    # test_data = pd.read_csv(
+    prev_n_rows = len(data)
+    
+    # Remove duplicates
+    data.drop_duplicates(subset="Message", inplace=True)
+    
+    print(f"Removed {prev_n_rows - len(data)} rows from the dataset.")
+    # data = pd.read_csv(
     #     "./src/language_toolkit/tests/data/(CUI) alexa_816th_file_1a1.csv"
     # )
     
@@ -82,18 +90,22 @@ if __name__ == "__main__":
     sf.add_labeling_function(lambda x: 1 if len(x.split()) > 2 else 0)
 
     sf.add_labeling_function(rf)
-    sf.add_labeling_function(nb)
+    sf.add_labeling_function(gb)
+    # sf.add_labeling_function(nb)
     # sf.add_labeling_function(mlp)
 
+    use_template_miner = True
     train_df, test_df = sf.train_test_split(
-        test_data, train_size=0.8, shuffle=True
+        data, train_size=0.9, shuffle=True
     )
     res = sf.fit(
-        train_df, train_col="Message", target_col="labels", template_miner=True
+        train_df, train_col="Message", target_col="labels", template_miner=use_template_miner
     )
-    pprint(sf.eval(test_df, "labels", use_template_miner=True))
+    pprint(sf.eval(test_df, "labels", use_template_miner=use_template_miner))
     sf.save(Path("./spam_model"))
 
     # print("============= NEW MODEL =============")
     # new_filter = StringFilter.load(Path("./test_model"))
     # pprint(new_filter.eval(test_df, "Message", "labels"))
+
+

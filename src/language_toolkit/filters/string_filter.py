@@ -501,7 +501,7 @@ class StringFilter:
         test_label_array = self.applier.apply(test_data)
         self.label_model = LabelModel(cardinality=2, verbose=True)
         self.label_model.fit(
-            L_train=train_label_array, n_epochs=1000, log_freq=100, seed=123
+            L_train=train_label_array, n_epochs=5000, log_freq=100, seed=123
         )
         return {
             "label_model": self._get_metrics(
